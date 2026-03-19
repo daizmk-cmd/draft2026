@@ -216,7 +216,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Noto Sans JP',sans-serif
     <div class="hdr-s"><span class="dot"></span>98th KOSHIEN SELECTION &nbsp;·&nbsp; 4-PLAYER LIVE DRAFT</div>
   </div>
   <div style="display:flex;align-items:center;gap:8px">
-    <button class="sync-btn" onclick="rAll()" style="font-size:13px;padding:6px 12px;border-radius:6px">↻</button>
+    <button class="sync-btn" id="refresh-btn" onclick="doRefresh(this)" style="font-size:13px;padding:6px 12px;border-radius:6px">↻</button>
     <div style="display:flex;align-items:center;gap:6px;background:rgba(229,9,20,.15);border:1px solid rgba(229,9,20,.4);border-radius:4px;padding:4px 10px">
       <span class="dot" style="background:var(--nf)"></span>
       <span style="font-size:10px;font-weight:700;color:var(--nf);letter-spacing:.1em">LIVE</span>
@@ -1290,6 +1290,21 @@ async function setR(mid,w){
   ST.rs[mid]=w;await sv();rResults();rScore();rPicks();
 }
 async function forceSync(){rAll();}
+async function doRefresh(btn){
+  if(btn){btn.style.opacity='.4';btn.style.pointerEvents='none';}
+  try{
+    await new Promise((res,rej)=>{
+      const t=setTimeout(()=>rej(new Error('timeout')),5000);
+      window._fbListen((data)=>{
+        clearTimeout(t);
+        mergeData(data);
+        rAll();
+        res();
+      });
+    });
+  }catch(e){rAll();}
+  if(btn){btn.style.opacity='1';btn.style.pointerEvents='';}
+}
 async function doReset(){
   if(!confirm('全データをリセットしますか？\nこの操作は元に戻せません。'))return;
   ST={ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{}};
