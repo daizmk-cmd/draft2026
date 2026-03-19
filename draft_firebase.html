@@ -338,6 +338,17 @@ const cr=()=>RD[ST.ri];
 const cw=()=>getWV(ST.ri)[ST.wi];
 function pki(nm){const p=ST.pk[nm];if(!p)return null;return{...p,pl:plr(p.pl),rd:RD[p.ri]};}
 function wns(s){return Object.values(ST.rs).filter(w=>w===s).length;}
+function isOut(s){
+  // 全試合結果を見て、sが負けた試合があればtrue
+  for(const [mid,w] of Object.entries(ST.rs)){
+    if(w && w!==s){
+      // この試合にsが出場していたか確認
+      const l=loser(mid,w);
+      if(l===s)return true;
+    }
+  }
+  return false;
+}
 function loser(mid,w){
   if(mid.startsWith('r1_')){const i=+mid.split('_')[1];return R1P[i].find(s=>s!==w)||null;}
   if(mid.startsWith('r2_')){const i=+mid.split('_')[1];const a=ST.rs[`r1_${i*2}`],b=ST.rs[`r1_${i*2+1}`];return a&&b?(a===w?b:a):null;}
@@ -1083,13 +1094,19 @@ function rScore(){
   const el=document.getElementById('pg-score');
   const sc=allScores();const sorted=PL.map(p=>({...p,s:sc[p.name]})).sort((a,b)=>b.s.tot-a.s.tot);
   const SK=['0P','2,000P','3,000P','5,000P'];const SKC=['sk0','sk2','sk3','sk4'];
-  let h=`<div class="card"><div class="ch">順位表</div><table class="stbl"><tr><th>順位</th><th style="text-align:left">名前</th><th>勝</th><th>B8</th><th>合計</th><th>賭け</th></tr>`;
-  sorted.forEach((p,i)=>{h+=`<tr><td class="sr ${p.c}">${i+1}</td><td class="sn2 ${p.c}">${p.name}</td><td>${p.s.w}</td><td style="font-size:10px;color:var(--gold)">${p.s.b8>0?`★${p.s.b8}`:'-'}</td><td class="stot">${p.s.tot}</td><td class="${SKC[i]}" style="font-size:11px;font-weight:700">${SK[i]}</td></tr>`;});
+  let h=`<div class="card"><div class="ch">順位表</div><table class="stbl"><tr><th>順位</th><th style="text-align:left">名前</th><th>勝</th><th>B8残</th><th>合計</th><th>賭け</th></tr>`;
+  sorted.forEach((p,i)=>{h+=`<tr><td class="sr ${p.c}">${i+1}</td><td class="sn2 ${p.c}">${p.name}</td><td>${p.s.w}</td><td style="font-size:10px;color:var(--gold)">${p.s.b8>0?`${p.s.b8}校`:'-'}</td><td class="stot">${p.s.tot}</td><td class="${SKC[i]}" style="font-size:11px;font-weight:700">${SK[i]}</td></tr>`;});
   h+=`</table></div>`;
   PL.forEach(p=>{
     const pks=ppk(p.name);const s=sc[p.name];
     h+=`<div class="card ${p.bg} ${p.bc}" style="border:1px solid"><div class="ch ${p.c}">${p.name} — ${s.tot}pt（${s.w}勝）</div>`;
-    pks.forEach(([school,info])=>{const rd=RD[info.ri];const pts=spts(school);const w=wns(school);h+=`<div class="pi"><span class="rt rt${rd.id}">${rd.lb}</span><span>${school}</span><span style="color:var(--muted);font-size:10px;margin-left:4px">${w}勝</span><span class="pp-pts">${pts>0?pts+'pt':'-'}</span></div>`;});
+    pks.forEach(([school,info])=>{const rd=RD[info.ri];const pts=spts(school);const w=wns(school);const out=isOut(school);
+  if(out){
+    h+=`<div class="pi" style="color:#555"><span class="rt" style="background:#2a2a2a;color:#555">${rd.lb}</span><span style="margin-left:5px">${school}</span><span style="color:#444;font-size:10px;margin-left:4px">${w}勝</span><span class="pp-pts" style="color:#555">${pts>0?pts+'pt':'-'}</span></div>`;
+  } else {
+    h+=`<div class="pi"><span class="rt rt${rd.id}">${rd.lb}</span><span style="margin-left:5px">${school}</span><span style="color:var(--muted);font-size:10px;margin-left:4px">${w}勝</span><span class="pp-pts">${pts>0?pts+'pt':'-'}</span></div>`;
+  }
+});
     h+=`</div>`;
   });
   el.innerHTML=h;
