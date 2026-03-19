@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SENBATSU DRAFT 2026</title>
+<script type="module">
+// ========================================
+// 🔥 FIREBASE CONFIG — ここを書き換えてください
+// ========================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDh-2-vXUJMOrcwLAyG7Bz6PEUXa-VsPR4",
+  authDomain: "draft-app-e068a.firebaseapp.com",
+  databaseURL: "https://draft-app-e068a-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "draft-app-e068a",
+  storageBucket: "draft-app-e068a.firebasestorage.app",
+  messagingSenderId: "462652874872",
+  appId: "1:462652874872:web:23c95bf523d0791e788d8d",
+  measurementId: "G-GBMZ1M5LZT"
+};
+// ========================================
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+const DB_KEY = "senbatsu2026";
+
+// グローバルに公開（非モジュールスクリプトから呼べるように）
+window._fbSet = (data) => set(ref(db, DB_KEY), data);
+window._fbListen = (cb) => onValue(ref(db, DB_KEY), snap => cb(snap.val()));
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#141414;--s1:#1f1f1f;--s2:#2a2a2a;--s3:#333;--bdr:#333;--bdr2:#444;
+  --gold:#fff;--gold2:#e0e0e0;--gf:rgba(255,255,255,.06);
+  --txt:#fff;--muted:#a0a0a0;--mute2:#666;
+  --nf:#E50914;--nf2:#ff3a44;
+  --p1:#3ecf8e;--p2:#b06fe0;--p3:#4a90e2;--p4:#E50914;
+  --f1:rgba(62,207,142,.13);--f2:rgba(176,111,224,.13);--f3:rgba(74,144,226,.13);--f4:rgba(229,9,20,.13);
+  --grn:#22c55e;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--txt);font-family:'Noto Sans JP',sans-serif;display:flex;flex-direction:column}
+
+/* header */
+.hdr{background:#000;border-bottom:3px solid var(--nf);padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.hdr-t{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.15em;color:#fff;text-shadow:2px 2px 15px rgba(229,9,20,.5)}
+.hdr-s{font-size:9px;color:var(--muted);margin-top:2px;letter-spacing:.05em}
+.dot{width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:4px;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.sync-btn{background:none;border:1px solid var(--bdr2);border-radius:4px;padding:4px 10px;color:var(--muted);font-size:11px;cursor:pointer;font-family:inherit;transition:.12s}
+.sync-btn:hover{color:#fff;border-color:#fff}
+
+/* nav */
+.nav{background:#000;border-bottom:1px solid var(--bdr);display:flex;flex-shrink:0}
+.nb{flex:1;padding:11px 3px 9px;background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);font-size:9px;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;transition:.12s;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.nb .ni{font-size:15px}.nb.on{color:#fff;border-bottom-color:var(--nf)}
+.nb:hover{color:#fff}
+
+/* layout */
+.main{flex:1;overflow-y:auto}
+.pg{display:none;padding:14px;max-width:540px;margin:0 auto}
+.pg.on{display:block}
+
+/* cards */
+.card{background:var(--s1);border:1px solid var(--bdr);border-radius:8px;padding:14px;margin-bottom:11px;transition:box-shadow .2s}
+.ch{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.12em;color:#fff;margin-bottom:11px;display:flex;align-items:center;gap:8px;text-transform:uppercase}
+.ch::before{content:'';width:3px;height:16px;background:var(--nf);border-radius:2px;flex-shrink:0}
+.ch::after{content:'';flex:1;height:1px;background:var(--bdr)}
+
+/* hero */
+.hero{background:linear-gradient(135deg,#1a1a1a,#222);border:1px solid var(--bdr2);border-top:3px solid var(--nf);border-radius:8px;padding:20px 16px;margin-bottom:13px;text-align:center}
+.hr{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.12em;color:#fff;line-height:1}
+.hd{font-size:12px;color:var(--muted);margin-top:5px}
+.hw{font-size:18px;font-weight:900;margin-top:8px;color:#fff}
+.hn{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* player colours */
+.c1{color:var(--p1)}.c2{color:var(--p2)}.c3{color:var(--p3)}.c4{color:var(--p4)}
+.bg1{background:var(--f1)}.bg2{background:var(--f2)}.bg3{background:var(--f3)}.bg4{background:var(--f4)}
+.bcrd1{border-color:rgba(62,207,142,.35)!important}.bcrd2{border-color:rgba(176,111,224,.35)!important}
+.bcrd3{border-color:rgba(74,144,226,.35)!important}.bcrd4{border-color:rgba(229,9,20,.35)!important}
+
+/* ---- S ROUND: PLAYER SELECT ---- */
+.pl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.pl-btn{padding:18px 10px;border-radius:8px;border:2px solid var(--bdr2);background:var(--s2);cursor:pointer;font-family:inherit;font-size:16px;font-weight:700;transition:.13s;text-align:center;color:#fff}
+.pl-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.5);border-color:#555}
+.pl-btn:disabled{opacity:.45;cursor:default}
+.pl-btn-sub{font-size:10px;font-weight:400;margin-top:4px;opacity:.7}
+
+/* S ROUND: STATUS GRID */
+.ss-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.ss-card{border-radius:8px;padding:11px 12px;border:2px solid var(--bdr);text-align:center}
+.ss-card.done{border-color:rgba(62,207,142,.5);background:rgba(62,207,142,.07)}
+.ss-card.waiting{border-color:var(--bdr);background:var(--s2)}
+.ss-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.ss-badge{font-size:12px}
+
+/* S ROUND: REVEAL GRID */
+.rv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.rv-card{border-radius:8px;padding:13px;border:2px solid var(--bdr);background:var(--s2);text-align:center;position:relative}
+.rv-card.conflict{border-color:rgba(229,9,20,.7);background:rgba(229,9,20,.07);animation:cpulse 2s ease-in-out infinite}
+.rv-card.ok{border-color:rgba(62,207,142,.5);background:rgba(62,207,142,.06)}
+@keyframes cpulse{0%,100%{opacity:1}50%{opacity:.8}}
+.rv-player{font-size:11px;font-weight:700;margin-bottom:6px}
+.rv-school{font-size:15px;font-weight:900;line-height:1.2}
+.rv-r1{font-size:10px;color:var(--muted);margin-top:4px}
+.rv-tag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:3px;margin-top:5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.tag-ok{background:rgba(62,207,142,.2);color:#6ee7b7}
+.tag-ng{background:rgba(229,9,20,.2);color:#fca5a5}
+
+/* conflict group */
+.cfl-box{background:rgba(229,9,20,.07);border:1px solid rgba(229,9,20,.3);border-radius:8px;padding:13px;margin-bottom:10px}
+.cfl-title{font-size:12px;color:#fca5a5;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em}
+.cfl-players{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.cfl-p{padding:7px 14px;border-radius:6px;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.15)}
+
+/* school grid */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sb{background:var(--s2);border:1px solid var(--bdr);border-radius:7px;padding:9px 10px;cursor:pointer;text-align:left;transition:.13s;width:100%}
+.sb:hover:not(:disabled){border-color:#fff;background:var(--gf);transform:translateY(-1px)}
+.sb:disabled{opacity:.4;cursor:not-allowed}
+.sb.tk1{background:var(--f1);border-color:rgba(62,207,142,.4)}
+.sb.tk2{background:var(--f2);border-color:rgba(176,111,224,.4)}
+.sb.tk3{background:var(--f3);border-color:rgba(74,144,226,.4)}
+.sb.tk4{background:var(--f4);border-color:rgba(229,9,20,.4)}
+.sn{font-size:13px;font-weight:700;color:#fff}
+.ss2{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
+.bl{font-size:9px;padding:1px 5px;border-radius:3px;display:inline-block;font-weight:700}
+.blA{background:rgba(168,85,247,.2);color:#c084fc}.blB{background:rgba(59,130,246,.2);color:#93c5fd}
+.blC{background:rgba(16,185,129,.2);color:#6ee7b7}.blD{background:rgba(249,115,22,.2);color:#fdba74}
+
+/* picks */
+.pw{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.pc{background:var(--s2);border:1px solid var(--bdr);border-radius:8px;padding:11px}
+.pp{font-size:13px;font-weight:900;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;text-transform:uppercase;letter-spacing:.05em}
+.pcnt{font-size:10px;color:var(--muted);font-weight:400;text-transform:none}
+.pi{display:flex;align-items:center;gap:5px;padding:4px 0;border-bottom:1px solid var(--bdr);font-size:11px}
+.pi:last-child{border:none}
+.rt{font-size:9px;padding:2px 5px;border-radius:3px;font-weight:700;flex-shrink:0}
+.rtS{background:#E50914;color:#fff}.rtA{background:#1e3a5f;color:#7dd3fc}.rtB{background:#064e3b;color:#6ee7b7}
+.rtC{background:#451a03;color:#fcd34d}.rtD{background:#4c0519;color:#fda4af}.rtE{background:#333;color:#a8a29e}
+.rtF{background:#0c4a6e;color:#bae6fd}.rtG{background:#2e1065;color:#d8b4fe}
+.pp-pts{margin-left:auto;font-weight:700;color:#fff;font-size:11px}
+
+/* results */
+.mr{display:flex;align-items:center;gap:5px;padding:7px 0;border-bottom:1px solid var(--bdr)}
+.mr:last-child{border:none}
+.mt{flex:1;text-align:center;font-size:12px;font-weight:500;min-width:0;line-height:1.4}
+.mv{color:var(--mute2);font-size:10px;flex-shrink:0}
+.mw{padding:5px 7px;border-radius:4px;border:1px solid var(--bdr2);background:var(--s2);color:var(--muted);font-size:10px;cursor:pointer;font-family:inherit;transition:.12s;white-space:nowrap}
+.mw.on{background:var(--nf);color:#fff;border-color:var(--nf);font-weight:700}
+.mpend{font-size:11px;color:var(--mute2);text-align:center;padding:7px 0}
+
+/* score */
+.stbl{width:100%;border-collapse:collapse}
+.stbl th{padding:7px 5px;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.08em;border-bottom:1px solid var(--bdr);text-align:center;text-transform:uppercase}
+.stbl td{padding:9px 5px;border-bottom:1px solid var(--bdr);text-align:center;font-size:12px}
+.sr{font-family:'Bebas Neue',sans-serif;font-size:21px}
+.sn2{text-align:left!important;font-weight:700;font-size:13px}
+.stot{font-family:'Bebas Neue',sans-serif;font-size:21px;color:#fff}
+
+/* buttons */
+.btn{padding:11px 16px;border-radius:6px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.05em;transition:.12s;text-transform:uppercase}
+.btn-g{background:var(--nf);color:#fff}.btn-g:hover{background:var(--nf2)}.btn-g:disabled{opacity:.4;cursor:not-allowed}
+.btn-o{background:var(--s2);color:#fff;border:1px solid var(--bdr2)}.btn-o:hover{border-color:#fff}
+.btn-r{background:#3a0000;color:#fca5a5;border:1px solid rgba(229,9,20,.4)}
+.btn-big{padding:15px;font-size:15px;border-radius:8px}
+.bblock{width:100%;margin-top:8px}
+.sl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--bdr)}
+.alrt{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:10px 13px;font-size:12px;line-height:1.7;margin-bottom:10px}
+.alrt-g{background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.3)}
+.alrt-r{background:rgba(229,9,20,.07);border-color:rgba(229,9,20,.3)}
+.empty{text-align:center;padding:20px;color:var(--muted);font-size:12px}
+.wtag{font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(229,9,20,.2);color:#ff8080;margin-left:3px}
+.sk0{color:#22c55e}.sk2{color:var(--p2)}.sk3{color:var(--p4)}.sk4{color:#ef4444}
+.dsel{width:100%;background:var(--s3);color:#fff;border:1px solid var(--bdr2);border-radius:6px;padding:9px 10px;font-size:13px;font-family:inherit;cursor:pointer}
+.dsel:focus{outline:none;border-color:#fff}
+
+/* ---- AUTO FETCH ---- */
+.fetch-bar{background:var(--s2);border:1px solid var(--bdr2);border-radius:8px;padding:12px 14px;margin-bottom:12px}
+.fetch-top{display:flex;align-items:center;gap:10px}
+.fetch-info{flex:1}
+.fetch-title{font-size:12px;font-weight:700;color:#fff;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+.fetch-status{font-size:11px;color:var(--muted);line-height:1.5}
+.fetch-status.ok{color:#6ee7b7}.fetch-status.err{color:#fca5a5}.fetch-status.loading{color:var(--nf);animation:blink 1s infinite}
+.fetch-btn{padding:9px 14px;border-radius:6px;border:1px solid var(--bdr2);background:var(--s3);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;transition:.12s;text-transform:uppercase;letter-spacing:.05em}
+.fetch-btn:hover:not(:disabled){border-color:#fff;color:#fff}
+.fetch-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---- AMIDA MODAL ---- */
+#amida-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:500;align-items:center;justify-content:center;padding:16px}
+#amida-overlay.show{display:flex}
+.amida-box{background:var(--s1);border:2px solid var(--nf);border-radius:12px;padding:26px 20px;max-width:340px;width:100%;text-align:center}
+.amida-ttl{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.15em;color:#fff;margin-bottom:4px}
+.amida-school{font-size:16px;font-weight:900;color:#fff;margin-bottom:18px}
+.amida-cards{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.amida-card{width:72px;height:72px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;border:2px solid rgba(255,255,255,.15);transition:all .2s}
+.amida-card.spin{animation:spin .12s ease-in-out infinite alternate}
+.amida-card.win{transform:scale(1.25)!important;border-color:var(--nf)!important;box-shadow:0 0 28px rgba(229,9,20,.7);animation:none}
+.amida-card.lose{transform:scale(.85)!important;opacity:.3;animation:none}
+@keyframes spin{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.08) rotate(3deg)}}
+.amida-result{font-size:18px;font-weight:900;margin:4px 0 16px;min-height:28px;color:#fff}
+.amida-note{font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div style="display:flex;flex-direction:column;gap:2px">
+    <div class="hdr-t">SENBATSU DRAFT <span style="color:var(--nf)">2026</span></div>
+    <div class="hdr-s"><span class="dot"></span>98th KOSHIEN SELECTION &nbsp;·&nbsp; 4-PLAYER LIVE DRAFT</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;background:rgba(229,9,20,.15);border:1px solid rgba(229,9,20,.4);border-radius:4px;padding:4px 10px">
+    <span class="dot" style="background:var(--nf)"></span>
+    <span style="font-size:10px;font-weight:700;color:var(--nf);letter-spacing:.1em">LIVE</span>
+  </div>
+</div>
+<div class="nav">
+  <button class="nb on" onclick="gp('draft',this)"><span class="ni">📋</span>ドラフト</button>
+  <button class="nb" onclick="gp('picks',this)"><span class="ni">🃏</span>指名</button>
+  <button class="nb" onclick="gp('results',this)"><span class="ni">⚾</span>結果</button>
+  <button class="nb" onclick="gp('score',this)"><span class="ni">🏆</span>順位</button>
+  <button class="nb" onclick="gp('rules',this)"><span class="ni">📋</span>ルール</button>
+  <button class="nb" onclick="gp('cfg',this)"><span class="ni">⚙️</span>設定</button>
+</div>
+<div class="main">
+  <div class="pg on" id="pg-draft"></div>
+  <div class="pg" id="pg-picks"></div>
+  <div class="pg" id="pg-results"></div>
+  <div class="pg" id="pg-score"></div>
+  <div class="pg" id="pg-rules"></div>
+  <div class="pg" id="pg-cfg"></div>
+</div>
+
+<!-- あみだくじ モーダル -->
+<div id="amida-overlay">
+  <div class="amida-box">
+    <div class="amida-ttl">🎲 あみだくじ</div>
+    <div class="amida-school" id="amida-school-name"></div>
+    <div class="amida-cards" id="amida-cards"></div>
+    <div class="amida-result" id="amida-result"></div>
+    <div class="amida-note" id="amida-note"></div>
+    <button class="btn btn-g bblock" id="amida-btn" onclick="startAmida()">くじを引く！</button>
+    <button class="btn btn-o bblock" id="amida-confirm" style="display:none" onclick="confirmAmida()">✅ この結果で確定</button>
+  </div>
+</div>
+
+<script>
+// ==============================
+// CONSTANTS
+// ==============================
+const PL=[
+  {name:'太田',i:1,c:'c1',bg:'bg1',bc:'bcrd1',col:'#3ecf8e',w:1},
+  {name:'新井',i:2,c:'c2',bg:'bg2',bc:'bcrd2',col:'#b06fe0',w:2},
+  {name:'若林',i:3,c:'c3',bg:'bg3',bc:'bcrd3',col:'#4a90e2',w:3},
+  {name:'本川',i:4,c:'c4',bg:'bg4',bc:'bcrd4',col:'#E50914',w:4},
+];
+const WV_ODD=['太田','新井','若林','本川'];  // A,C,E,G巡
+const WV_EVN=['本川','若林','新井','太田'];  // B,D,F巡
+function getWV(ri){
+  // ri=1:A, ri=2:B, ri=3:C, ...
+  return (ri%2===1)?WV_ODD:WV_EVN;
+}
+const RD=[
+  {id:'S',lb:'S巡',rk:1},{id:'A',lb:'A巡',rk:2},{id:'B',lb:'B巡',rk:3},
+  {id:'C',lb:'C巡',rk:4},{id:'D',lb:'D巡',rk:5},{id:'E',lb:'E巡',rk:6},
+  {id:'F',lb:'F巡',rk:7},{id:'G',lb:'G巡',rk:8},
+];
+const SC=[
+  {n:'帝京',p:'東京',bl:'A',r1:'沖縄尚学',sr:10},{n:'沖縄尚学',p:'沖縄',bl:'A',r1:'帝京',sr:6},
+  {n:'阿南光',p:'徳島',bl:'A',r1:'中京大中京',sr:24},{n:'中京大中京',p:'愛知',bl:'A',r1:'阿南光',sr:12},
+  {n:'八戸学院光星',p:'青森',bl:'A',r1:'崇徳',sr:14},{n:'崇徳',p:'広島',bl:'A',r1:'八戸学院光星',sr:9},
+  {n:'滋賀学園',p:'滋賀',bl:'A',r1:'長崎西',sr:16},{n:'長崎西',p:'長崎',bl:'A',r1:'滋賀学園',sr:31},
+  {n:'横浜',p:'神奈川',bl:'B',r1:'神村学園',sr:2},{n:'神村学園',p:'鹿児島',bl:'B',r1:'横浜',sr:29},
+  {n:'花巻東',p:'岩手',bl:'B',r1:'智弁学園',sr:7},{n:'智弁学園',p:'奈良',bl:'B',r1:'花巻東',sr:11},
+  {n:'東洋大姫路',p:'兵庫',bl:'B',r1:'花咲徳栄',sr:15},{n:'花咲徳栄',p:'埼玉',bl:'B',r1:'東洋大姫路',sr:13},
+  {n:'高知農',p:'高知',bl:'B',r1:'日本文理',sr:32},{n:'日本文理',p:'新潟',bl:'B',r1:'高知農',sr:27},
+  {n:'北照',p:'北海道',bl:'C',r1:'専大松戸',sr:28},{n:'専大松戸',p:'千葉',bl:'C',r1:'北照',sr:18},
+  {n:'神戸国際大付',p:'兵庫',bl:'C',r1:'九州国際大付',sr:4},{n:'九州国際大付',p:'福岡',bl:'C',r1:'神戸国際大付',sr:1},
+  {n:'近江',p:'滋賀',bl:'C',r1:'大垣日大',sr:20},{n:'大垣日大',p:'岐阜',bl:'C',r1:'近江',sr:8},
+  {n:'山梨学院',p:'山梨',bl:'C',r1:'長崎日大',sr:5},{n:'長崎日大',p:'長崎',bl:'C',r1:'山梨学院',sr:30},
+  {n:'東北',p:'宮城',bl:'D',r1:'帝京長岡',sr:25},{n:'帝京長岡',p:'新潟',bl:'D',r1:'東北',sr:26},
+  {n:'高川学園',p:'山口',bl:'D',r1:'英明',sr:30},{n:'英明',p:'香川',bl:'D',r1:'高川学園',sr:23},
+  {n:'三重',p:'三重',bl:'D',r1:'佐野日大',sr:19},{n:'佐野日大',p:'栃木',bl:'D',r1:'三重',sr:21},
+  {n:'熊本工',p:'熊本',bl:'D',r1:'大阪桐蔭',sr:22},{n:'大阪桐蔭',p:'大阪',bl:'D',r1:'熊本工',sr:3},
+];
+const R1P=[
+  ['帝京','沖縄尚学'],['阿南光','中京大中京'],['八戸学院光星','崇徳'],['滋賀学園','長崎西'],
+  ['横浜','神村学園'],['花巻東','智弁学園'],['東洋大姫路','花咲徳栄'],['高知農','日本文理'],
+  ['北照','専大松戸'],['神戸国際大付','九州国際大付'],['近江','大垣日大'],['山梨学院','長崎日大'],
+  ['東北','帝京長岡'],['高川学園','英明'],['三重','佐野日大'],['熊本工','大阪桐蔭'],
+];
+
+// ==============================
+// STATE
+// ==============================
+// ST.sd  = {playerName: schoolName}  ← S巡宣言（開票まで非表示）
+// ST.ss  = {playerName: true}        ← 提出済みフラグ（学校名は非表示）
+// ST.so  = bool                      ← 開票済み
+// ST.snr = [playerName, ...]         ← 再指名待ちキュー
+// ST.pk  = {school: {pl,ri}}         ← 確定指名
+// ST.rs  = {matchId: winnerName}     ← 試合結果
+let ST={ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{}};
+const KEY='sb2026v5';
+
+// ローカル変数（共有しない）
+let localPlayer=null; // このデバイスで操作中のプレイヤー
+let amidaContext=null; // {school, players, winner}
+
+// ==============================
+// STORAGE — Firebase Realtime Database
+// ==============================
+const EMPTY_ST=()=>({ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{},amidaResults:{},fetchLocked:false});
+
+async function sv(){
+  try{ await window._fbSet(ST); }catch(e){ console.error('Firebase write error',e); }
+}
+async function ld(){
+  // 初回ロードはリスナー側で処理するため sv/ld パターンは書き込みのみ使用
+}
+function mergeData(d){
+  ST = {...EMPTY_ST(), ...(d||{})};
+}
+
+// ==============================
+// HELPERS
+// ==============================
+const plr=n=>PL.find(p=>p.name===n);
+const rem=()=>SC.filter(s=>!ST.pk[s.n]);
+const ppk=n=>Object.entries(ST.pk).filter(([,v])=>v.pl===n).sort((a,b)=>a[1].ri-b[1].ri);
+const done=()=>ST.ri>=RD.length;
+const cr=()=>RD[ST.ri];
+const cw=()=>getWV(ST.ri)[ST.wi];
+function pki(nm){const p=ST.pk[nm];if(!p)return null;return{...p,pl:plr(p.pl),rd:RD[p.ri]};}
+function wns(s){return Object.values(ST.rs).filter(w=>w===s).length;}
+function loser(mid,w){
+  if(mid.startsWith('r1_')){const i=+mid.split('_')[1];return R1P[i].find(s=>s!==w)||null;}
+  if(mid.startsWith('r2_')){const i=+mid.split('_')[1];const a=ST.rs[`r1_${i*2}`],b=ST.rs[`r1_${i*2+1}`];return a&&b?(a===w?b:a):null;}
+  if(mid.startsWith('qf_')){const i=+mid.split('_')[1];const a=ST.rs[`r2_${i*2}`],b=ST.rs[`r2_${i*2+1}`];return a&&b?(a===w?b:a):null;}
+  if(mid.startsWith('sf_')){const i=+mid.split('_')[1];const a=ST.rs[`qf_${i*2}`],b=ST.rs[`qf_${i*2+1}`];return a&&b?(a===w?b:a):null;}
+  if(mid==='final'){const a=ST.rs.sf_0,b=ST.rs.sf_1;return a&&b?(a===w?b:a):null;}
+  return null;
+}
+function spts(s){
+  const pk=ST.pk[s];if(!pk)return 0;
+  const wr=pk.ri+1;let pts=0;
+  Object.entries(ST.rs).forEach(([mid,w])=>{
+    if(w!==s)return;let p=30;
+    const ls=loser(mid,w);if(ls&&ST.pk[ls]){const lr=ST.pk[ls].ri+1;if(wr>lr)p+=(wr-lr)*10;}
+    if(mid==='final')p+=70;pts+=p;
+  });
+  if(ST.rs.final){const fl=loser('final',ST.rs.final);if(fl===s)pts+=30;}
+  return pts;
+}
+function allScores(){
+  const sc={};PL.forEach(p=>{sc[p.name]={tot:0,w:0,b8:0};});
+  Object.entries(ST.rs).forEach(([mid,w])=>{
+    const pk=ST.pk[w];if(!pk)return;
+    const wr=pk.ri+1;let p=30;
+    const ls=loser(mid,w);if(ls&&ST.pk[ls]){const lr=ST.pk[ls].ri+1;if(wr>lr)p+=(wr-lr)*10;}
+    if(mid==='final')p+=70;sc[pk.pl].tot+=p;sc[pk.pl].w+=1;
+  });
+  if(ST.rs.final){const fl=loser('final',ST.rs.final);if(fl&&ST.pk[fl])sc[ST.pk[fl].pl].tot+=30;}
+  const b8={};PL.forEach(p=>b8[p.name]=0);
+  for(let i=0;i<8;i++){const w=ST.rs[`r2_${i}`];if(w&&ST.pk[w])b8[ST.pk[w].pl]++;}
+  const mx=Math.max(...Object.values(b8),0);
+  if(mx>0){const tops=PL.filter(p=>b8[p.name]===mx);const bon=tops.length===1?50:tops.length===2?30:20;tops.forEach(p=>{sc[p.name].tot+=bon;sc[p.name].b8=b8[p.name];});}
+  return sc;
+}
+
+// ==============================
+// 未解決競合を計算
+// ==============================
+function getPendingConflicts(){
+  // sd のうち複数人が同じ学校を選んでいて、まだ pk に入っていないもの
+  const grp={};
+  Object.entries(ST.sd).forEach(([pl,s])=>{
+    if(ST.pk[s]) return; // すでに確定済み
+    if(!grp[s])grp[s]=[];
+    grp[s].push(pl);
+  });
+  return Object.entries(grp).filter(([,ps])=>ps.length>1).map(([s,ps])=>({school:s,players:ps}));
+}
+
+// ==============================
+// RENDER: DRAFT
+// ==============================
+function rDraft(){
+  const el=document.getElementById('pg-draft');
+  if(done()){
+    el.innerHTML=`<div class="hero"><div class="hr">ドラフト完了！</div><div class="hd">全32校の指名が完了しました</div></div><div class="alrt alrt-g" style="text-align:center">「結果」タブで試合結果を入力してください<br><button class="btn btn-g" style="margin-top:9px" onclick="gp('results',document.querySelectorAll('.nb')[2])">⚾ 結果入力へ →</button></div>`;
+    return;
+  }
+  if(ST.ri!==0){el.innerHTML=rWaiver();return;}
+  // S巡フロー
+  if(ST.so){
+    const pending=getPendingConflicts();
+    if(pending.length>0){el.innerHTML=rSReveal();return;}   // 未解決競合あり→開票画面
+    if(ST.snr.length>0){                                    // 全競合解決済み→再指名フェーズ
+      if(ST.snro){
+        const rPending=getRepickConflicts();
+        if(rPending.length>0){el.innerHTML=rSRepickReveal();return;} // 再指名も競合
+        if(anyRepickPending()){el.innerHTML=rSRepickReveal();return;} // 確定待ち
+        el.innerHTML=rSRepickReveal();return;
+      }
+      el.innerHTML=rSRepickSelect();return;
+    }
+    el.innerHTML=rSReveal();return;                         // 全員確定→A巡ボタン
+  }
+  el.innerHTML=rSSelect();
+}
+
+// ------ S巡①: 個人選択画面 ------
+function rSSelect(){
+  const allSub=PL.every(p=>ST.ss[p.name]);
+  
+  // まだ自分を選んでいない
+  if(!localPlayer){
+    return `<div class="hero">
+      <div class="hr">S巡 — 一斉指名</div>
+      <div class="hd">あなたは誰ですか？</div>
+      <div class="hn">自分の名前を選んで学校を指名してください</div>
+    </div>
+    <div class="pl-grid">
+      ${PL.map(p=>{
+        const sub=ST.ss[p.name];
+        return `<button class="pl-btn" style="color:${p.col};border-color:${p.col}44" onclick="setLocalPlayer('${p.name}')" ${sub?'disabled':''}>
+          ${p.name}
+          <div class="pl-btn-sub">${sub?'✅ 選択済み（待機中）':'▶ 選択する'}</div>
+        </button>`;
+      }).join('')}
+    </div>
+    ${ssStatusHtml()}
+    ${allSub?`<button class="btn btn-g bblock btn-big" onclick="openS()">🎯 全員が選択完了！開票する</button>`:''}`;
+  }
+
+  const me=plr(localPlayer);
+  // 自分がすでに提出済み
+  if(ST.ss[localPlayer]){
+    const submitted=PL.filter(p=>ST.ss[p.name]).length;
+    return `<div class="hero">
+      <div class="hr" style="font-size:24px">✅ 選択完了！</div>
+      <div class="hw"><span class="${me.c}">${localPlayer}</span>さんの選択は送信済み</div>
+      <div class="hn">他のメンバーが選択するまでお待ちください</div>
+    </div>
+    ${allSub?
+      `<button class="btn btn-g bblock btn-big" onclick="openS()">🎯 全員完了！開票する →</button>`:
+      `<div class="alrt" style="text-align:center">⏳ ${submitted}/4 人が選択完了 — あと ${4-submitted} 人</div>`
+    }
+    ${ssStatusHtml()}
+    <button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">← 戻る（別の人が操作）</button>`;
+  }
+
+  // 自分の選択画面
+  return `<div class="hero">
+    <div class="hr">S巡</div>
+    <div class="hw"><span class="${me.c}">${localPlayer}</span>さんの指名</div>
+    <div class="hn">🔒 あなたの選択は他の人には見えません</div>
+  </div>
+  <div style="background:var(--s2);border:1px solid var(--bdr2);border-radius:12px;padding:14px;margin-bottom:12px">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;letter-spacing:.05em">指名したい学校を選択</div>
+    <select id="s-school-sel" class="dsel">
+      <option value="">-- 学校を選択してください --</option>
+      ${SC.map(s=>`<option value="${s.n}">${s.n}（${s.bl}ブロック | 初戦：${s.r1}）</option>`).join('')}
+    </select>
+  </div>
+  <button class="btn btn-g bblock btn-big" onclick="submitS()">🔒 決定（非公開で送信）</button>
+  <div class="sl" style="margin-top:14px">全員の選択状況</div>
+  ${ssStatusHtml()}
+  <button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">← 戻る（別の人が操作）</button>`;
+}
+
+function ssStatusHtml(){
+  return `<div class="ss-grid">
+    ${PL.map(p=>{
+      const sub=ST.ss[p.name];
+      return `<div class="ss-card ${sub?'done':'waiting'}">
+        <div class="ss-name ${p.c}">${p.name}</div>
+        <div class="ss-badge">${sub?'✅ 選択済み':'⏳ 未選択'}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+// ------ S巡②: 開票・競合処理 ------
+function rSReveal(){
+  // 競合グループを計算（未解決のみ）
+  const pending=getPendingConflicts();
+
+  // 競合なし・全員確定 → A巡へ
+  const allConfirmed=PL.every(p=>{
+    const s=ST.sd[p.name];
+    return s && ST.pk[s]?.pl === p.name;
+  });
+
+  let h=`<div class="hero">
+    <div class="hr">S巡 — 開票結果</div>
+    <div class="hd">${pending.length>0?`⚠️ 競合あり（あみだくじで解決）`:`✅ 全員の指名が確定しました`}</div>
+  </div>`;
+
+  // 4人の選択を表示
+  h+=`<div class="rv-grid">`;
+  PL.forEach(p=>{
+    const s=ST.sd[p.name]||'？';
+    const sc=SC.find(x=>x.n===s);
+    const isConflict=pending.some(c=>c.players.includes(p.name));
+    const isOk=ST.pk[s]?.pl===p.name;
+    h+=`<div class="rv-card ${isConflict?'conflict':isOk?'ok':''}">
+      <div class="rv-player ${p.c}">${p.name}</div>
+      <div class="rv-school">${s}</div>
+      ${sc?`<div class="rv-r1">初戦：${sc.r1}</div>`:''}
+      <div>${isOk?'<span class="rv-tag tag-ok">✅ 確定</span>':isConflict?'<span class="rv-tag tag-ng">⚠️ 競合</span>':'<span class="rv-tag" style="background:var(--s3);color:var(--muted)">待機中</span>'}</div>
+    </div>`;
+  });
+  h+=`</div>`;
+
+  // 競合グループとあみだくじボタン
+  if(pending.length>0){
+    h+=`<div class="sl">あみだくじで解決</div>`;
+    conflictList=pending;
+    pending.forEach((c,idx)=>{
+      h+=`<div class="cfl-box">
+        <div class="cfl-title">🎲 「${c.school}」が競合（${c.players.length}人）</div>
+        <div class="cfl-players">
+          ${c.players.map(name=>{const p=plr(name);return`<span class="cfl-p" style="color:${p.col};border-color:${p.col}44;background:${p.col}15">${name}</span>`;}).join('')}
+        </div>
+        <button class="btn btn-g bblock" onclick="showAmidaByIdx(${idx})">🎲 あみだくじを引く</button>
+      </div>`;
+    });
+  } else if(allConfirmed){
+    h+=`<div class="alrt alrt-g" style="text-align:center;margin-top:8px">全員の指名が確定しました！<br><button class="btn btn-g" style="margin-top:8px" onclick="finishS()">A巡へ進む →</button></div>`;
+  } else if(ST.snr.length>0){
+    // 再指名待ちの人がいる → 再指名フェーズへ誘導
+    h+=`<div class="alrt" style="text-align:center;margin-top:8px">
+      ⚠️ 外れた <strong>${ST.snr.join('・')}さん</strong> は再指名してください
+      <br><button class="btn btn-g" style="margin-top:8px" onclick="goRepick()">🔄 再指名へ進む →</button>
+    </div>`;
+  } else {
+    // 全員確定（保険）
+    h+=`<button class="btn btn-g bblock" onclick="finishS()">A巡へ進む →</button>`;
+  }
+
+  // 確定済みのものを表示
+  const confirmed=Object.entries(ST.pk).filter(([,v])=>v.ri===0);
+  if(confirmed.length>0){
+    h+=`<div class="sl" style="margin-top:14px">確定済み (${confirmed.length}/4)</div>`;
+    confirmed.forEach(([s,v])=>{
+      const p=plr(v.pl);
+      h+=`<div class="mr"><span class="${p.c}" style="font-weight:700;font-size:12px;width:40px;flex-shrink:0">${v.pl}</span><strong style="font-size:13px">${s}</strong></div>`;
+    });
+  }
+
+  return h;
+}
+
+// ------ S巡③: 再指名 — 非公開一斉選択 ------
+function getRepickConflicts(){
+  const already=new Set(Object.keys(ST.pk));
+  const grp={};
+  Object.entries(ST.snrd).forEach(([pl,s])=>{
+    if(already.has(s))return;
+    if(!grp[s])grp[s]=[];
+    grp[s].push(pl);
+  });
+  return Object.entries(grp).filter(([,ps])=>ps.length>1).map(([s,ps])=>({school:s,players:ps}));
+}
+function anyRepickPending(){
+  return ST.snr.some(n=>!ST.pk[ST.snrd[n]]);
+}
+function ssRepickStatusHtml(){
+  let h='<div class="ss-grid">';
+  ST.snr.forEach(name=>{
+    const p=plr(name);const sub=ST.snrs[name];
+    h+=`<div class="ss-card ${sub?'done':'waiting'}">
+      <div class="ss-name ${p.c}">${name}</div>
+      <div class="ss-badge">${sub?'✅ 選択済み':'⏳ 未選択'}</div>
+    </div>`;
+  });
+  h+='</div>';
+  return h;
+}
+
+// 再指名①: 各自の非公開選択画面
+function rSRepickSelect(){
+  const allSub=ST.snr.every(n=>ST.snrs[n]);
+  const already=new Set(Object.keys(ST.pk));
+  const avail=SC.filter(s=>!already.has(s.n));
+
+  // 誰が操作するか選ぶ
+  if(!localPlayer||!ST.snr.includes(localPlayer)){
+    let h=`<div class="hero">
+      <div class="hr">S巡 — 再指名</div>
+      <div class="hd">あみだくじで外れた方は再指名してください</div>
+      <div class="hn">🔒 各自が非公開で選択 → 一斉開票</div>
+    </div><div class="pl-grid">`;
+    ST.snr.forEach(name=>{
+      const p=plr(name);const sub=ST.snrs[name];
+      h+=`<button class="pl-btn" style="color:${p.col};border-color:${p.col}44" onclick="setLocalPlayer('${name}')" ${sub?'disabled':''}>
+        ${name}<div class="pl-btn-sub">${sub?'✅ 選択済み':'▶ 再指名する'}</div>
+      </button>`;
+    });
+    h+=`</div>${ssRepickStatusHtml()}`;
+    if(allSub) h+=`<button class="btn btn-g bblock btn-big" onclick="openRepick()">🎯 開票する</button>`;
+    return h;
+  }
+
+  const me=plr(localPlayer);
+  if(ST.snrs[localPlayer]){
+    const done2=ST.snr.filter(n=>ST.snrs[n]).length;
+    let h=`<div class="hero">
+      <div class="hr" style="font-size:24px">✅ 選択完了！</div>
+      <div class="hw"><span class="${me.c}">${localPlayer}</span>さんの選択は送信済み</div>
+      <div class="hn">他の方の選択をお待ちください</div>
+    </div>`;
+    if(allSub) h+=`<button class="btn btn-g bblock btn-big" onclick="openRepick()">🎯 全員完了！開票する →</button>`;
+    else h+=`<div class="alrt" style="text-align:center">⏳ ${done2}/${ST.snr.length} 人が選択完了</div>`;
+    h+=ssRepickStatusHtml();
+    h+=`<button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">← 戻る（別の人が操作）</button>`;
+    return h;
+  }
+
+  // 自分の選択画面
+  let h=`<div class="hero">
+    <div class="hr">S巡 — 再指名</div>
+    <div class="hw"><span class="${me.c}">${localPlayer}</span>さんの再指名</div>
+    <div class="hn">🔒 あなたの選択は他の人には見えません</div>
+  </div>
+  <div style="background:var(--s2);border:1px solid var(--bdr2);border-radius:12px;padding:14px;margin-bottom:12px">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700">指名したい学校を選択（残り${avail.length}校）</div>
+    <select id="rp-school-sel" class="dsel">
+      <option value="">-- 学校を選択してください --</option>`;
+  avail.forEach(s=>{h+=`<option value="${s.n}">${s.n}（${s.bl}ブロック | 初戦：${s.r1}）</option>`;});
+  h+=`</select></div>
+  <button class="btn btn-g bblock btn-big" onclick="submitRepick()">🔒 決定（非公開で送信）</button>`;
+  h+=`<div class="sl" style="margin-top:14px">再指名対象者の状況</div>`;
+  h+=ssRepickStatusHtml();
+  h+=`<button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">← 戻る</button>`;
+  return h;
+}
+
+// 再指名②: 開票・競合処理
+function rSRepickReveal(){
+  const already=new Set(Object.keys(ST.pk));
+  const rPending=getRepickConflicts();
+  const allConfirmed=ST.snr.every(n=>{
+    const s=ST.snrd[n];return s&&ST.pk[s]?.pl===n;
+  });
+
+  let h=`<div class="hero">
+    <div class="hr">再指名 — 開票</div>
+    <div class="hd">${rPending.length>0?'⚠️ 競合あり — あみだくじで解決':'✅ 再指名が確定しました'}</div>
+  </div><div class="rv-grid">`;
+  ST.snr.forEach(name=>{
+    const s=ST.snrd[name]||'？';
+    const sc2=SC.find(x=>x.n===s);
+    const isConflict=rPending.some(c=>c.players.includes(name));
+    const isOk=ST.pk[s]?.pl===name;
+    const p=plr(name);
+    h+=`<div class="rv-card ${isConflict?'conflict':isOk?'ok':''}">
+      <div class="rv-player ${p.c}">${name}</div>
+      <div class="rv-school">${s}</div>
+      ${sc2?`<div class="rv-r1">初戦：${sc2.r1}</div>`:''}
+      <div>${isOk?'<span class="rv-tag tag-ok">✅ 確定</span>':isConflict?'<span class="rv-tag tag-ng">⚠️ 競合</span>':'<span class="rv-tag" style="background:var(--s3);color:var(--muted)">待機中</span>'}</div>
+    </div>`;
+  });
+  h+=`</div>`;
+
+  if(rPending.length>0){
+    conflictList=rPending;
+    h+=`<div class="sl">あみだくじで解決</div>`;
+    rPending.forEach((c,idx)=>{
+      h+=`<div class="cfl-box">
+        <div class="cfl-title">🎲 「${c.school}」が競合（${c.players.length}人）</div>
+        <div class="cfl-players">`;
+      c.players.forEach(n=>{const p=plr(n);h+=`<span class="cfl-p" style="color:${p.col};border-color:${p.col}44;background:${p.col}15">${n}</span>`;});
+      h+=`</div><button class="btn btn-g bblock" onclick="showAmidaByIdx(${idx})">🎲 あみだくじを引く</button></div>`;
+    });
+  } else if(allConfirmed){
+    h+=`<div class="alrt alrt-g" style="text-align:center;margin-top:8px">全員の再指名が確定！<br><button class="btn btn-g" style="margin-top:8px" onclick="finishS()">A巡へ進む →</button></div>`;
+  } else {
+    h+=`<button class="btn btn-g bblock" onclick="finishS()">A巡へ進む →</button>`;
+  }
+  return h;
+}
+
+// ------ ウェーバー巡 ------
+function rWaiver(){
+  if(ST.wi>=getWV(ST.ri).length)return`<div class="hero"><div class="hr">${cr().lb} — 完了</div></div><button class="btn btn-g bblock" onclick="advRnd()">次の巡へ →</button>`;
+  const rd=cr();const cp=cw();const cpd=plr(cp);const rm=rem();
+  let h=`<div class="hero"><div class="hr">${rd.lb}</div><div class="hd">${rd.id==='A'?'ウェーバー順（箱根成績下位から）':'ウェーバー順'}</div><div class="hw">現在: <span class="${cpd.c}">${cp}</span> さんの番</div><div class="hn">ウェーバー ${ST.wi+1}/4 — 残り ${rm.length} 校</div></div><div class="sl">指名する学校を選択</div><div class="sg">`;
+  const isMyTurn = localPlayer && localPlayer===cp;
+  if(!isMyTurn && !localPlayer){
+    h+=`<div class="alrt" style="margin-bottom:10px">あなたの名前を選択してください</div>`;
+    PL.forEach(p=>{h+=`<button class="btn btn-o bblock" style="margin-bottom:6px" onclick="localPlayer='${p.name}';rDraft()">${p.name}</button>`;});
+    h+=`</div>`;return h;
+  }
+  if(!isMyTurn){
+    h+=`<div class="alrt alrt-r">今は <strong>${cp}</strong> さんの番です。あなた（${localPlayer}）は待機中です。</div>`;
+    h+=`</div>`;return h;
+  }
+  rm.forEach(s=>{h+=`<button class="sb" onclick="doPick('${s.n}')"><div class="sn">${s.n}</div><div class="ss2"><span class="bl bl${s.bl}">${s.bl}</span> ${s.p}</div><div class="ss2" style="margin-top:2px">初戦：${s.r1}</div></button>`;});
+  h+=`</div>`;
+  h+=`<button class="btn btn-o bblock" style="margin-top:10px;font-size:12px" onclick="undoPick()">↩ 1人前に戻る</button>`;
+  const thisPks=Object.entries(ST.pk).filter(([,v])=>v.ri===ST.ri).sort((a,b)=>getWV(ST.ri).indexOf(a[1].pl)-getWV(ST.ri).indexOf(b[1].pl));
+  if(thisPks.length){h+=`<div class="sl" style="margin-top:14px">この巡の指名済み</div>`;thisPks.forEach(([s,info])=>{const p=plr(info.pl);h+=`<div class="mr"><span class="${p.c}" style="font-weight:700;font-size:12px">${info.pl}</span><span style="margin-left:8px;font-size:13px">${s}</span></div>`;});}
+  return h;
+}
+
+// ==============================
+// AMIDA KUJI
+// ==============================
+let amidaWinner=null;
+let conflictList=[];
+
+function showAmidaByIdx(idx){
+  const c=conflictList[idx];
+  if(!c)return;
+  showAmida(c.school,c.players);
+}
+
+function showAmida(school, players){
+  // 競合者のみに絞る
+  const conflictPlayers = players.filter(p => !ST.pk[school] || ST.pk[school].pl === p);
+  amidaContext={school, players:conflictPlayers};
+  amidaWinner=null;
+
+  // 既に結果がある場合は結果を表示
+  const existingWinner = ST.amidaResults && ST.amidaResults[school];
+
+  document.getElementById('amida-school-name').textContent=`「${school}」の指名権`;
+  document.getElementById('amida-note').textContent=`${conflictPlayers.join('・')} が競合しています`;
+
+  const cards=document.getElementById('amida-cards');
+  cards.innerHTML=conflictPlayers.map(name=>{
+    const p=plr(name);
+    return `<div class="amida-card" id="acard-${name}" style="background:${p.col}22;border-color:${p.col}55;color:${p.col}">${name}</div>`;
+  }).join('');
+
+  if(existingWinner){
+    amidaWinner=existingWinner;
+    document.getElementById('amida-result').textContent=`🎉 ${existingWinner} さんが当選！`;
+    document.getElementById('amida-btn').style.display='none';
+    document.getElementById('amida-confirm').style.display='block';
+    conflictPlayers.forEach(name=>{
+      const el=document.getElementById(`acard-${name}`);
+      if(el){el.classList.remove('spin');el.classList.add(name===existingWinner?'win':'lose');}
+    });
+  } else {
+    document.getElementById('amida-result').textContent='';
+    document.getElementById('amida-btn').style.display='block';
+    document.getElementById('amida-btn').textContent='くじを引く！';
+    document.getElementById('amida-btn').disabled=false;
+    document.getElementById('amida-confirm').style.display='none';
+  }
+
+  document.getElementById('amida-overlay').classList.add('show');
+}
+
+function startAmida(){
+  if(!amidaContext) return;
+  document.getElementById('amida-btn').disabled=true;
+
+  const {school, players}=amidaContext;
+  // アニメーション開始
+  players.forEach(name=>{
+    const el=document.getElementById(`acard-${name}`);
+    el.classList.add('spin');
+    el.classList.remove('win','lose');
+  });
+
+  // 2秒後に結果を表示
+  setTimeout(()=>{
+    // ランダムに勝者を決定
+    const winner=players[Math.floor(Math.random()*players.length)];
+    amidaWinner=winner;
+
+    players.forEach(name=>{
+      const el=document.getElementById(`acard-${name}`);
+      el.classList.remove('spin');
+      if(name===winner)el.classList.add('win');
+      else el.classList.add('lose');
+    });
+
+    document.getElementById('amida-result').textContent=`🎉 ${winner} さんが当選！`;
+    document.getElementById('amida-note').textContent=`${winner}さんが「${school}」の指名権を獲得しました`;
+    document.getElementById('amida-btn').style.display='none';
+    document.getElementById('amida-confirm').style.display='block';
+  }, 2000);
+}
+
+async function confirmAmida(){
+  if(!amidaContext||!amidaWinner) return;
+  const {school, players}=amidaContext;
+  const winner=amidaWinner;
+  const losers=players.filter(n=>n!==winner);
+
+  // あみだ結果をFirebaseに保存（全員統一）
+  if(!ST.amidaResults) ST.amidaResults={};
+  ST.amidaResults[school]=winner;
+
+  // 勝者の指名を確定
+  ST.pk[school]={pl:winner, ri:0};
+
+  // 再指名フェーズか初回S巡かを判定
+  const isRepickPhase = ST.snr.length>0 && players.some(n=>ST.snr.includes(n));
+
+  if(isRepickPhase){
+    // 再指名フェーズ: 敗者を再び再指名キューへ戻し、次ラウンドの選択をリセット
+    const newSnr=losers.filter(n=>ST.snr.includes(n));
+    // snrを敗者だけに絞って再選択させる
+    ST.snr=newSnr;
+    ST.snrd={};ST.snrs={};ST.snro=false;
+  } else {
+    // 初回S巡: 敗者を再指名キューに追加
+    losers.forEach(l=>{if(!ST.snr.includes(l))ST.snr.push(l);});
+  }
+
+  await sv();
+  document.getElementById('amida-overlay').classList.remove('show');
+  amidaContext=null;
+  amidaWinner=null;
+  rDraft();
+}
+
+// ==============================
+// RENDER: PICKS
+// ==============================
+function rPicks(){
+  const el=document.getElementById('pg-picks');
+  let h=`<div class="pw">`;
+  PL.forEach(p=>{
+    const pks=ppk(p.name);const tot=pks.reduce((s,[sc])=>s+spts(sc),0);
+    h+=`<div class="pc ${p.bg} ${p.bc}" style="border:1px solid"><div class="pp ${p.c}">${p.name}<span class="pcnt">${pks.length}/8校</span></div>`;
+    if(!pks.length)h+=`<div style="font-size:11px;color:var(--muted)">未指名</div>`;
+    else{pks.forEach(([s,info])=>{const rd=RD[info.ri];const pts=spts(s);const w=wns(s);h+=`<div class="pi"><span class="rt rt${rd.id}">${rd.lb}</span><span>${s}</span>${w>0?`<span class="pp-pts">${pts}pt</span>`:''}</div>`;});if(tot>0)h+=`<div style="text-align:right;font-size:11px;color:var(--gold);margin-top:5px;font-weight:700">計 ${tot}pt</div>`;}
+    h+=`</div>`;
+  });
+  h+=`</div>`;
+  const rm=rem();
+  if(rm.length){h+=`<div class="sl" style="margin-top:13px">未指名校 (${rm.length}校)</div><div class="sg">`;rm.forEach(s=>{h+=`<div class="sb" style="cursor:default;opacity:.5"><div class="sn">${s.n}</div><div class="ss2"><span class="bl bl${s.bl}">${s.bl}</span> ${s.p}</div></div>`;});h+=`</div>`;}
+  el.innerHTML=h;
+}
+
+// ==============================
+// RENDER: RESULTS
+// ==============================
+let lastFetchTime=null;
+let fetchLog='まだ取得していません';
+let fetchClass='';
+
+function rResults(){
+  const el=document.getElementById('pg-results');
+  let h=`<div class="fetch-bar">
+    <div class="fetch-top">
+      <div class="fetch-info">
+        <div class="fetch-title">🤖 試合結果 自動取得（毎日新聞）</div>
+        <div class="fetch-status ${fetchClass}" id="fs">${fetchLog}</div>
+      </div>
+      <button class="fetch-btn" id="fbtn" onclick="fetchResults()">🔄 今すぐ取得</button>
+    </div>
+  </div>`;
+  h+=`<div class="card"><div class="ch">1回戦</div>`;R1P.forEach((pair,i)=>{h+=mrow(`r1_${i}`,pair[0],pair[1]);});h+=`</div>`;
+  h+=`<div class="card"><div class="ch">2回戦</div>`;for(let i=0;i<8;i++){const a=ST.rs[`r1_${i*2}`],b=ST.rs[`r1_${i*2+1}`];h+=a&&b?mrow(`r2_${i}`,a,b):`<div class="mpend">1回戦結果待ち</div>`;}h+=`</div>`;
+  h+=`<div class="card"><div class="ch">準々決勝</div>`;for(let i=0;i<4;i++){const a=ST.rs[`r2_${i*2}`],b=ST.rs[`r2_${i*2+1}`];h+=a&&b?mrow(`qf_${i}`,a,b):`<div class="mpend">2回戦結果待ち</div>`;}h+=`</div>`;
+  h+=`<div class="card"><div class="ch">準決勝</div>`;for(let i=0;i<2;i++){const a=ST.rs[`qf_${i*2}`],b=ST.rs[`qf_${i*2+1}`];h+=a&&b?mrow(`sf_${i}`,a,b):`<div class="mpend">準々決勝結果待ち</div>`;}h+=`</div>`;
+  h+=`<div class="card"><div class="ch">決勝 🏆</div>`;const fa=ST.rs.sf_0,fb=ST.rs.sf_1;h+=fa&&fb?mrow('final',fa,fb):`<div class="mpend">準決勝結果待ち</div>`;h+=`</div>`;
+  el.innerHTML=h;
+}
+
+// ==============================
+// 自動取得ロジック
+// ==============================
+
+// 学校名の表記ゆれを正規化
+function normalizeName(n){
+  if(!n||n==='null')return null;
+  n=n.trim();
+  const map={
+    '八戸光星':'八戸学院光星','光星学院':'八戸学院光星',
+    '九国大付':'九州国際大付','九州国際大附':'九州国際大付','九国大附':'九州国際大付','九州国際大付属':'九州国際大付',
+    '神戸国際大附':'神戸国際大付','神国大附':'神戸国際大付',
+    '智辯学園':'智弁学園','智辯':'智弁学園',
+    '東洋大姫路高校':'東洋大姫路','東洋大付姫路':'東洋大姫路','東洋大学附属姫路':'東洋大姫路',
+    '大阪桐蔭高校':'大阪桐蔭','桐蔭':'大阪桐蔭',
+    '横浜高校':'横浜','帝京高校':'帝京',
+    '花咲徳栄高校':'花咲徳栄','山梨学院高校':'山梨学院',
+    '花巻東高校':'花巻東','八戸学院光星高校':'八戸学院光星',
+    '神村学園高校':'神村学園','沖縄尚学高校':'沖縄尚学',
+    '帝京長岡高校':'帝京長岡','高川学園高校':'高川学園',
+  };
+  return map[n]||n;
+}
+
+// R1Pの対戦から正しいmatch IDにマッピング
+// fetchしたデータは「勝者校名→どの試合か」を逆引きする
+function applyFetchedResults(fetched){
+  // fetchedは {matchId: winner} の形式で来る想定
+  // validなキー
+  const VALID_KEYS=[
+    'r1_0','r1_1','r1_2','r1_3','r1_4','r1_5','r1_6','r1_7',
+    'r1_8','r1_9','r1_10','r1_11','r1_12','r1_13','r1_14','r1_15',
+    'r2_0','r2_1','r2_2','r2_3','r2_4','r2_5','r2_6','r2_7',
+    'qf_0','qf_1','qf_2','qf_3','sf_0','sf_1','final'
+  ];
+  let updated=0;
+  VALID_KEYS.forEach(k=>{
+    const raw=fetched[k];
+    if(!raw||raw==='null')return;
+    const norm=normalizeName(String(raw));
+    const valid=SC.some(s=>s.n===norm);
+    if(!valid){console.warn('不明な学校名:',raw,'→',norm);return;}
+    if(ST.rs[k]!==norm){ST.rs[k]=norm;updated++;}
+  ST.fetchLocked=true;
+  });
+  return updated;
+}
+
+async function fetchResults(){
+  const btn=document.getElementById('fbtn');
+  const statusEl=document.getElementById('fs');
+  if(btn)btn.disabled=true;
+  fetchClass='loading';
+  fetchLog='⏳ 取得中...';
+  if(statusEl){statusEl.className='fetch-status loading';statusEl.textContent=fetchLog;}
+
+  // プロキシ経由で高校野球ニュースサイトを取得
+  const TARGET='https://www.xn--8wv97xz6xo7h.online/senbatsu-koshien-team/';
+  const PROXIES=[
+    `https://corsproxy.io/?${encodeURIComponent(TARGET)}`,
+    `https://api.allorigins.win/get?url=${encodeURIComponent(TARGET)}`,
+  ];
+
+  async function tryFetch(url,ms){
+    return new Promise((res,rej)=>{
+      const t=setTimeout(()=>rej(new Error('タイムアウト')),ms);
+      fetch(url).then(async r=>{
+        clearTimeout(t);
+        if(!r.ok)throw new Error('HTTP '+r.status);
+        const text=await r.text();
+        let j; try{j=JSON.parse(text);}catch(e){j=null;}
+        res(j&&j.contents?j.contents:text);
+      }).catch(e=>{clearTimeout(t);rej(e);});
+    });
+  }
+
+  let html=null;
+  for(const proxy of PROXIES){
+    try{
+      const result=await tryFetch(proxy,15000);
+      if(result&&result.length>500){html=result;break;}
+    }catch(e){continue;}
+  }
+
+  if(!html){
+    fetchClass='err';
+    fetchLog='❌ 取得失敗: '+e.message;
+    if(statusEl){statusEl.className='fetch-status err';statusEl.textContent=fetchLog;}
+    if(btn)btn.disabled=false;
+    return;
+  }
+
+  if(!html||html.length<500){
+    fetchClass='err';
+    fetchLog='❌ 取得失敗: ページが取得できませんでした';
+    if(statusEl){statusEl.className='fetch-status err';statusEl.textContent=fetchLog;}
+    if(btn)btn.disabled=false;
+    return;
+  }
+
+  // ページ内のテキストを取得
+  const parser=new DOMParser();
+  const doc=parser.parseFromString(html,'text/html');
+  const bodyText=(doc.body?.innerText||doc.body?.textContent||'').replace(/[ \t]+/g,' ');
+
+  const fetched={};
+
+  // サイトの学校名マッピング（略称 → アプリ内名称）
+  const nameMap={
+    '八学光星':'八戸学院光星','高知農業':'高知農','神戸国際大':'神戸国際大付',
+    '九国大付':'九州国際大付','帝京高校':'帝京'
+  };
+  function normSite(n){
+    n=n.trim();
+    return nameMap[n]||n;
+  }
+
+  // パターン1: 試合後形式 "校名A 数字-数字 校名B" (例: 沖縄尚学 3-4 帝京高校)
+  const resultPat=/([^\s\d　]{2,10})\s+(\d+)[-−ー]+(\d+)\s+([^\s\d　]{2,10})/g;
+  let m1;
+  while((m1=resultPat.exec(bodyText))!==null){
+    const a=normSite(m1[1]),sa=parseInt(m1[2]),sb=parseInt(m1[3]),b=normSite(m1[4]);
+    if(sa===sb)continue;
+    const winner=sa>sb?a:b;
+    R1P.forEach((pair,i)=>{
+      const [ra,rb]=pair;
+      if((ra===a&&rb===b)||(ra===b&&rb===a)){
+        if(!fetched['r1_'+i])fetched['r1_'+i]=winner;
+      }
+    });
+  }
+
+  // パターン2: vs形式でスコア行から判定 (試合前→試合後で変わる場合)
+  const vsPat=/([^\s　]{2,10})\s+vs\s+([^\s　]{2,10})/gi;
+  let vm;
+  while((vm=vsPat.exec(bodyText))!==null){
+    const a=normSite(vm[1]),b=normSite(vm[2]);
+    const after=bodyText.slice(vm.index+vm[0].length,vm.index+vm[0].length+300);
+    const scores=[];
+    const sp=/＝(\d+)/g;let sm;
+    while((sm=sp.exec(after))!==null&&scores.length<2)scores.push(parseInt(sm[1]));
+    if(scores.length===2&&scores[0]!==scores[1]){
+      const winner=scores[0]>scores[1]?a:b;
+      R1P.forEach((pair,i)=>{
+        const [ra,rb]=pair;
+        if((ra===a&&rb===b)||(ra===b&&rb===a)){
+          if(!fetched['r1_'+i])fetched['r1_'+i]=winner;
+        }
+      });
+    }
+  }
+
+  const updated=applyFetchedResults(fetched);
+  if(updated>0)await sv();
+
+  const now=new Date().toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  lastFetchTime=now;
+  const found=Object.values(fetched).filter(Boolean).length;
+  fetchClass='ok';
+  fetchLog=found>0?`✅ ${now} — ${updated}試合更新（${found}試合検出）`:`✅ ${now} — 結果なし（試合前または未反映）`;
+  rAll();
+}
+
+// 大会期間中の夜間（20時以降）に自動取得
+async function autoFetchIfNeeded(){
+  const now=new Date();
+  const jst=new Date(now.getTime()+9*3600*1000);
+  const y=jst.getUTCFullYear(),m=jst.getUTCMonth()+1,d=jst.getUTCDate(),h=jst.getUTCHours();
+  // 大会期間: 2026/3/19〜4/4
+  const inPeriod=(y===2026&&((m===3&&d>=19)||(m===4&&d<=4)));
+  if(!inPeriod||h<20)return;
+  await fetchResults();
+}
+
+function mrow(mid,tA,tB){
+  const w=ST.rs[mid];
+  const isMotoKawa=localPlayer==='本川';
+  const nm=t=>{const pi=pki(t);return pi?`<span class="${pi.pl.c}" style="font-weight:700">${t}</span><span class="rt rt${pi.rd.id}" style="margin-left:3px">${pi.rd.lb}</span>`:t;};
+  if(w){
+    // 入力済み：グレーアウト + 本川のみ修正ボタン表示
+    const fixBtn=isMotoKawa?`<button onclick="clearR('${mid}')" style="background:none;border:none;color:#666;font-size:10px;cursor:pointer;padding:0;margin-top:2px;text-decoration:underline">修正</button>`:'';
+    return `<div class="mr" style="opacity:.6;flex-direction:column;align-items:stretch;gap:4px">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="mt" style="text-align:right;font-size:13px;flex:1">${nm(tA)}</div>
+        <span class="mv" style="font-size:11px;background:rgba(62,207,142,.15);color:#3ecf8e;border-radius:4px;padding:3px 8px;white-space:nowrap">✓ ${w} 勝</span>
+        <div class="mt" style="text-align:left;font-size:13px;flex:1">${nm(tB)}</div>
+      </div>
+      <div style="text-align:center">${fixBtn}</div>
+    </div>`;
+  }
+  // 未入力：大きなボタンで入力可能（全員操作可）
+  return `<div class="mr" style="flex-direction:column;align-items:stretch;gap:8px">
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="mt" style="text-align:right;font-size:13px;flex:1">${nm(tA)}</div>
+      <span class="mv">vs</span>
+      <div class="mt" style="text-align:left;font-size:13px;flex:1">${nm(tB)}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <button class="mw" onclick="setR('${mid}','${tA}')" style="padding:10px 8px;font-size:13px;font-weight:700;text-align:center">◀ ${tA} 勝</button>
+      <button class="mw" onclick="setR('${mid}','${tB}')" style="padding:10px 8px;font-size:13px;font-weight:700;text-align:center">${tB} 勝 ▶</button>
+    </div>
+  </div>`;
+}
+
+// ==============================
+// RENDER: SCORE
+// ==============================
+function rScore(){
+  const el=document.getElementById('pg-score');
+  const sc=allScores();const sorted=PL.map(p=>({...p,s:sc[p.name]})).sort((a,b)=>b.s.tot-a.s.tot);
+  const SK=['0P','2,000P','3,000P','5,000P'];const SKC=['sk0','sk2','sk3','sk4'];
+  let h=`<div class="card"><div class="ch">順位表</div><table class="stbl"><tr><th>順位</th><th style="text-align:left">名前</th><th>勝</th><th>B8</th><th>合計</th><th>賭け</th></tr>`;
+  sorted.forEach((p,i)=>{h+=`<tr><td class="sr ${p.c}">${i+1}</td><td class="sn2 ${p.c}">${p.name}</td><td>${p.s.w}</td><td style="font-size:10px;color:var(--gold)">${p.s.b8>0?`★${p.s.b8}`:'-'}</td><td class="stot">${p.s.tot}</td><td class="${SKC[i]}" style="font-size:11px;font-weight:700">${SK[i]}</td></tr>`;});
+  h+=`</table></div>`;
+  PL.forEach(p=>{
+    const pks=ppk(p.name);const s=sc[p.name];
+    h+=`<div class="card ${p.bg} ${p.bc}" style="border:1px solid"><div class="ch ${p.c}">${p.name} — ${s.tot}pt（${s.w}勝）</div>`;
+    pks.forEach(([school,info])=>{const rd=RD[info.ri];const pts=spts(school);const w=wns(school);h+=`<div class="pi"><span class="rt rt${rd.id}">${rd.lb}</span><span>${school}</span><span style="color:var(--muted);font-size:10px;margin-left:4px">${w}勝</span><span class="pp-pts">${pts>0?pts+'pt':'-'}</span></div>`;});
+    h+=`</div>`;
+  });
+  el.innerHTML=h;
+}
+
+// ==============================
+// RENDER: RULES
+// ==============================
+function rRules(){
+  document.getElementById('pg-rules').innerHTML=`
+  <div class="hero"><div class="hr">得点ルール</div><div class="hd">第98回センバツ ドラフトゲーム 2026</div></div>
+  <div class="card"><div class="ch">基本得点</div>
+    <div style="font-size:13px;line-height:2.4">
+      ${[['指名校が1勝するたびに','+30pt'],['優勝校を指名していた場合','+70pt'],['準優勝校を指名していた場合','+30pt'],['ベスト8最多残留（1位）','+50pt']].map(([lbl,pts])=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr)"><span>${lbl}</span><strong style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:18px">${pts}</strong></div>`).join('')}
+    </div>
+    <div style="background:rgba(232,184,75,.07);border-radius:8px;padding:9px;font-size:11px;color:var(--muted);line-height:1.7;margin-top:6px">※ベスト8最多が2名タイ→各+30pt　3名→各+20pt<br>※優勝・準優勝ボーナスは勝利ptに追加加算</div>
+  </div>
+  <div class="card"><div class="ch">⚡ アップセットボーナス</div>
+    <div style="font-size:12px;color:var(--txt);line-height:1.8;margin-bottom:10px">後から指名した学校が、先に指名した学校に勝つとボーナス発生。</div>
+    <div style="background:var(--s2);border-radius:10px;padding:12px;margin-bottom:10px;text-align:center">
+      <div style="font-size:10px;color:var(--muted);margin-bottom:6px">計算式</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);letter-spacing:.05em">得点 = 30 + (自分のランク − 相手のランク) × 10pt</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px">※ 自分のランク ＞ 相手のランクのときのみ発生</div>
+    </div>
+    <div style="font-size:12px;line-height:2">
+      ${[['G巡(rk8) が S巡(rk1)に勝つ','(8-1)×10=+70pt追加','計100pt','#d8b4fe'],['F巡(rk7) が A巡(rk2)に勝つ','(7-2)×10=+50pt追加','計80pt','#bae6fd'],['D巡(rk5) が S巡(rk1)に勝つ','(5-1)×10=+40pt追加','計70pt','#fda4af'],['B巡(rk3) が A巡(rk2)に勝つ','(3-2)×10=+10pt追加','計40pt','#6ee7b7']].map(([desc,calc,total,col])=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bdr)"><span style="flex:1;font-size:11px">${desc}</span><span style="color:var(--muted);font-size:10px;white-space:nowrap">${calc}</span><strong style="color:${col};white-space:nowrap">${total}</strong></div>`).join('')}
+    </div>
+  </div>
+  <div class="card"><div class="ch">指名ランク表</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      ${[['S巡','ランク1','#312e81','#a5b4fc'],['A巡','ランク2','#1e3a5f','#7dd3fc'],['B巡','ランク3','#064e3b','#6ee7b7'],['C巡','ランク4','#451a03','#fcd34d'],['D巡','ランク5','#7f1d1d','#fda4af'],['E巡','ランク6','#1c1917','#a8a29e'],['F巡','ランク7','#0c4a6e','#bae6fd'],['G巡','ランク8','#2e1065','#d8b4fe']].map(([rnd,rank,bg,col])=>`<div style="background:${bg};border-radius:8px;padding:9px 12px;display:flex;justify-content:space-between"><strong style="color:${col}">${rnd}</strong><span style="color:${col};opacity:.8;font-size:12px">${rank}</span></div>`).join('')}
+    </div>
+  </div>
+  <div class="card"><div class="ch">S巡の流れ</div>
+    <div style="font-size:12px;line-height:2.2;color:var(--txt)">
+      <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)">
+        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">①</span><span>各自のスマホで名前を選び、<strong>学校を非公開で選択・送信</strong></span>
+      </div>
+      <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)">
+        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">②</span><span>全員送信後「開票」ボタンで<strong>4人の選択を一斉公開</strong></span>
+      </div>
+      <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)">
+        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">③</span><span>競合があれば<strong>あみだくじ</strong>で当選者を決定</span>
+      </div>
+      <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)">
+        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">④</span><span>外れた人は残り校から<strong>再指名</strong>（また被ったらあみだくじ）</span>
+      </div>
+      <div style="display:flex;gap:10px;padding:7px 0">
+        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">⑤</span><span>A〜G巡は<strong>ウェーバー順</strong>（奇数巡: 太田→新井→若林→本川 / 偶数巡: 本川→若林→新井→太田）</span>
+      </div>
+    </div>
+  </div>
+  <div class="card"><div class="ch">ポイント</div>
+    <div style="font-size:13px">
+      ${[['🥇 1位','0P','sk0'],['🥈 2位','2,000P','sk2'],['🥉 3位','3,000P','sk3'],['4位','5,000P','sk4']].map(([rank,amt,cls])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr)"><span>${rank}</span><strong class="${cls}" style="font-family:'Bebas Neue',sans-serif;font-size:20px">${amt}</strong></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ==============================
+// RENDER: CFG
+// ==============================
+function rCfg(){
+  const fbStatus = fbReady
+    ? '<div style="color:#6ee7b7;font-size:12px;font-weight:700">✅ Firebase接続済み — リアルタイム同期中</div>'
+    : '<div style="color:#fca5a5;font-size:12px;font-weight:700">❌ Firebase未接続 — config設定が必要です</div>';
+  const hakoneLabels=['4位','3位','2位','1位優勝'];
+  const wvRows=WV_ODD.map((n,i)=>{const p=plr(n);return`<div><span class="${p.c}" style="font-weight:700">${i+1}番手：${n}</span><span style="color:var(--muted);font-size:11px;margin-left:8px">2026箱根 ${hakoneLabels[i]}</span></div>`;}).join('');
+  const wvRowsB=WV_EVN.map((n,i)=>{const p=plr(n);return`<div><span class="${p.c}" style="font-weight:700">${i+1}番手：${n}</span></div>`;}).join('');
+  document.getElementById('pg-cfg').innerHTML=`<div class="card"><div class="ch">Firebase状態</div>${fbStatus}<div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.8">接続中は全員の操作がリアルタイムで反映されます。</div></div><div class="card"><div class="ch">データ管理</div><button class="btn btn-r bblock" onclick="doReset()">🗑️ 全データをリセット</button><button class="btn btn-o bblock" style="margin-top:8px" onclick="unlockFetch()">🔓 手動入力ロックを解除</button></div><div class="card"><div class="ch">ウェーバー順</div><div style="font-size:12px;color:var(--muted);margin-bottom:6px">A/C/E/G巡</div><div style="font-size:13px;line-height:2.3;margin-bottom:10px">${wvRows}</div><div style="font-size:12px;color:var(--muted);margin-bottom:6px">B/D/F巡</div><div style="font-size:13px;line-height:2.3">${wvRowsB}</div></div>`;
+}
+
+// ==============================
+// ACTIONS: S巡
+// ==============================
+function setLocalPlayer(name){
+  localPlayer=name;
+  rDraft();
+}
+
+async function submitS(){
+  const sel=document.getElementById('s-school-sel');
+  if(!sel||!sel.value){alert('学校を選択してください');return;}
+  ST.sd[localPlayer]=sel.value;
+  ST.ss[localPlayer]=true;
+  await sv();
+  rDraft();
+}
+
+function goRepick(){
+  localPlayer=null;
+  document.getElementById('pg-draft').innerHTML=rSRepickSelect();
+}
+
+async function openS(){
+  if(!PL.every(p=>ST.ss[p.name])){alert('まだ全員が選択していません');return;}
+  ST.so=true;
+  // 競合なしの学校を自動確定
+  const grp={};
+  Object.entries(ST.sd).forEach(([pl,s])=>{if(!grp[s])grp[s]=[];grp[s].push(pl);});
+  Object.entries(grp).forEach(([s,ps])=>{if(ps.length===1&&!ST.pk[s])ST.pk[s]={pl:ps[0],ri:0};});
+  await sv();
+  localPlayer=null; // 開票後はリセット
+  rDraft();
+}
+
+async function finishS(){
+  // 全員確定済みならA巡へ
+  ST.sd={};ST.ss={};ST.so=false;ST.snr=[];ST.snrd={};ST.snrs={};ST.snro=false;ST.ri=1;ST.wi=0;
+  await sv();rAll();
+}
+
+async function submitRepick(){
+  const sel=document.getElementById('rp-school-sel');
+  if(!sel||!sel.value){alert('学校を選択してください');return;}
+  ST.snrd[localPlayer]=sel.value;
+  ST.snrs[localPlayer]=true;
+  await sv();
+  rDraft();
+}
+
+async function openRepick(){
+  if(!ST.snr.every(n=>ST.snrs[n])){alert('まだ全員が選択していません');return;}
+  ST.snro=true;
+  // 競合なし→自動確定
+  const already=new Set(Object.keys(ST.pk));
+  const grp={};
+  Object.entries(ST.snrd).forEach(([pl,s])=>{if(!grp[s])grp[s]=[];grp[s].push(pl);});
+  Object.entries(grp).forEach(([s,ps])=>{if(ps.length===1&&!already.has(s))ST.pk[s]={pl:ps[0],ri:0};});
+  await sv();
+  localPlayer=null;
+  rDraft();
+}
+
+// ==============================
+// ACTIONS: ウェーバー・結果
+// ==============================
+let _picking=false;
+async function doPick(s){
+  if(_picking)return;
+  if(ST.pk[s]){alert('すでに指名済みです');return;}
+  if(!localPlayer||localPlayer!==cw()){alert('あなたの番ではありません');return;}
+  _picking=true;
+  const pl=cw();ST.pk[s]={pl,ri:ST.ri,wi:ST.wi};ST.wi++;
+  if(ST.wi>=getWV(ST.ri).length){ST.wi=0;ST.ri++;}
+  localPlayer=null;
+  await sv();rAll();
+  _picking=false;
+}
+async function undoPick(){
+  // 全指名の中で最後（wi最大・ri最大）のものを探して取り消す
+  const all=Object.entries(ST.pk);
+  if(!all.length){alert('取り消せる指名がありません');return;}
+  // ri最大→その中でwi最大
+  const last=all.sort((a,b)=>b[1].ri!==a[1].ri?b[1].ri-a[1].ri:b[1].wi-a[1].wi)[0];
+  const lastRi=last[1].ri;
+  const lastWi=last[1].wi;
+  delete ST.pk[last[0]];
+  ST.ri=lastRi;
+  ST.wi=lastWi;
+  localPlayer=null;
+  await sv();rAll();
+}
+async function advRnd(){ST.wi=0;ST.ri++;await sv();rAll();}
+async function clearR(mid){
+  if(localPlayer!=='本川'){alert('修正は本川のみ可能です');return;}
+  if(!confirm('この試合の結果を取り消しますか？'))return;
+  delete ST.rs[mid];await sv();rResults();rScore();rPicks();
+}
+
+async function unlockFetch(){
+  if(!confirm('自動取得ロックを解除して手動入力を許可しますか？'))return;
+  ST.fetchLocked=false;await sv();rResults();rCfg();
+}
+async function setR(mid,w){
+  if(ST.fetchLocked){alert('自動取得済みのため手動入力はロックされています');return;}
+  if(ST.rs[mid]){return;} // 入力済みは変更不可
+  ST.rs[mid]=w;await sv();rResults();rScore();rPicks();
+}
+async function forceSync(){rAll();}
+async function doReset(){
+  if(!confirm('全データをリセットしますか？\nこの操作は元に戻せません。'))return;
+  ST={ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{}};
+  localPlayer=null;await sv();rAll();
+}
+
+// ==============================
+// NAV
+// ==============================
+let curPg='draft';
+function gp(pg,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+pg).classList.add('on');
+  if(btn)btn.classList.add('on');
+  curPg=pg;rpg(pg);
+}
+function rpg(p){if(p==='draft')rDraft();else if(p==='picks')rPicks();else if(p==='results')rResults();else if(p==='score')rScore();else if(p==='rules')rRules();else if(p==='cfg')rCfg();}
+function rAll(){rDraft();rPicks();rResults();rScore();rRules();rCfg();}
+
+// Firebase未接続チェック用
+let fbReady = false;
+
+(()=>{
+  // Firebaseリスナーが準備できるまで待つ
+  const waitFb = setInterval(()=>{
+    if(typeof window._fbListen !== 'function') return;
+    clearInterval(waitFb);
+    fbReady = true;
+
+    // リアルタイムリスナー: Firebaseのデータが変わったら即反映
+    window._fbListen((data)=>{
+      mergeData(data);
+      rAll();
+    });
+
+    // 大会期間中・20時以降なら自動取得（初回のみ）
+    autoFetchIfNeeded();
+    // 1時間ごとに自動再取得チェック
+    setInterval(()=>autoFetchIfNeeded(), 3600000);
+  }, 200);
+
+  // Firebaseが5秒で繋がらなければオフラインモードで起動
+  setTimeout(()=>{
+    if(!fbReady){
+      console.warn('Firebase未接続 — オフラインモードで起動');
+      ST = EMPTY_ST();
+      rAll();
+    }
+  }, 5000);
+})();
+</script>
+<a href="draft_db.html" style="position:fixed;bottom:16px;right:16px;background:#1e2533;border:1px solid #2d3748;color:#a8b5c8;padding:8px 14px;border-radius:8px;font-size:12px;text-decoration:none;z-index:9999;">📊 過去成績DB</a>
+</body>
+</html>

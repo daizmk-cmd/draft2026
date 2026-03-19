@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ドラフトゲーム 歴代実績DB</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+  --bg: #141414;
+  --surface: #1f1f1f;
+  --surface2: #2a2a2a;
+  --border: #333;
+  --text: #ffffff;
+  --muted: #a0a0a0;
+  --netflix: #E50914;
+  --netflix-dark: #b00710;
+  --gold: #f5c842;
+  --silver: #a8b5c8;
+  --bronze: #c87832;
+
+  --p0: #4a90e2;
+  --p1: #e25c4a;
+  --p2: #3ecf8e;
+  --p3: #b06fe0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ========== HEADER ========== */
+header {
+  background: linear-gradient(180deg, #000 0%, rgba(20,20,20,0.95) 100%);
+  border-bottom: 3px solid var(--netflix);
+  padding: 40px 48px 28px;
+  position: relative;
+  overflow: hidden;
+}
+header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, var(--netflix), transparent 60%);
+}
+.header-inner { position:relative; max-width:1200px; margin:0 auto; display:flex; align-items:flex-end; gap:32px; flex-wrap:wrap; }
+h1 {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(42px,7vw,80px);
+  letter-spacing:6px; line-height:1;
+  color:#fff;
+  text-shadow: 2px 2px 20px rgba(229,9,20,0.4);
+}
+h1 span { color:var(--netflix); }
+.header-meta { font-size:13px; color:var(--muted); line-height:2; padding-bottom:6px; }
+.header-meta strong { color:#e0e0e0; font-weight:700; }
+
+/* ========== NAV TABS ========== */
+.tabs {
+  background: rgba(20,20,20,0.97);
+  border-bottom: 1px solid #2a2a2a;
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(10px);
+}
+.tabs-inner { max-width:1200px; margin:0 auto; display:flex; overflow-x:auto; padding: 0 16px; }
+.tab-btn {
+  flex-shrink:0; padding:16px 28px; font-size:14px; font-weight:700;
+  color:var(--muted); border:none; background:none; cursor:pointer;
+  border-bottom:3px solid transparent; transition:all 0.2s; white-space:nowrap;
+  font-family:'Noto Sans JP',sans-serif; letter-spacing:0.5px;
+  text-transform:uppercase;
+}
+.tab-btn:hover { color:#fff; }
+.tab-btn.active { color:#fff; border-bottom-color:var(--netflix); }
+
+/* ========== MAIN ========== */
+main { max-width:1200px; margin:0 auto; padding:40px 24px; }
+.section { display:none; }
+.section.active { display:block; animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* ========== SECTION TITLE ========== */
+.section-title {
+  font-size:22px; font-weight:900; margin-bottom:16px;
+  display:flex; align-items:center; gap:12px;
+  text-transform:uppercase; letter-spacing:1px;
+}
+.section-title::before {
+  content:''; display:block; width:4px; height:22px;
+  background:var(--netflix); border-radius:2px;
+}
+.section-desc { font-size:13px; color:var(--muted); margin-bottom:28px; }
+
+/* ========== OVERVIEW CARDS ========== */
+.cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:40px; }
+.card {
+  background: var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:24px 20px;
+  position:relative; overflow:hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor:default;
+}
+.card:hover { transform:translateY(-4px); box-shadow:0 12px 40px rgba(229,9,20,0.15); }
+.card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--accent-color, var(--netflix)); }
+.card-label { font-size:11px; text-transform:uppercase; letter-spacing:2.5px; color:var(--muted); margin-bottom:10px; }
+.card-value { font-family:'Bebas Neue',sans-serif; font-size:48px; letter-spacing:2px; color:#fff; line-height:1; }
+.card-sub { font-size:12px; color:var(--muted); margin-top:6px; }
+
+/* ========== TABLES ========== */
+.table-wrap { overflow-x:auto; border-radius:8px; border:1px solid var(--border); }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+thead th {
+  padding:12px 16px; text-align:left; font-size:11px; text-transform:uppercase;
+  letter-spacing:2px; color:var(--muted); border-bottom:1px solid var(--border);
+  font-weight:700; white-space:nowrap; background:#1a1a1a;
+}
+thead th.num { text-align:center; }
+tbody tr { border-bottom:1px solid rgba(255,255,255,0.05); transition:background 0.15s; }
+tbody tr:hover { background:rgba(229,9,20,0.06); }
+tbody td { padding:14px 16px; vertical-align:middle; }
+td.num { text-align:center; font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--muted); }
+td.rank-cell { text-align:center; }
+
+.rank-badge {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:30px; height:30px; border-radius:6px;
+  font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700;
+}
+.rank-1 { background:rgba(229,9,20,0.2); color:#ff4d57; border:1px solid rgba(229,9,20,0.5); }
+.rank-2 { background:rgba(168,181,200,0.1); color:var(--silver); border:1px solid rgba(168,181,200,0.3); }
+.rank-3 { background:rgba(200,120,50,0.1); color:var(--bronze); border:1px solid rgba(200,120,50,0.3); }
+.rank-4 { background:rgba(100,100,100,0.1); color:#666; border:1px solid #333; }
+
+.player-name { display:flex; align-items:center; gap:8px; }
+.player-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.score-cell { font-family:'JetBrains Mono',monospace; font-weight:700; }
+
+.kind-badge {
+  display:inline-block; padding:3px 10px; border-radius:3px; font-size:11px; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.5px;
+}
+.kind-センバツ { background:rgba(74,144,226,0.15); color:#6aa3e8; border:1px solid rgba(74,144,226,0.2); }
+.kind-夏の甲子園 { background:rgba(229,9,20,0.15); color:#ff6b6b; border:1px solid rgba(229,9,20,0.2); }
+.kind-箱根駅伝 { background:rgba(62,207,142,0.15); color:#65d4a5; border:1px solid rgba(62,207,142,0.2); }
+.kind-ワールドカップ { background:rgba(245,200,66,0.15); color:#f5c842; border:1px solid rgba(245,200,66,0.2); }
+.kind-オリンピック { background:rgba(62,180,240,0.15); color:#3eb4f0; border:1px solid rgba(62,180,240,0.2); }
+
+.no-data { color:#444; font-size:12px; }
+
+/* ========== MEDAL TABLE ========== */
+.medal-table { width:100%; border-collapse:collapse; }
+.medal-table th {
+  padding:12px 16px; font-size:11px; text-transform:uppercase; letter-spacing:2px;
+  color:var(--muted); text-align:center; background:#1a1a1a; border-bottom:1px solid var(--border);
+  font-weight:700;
+}
+.medal-table td { padding:14px 16px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.05); }
+.medal-table td.name { text-align:left; font-weight:700; }
+.medal-count { font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700; }
+.gold-c { color:var(--gold); }
+.silver-c { color:var(--silver); }
+.bronze-c { color:var(--bronze); }
+
+/* ========== PLAYER CARDS ========== */
+.player-stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; margin-bottom:32px; }
+.player-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px; overflow:hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.player-card:hover { transform:translateY(-4px); box-shadow:0 16px 48px rgba(0,0,0,0.5); }
+.player-card-header {
+  padding:22px 24px 18px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:16px;
+}
+.player-avatar {
+  width:52px; height:52px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Bebas Neue',sans-serif; font-size:26px; font-weight:700;
+  flex-shrink:0;
+}
+.player-card-name { font-size:22px; font-weight:900; letter-spacing:0.5px; }
+.player-card-sub { font-size:12px; color:var(--muted); margin-top:3px; }
+.player-card-body { padding:16px 24px; }
+.stat-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+.stat-row:last-child { border-bottom:none; }
+.stat-label { font-size:13px; color:var(--muted); }
+.stat-value { font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; }
+
+/* ========== WIN RATE BAR ========== */
+.winrate-bar { display:flex; align-items:center; gap:10px; }
+.winrate-label { font-size:14px; font-weight:700; min-width:44px; text-align:right; }
+.bar-track { flex:1; height:4px; background:#333; border-radius:2px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:2px; transition:width 0.8s ease; }
+
+/* ========== HISTORY FILTERS ========== */
+.history-filters { display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+.filter-btn {
+  padding:8px 18px; border-radius:4px; font-size:12px; font-weight:700; cursor:pointer;
+  background:var(--surface); border:1px solid var(--border); color:var(--muted);
+  transition:all 0.2s; font-family:'Noto Sans JP',sans-serif;
+  text-transform:uppercase; letter-spacing:1px;
+}
+.filter-btn:hover { border-color:#666; color:#fff; }
+.filter-btn.active { background:var(--netflix); border-color:var(--netflix); color:#fff; }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width:640px) {
+  header { padding:24px 20px; }
+  .tab-btn { padding:14px 16px; font-size:12px; }
+  main { padding:24px 12px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <h1>DRAFT GAME <span>ARCHIVE</span></h1>
+    </div>
+    <div class="header-meta">
+      <strong>2008〜2025年</strong> ｜ 全53大会 記録 ｜ <strong>スコア判明: 43大会</strong><br>
+      センバツ・夏の甲子園・箱根駅伝・ワールドカップ・オリンピック
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="showTab('overview')">📊 総合順位</button>
+    <button class="tab-btn" onclick="showTab('players')">👤 個人成績</button>
+    <button class="tab-btn" onclick="showTab('history')">📋 大会履歴</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===== OVERVIEW ===== -->
+<section class="section active" id="tab-overview">
+  <div class="section-title">通算メダル集計</div>
+  <p class="section-desc">スコア記録がある43大会のメダル数（1位=金、2位=銀、3位=銅）</p>
+  <div class="table-wrap" style="margin-bottom:32px">
+    <table class="medal-table" id="medal-table"></table>
+  </div>
+
+  <div class="section-title">勝率・平均順位</div>
+  <p class="section-desc">各プレイヤーの出場回数・優勝回数・平均順位（低いほど良い）</p>
+  <div class="table-wrap">
+    <table id="overview-table">
+      <thead>
+        <tr>
+          <th>RANK</th>
+          <th>PLAYER</th>
+          <th>出場</th>
+          <th>1位</th>
+          <th>2位</th>
+          <th>3位</th>
+          <th>4位</th>
+          <th>平均順位</th>
+          <th>優勝率</th>
+        </tr>
+      </thead>
+      <tbody id="overview-tbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== PLAYERS ===== -->
+<section class="section" id="tab-players">
+  <div class="player-stats-grid" id="player-stats-grid"></div>
+</section>
+
+<!-- ===== HISTORY ===== -->
+<section class="section" id="tab-history">
+  <div class="history-filters">
+    <button class="filter-btn active" onclick="filterHistory('all', this)">すべて</button>
+    <button class="filter-btn" onclick="filterHistory('センバツ', this)">センバツ</button>
+    <button class="filter-btn" onclick="filterHistory('夏の甲子園', this)">夏の甲子園</button>
+    <button class="filter-btn" onclick="filterHistory('箱根駅伝', this)">箱根駅伝</button>
+    <button class="filter-btn" onclick="filterHistory('ワールドカップ', this)">ワールドカップ</button>
+    <button class="filter-btn" onclick="filterHistory('オリンピック', this)">オリンピック</button>
+  </div>
+  <div class="table-wrap">
+    <table id="history-table">
+      <thead>
+        <tr>
+          <th class="num">No.</th>
+          <th>大会名</th>
+          <th>種別</th>
+          <th>1位</th>
+          <th>2位</th>
+          <th>3位</th>
+          <th>4位</th>
+          <th>5位</th>
+        </tr>
+      </thead>
+      <tbody id="history-tbody"></tbody>
+    </table>
+  </div>
+</section>
+
+
+</main>
+
+<script>
+const PLAYER_COLORS = {
+  '若林': { color:'#4a90e2', bg:'rgba(74,144,226,0.12)', initial:'若' },
+  '太田': { color:'#3ecf8e', bg:'rgba(62,207,142,0.12)', initial:'太' },
+  '本川': { color:'#E50914', bg:'rgba(229,9,20,0.12)', initial:'本' },
+  '新井': { color:'#b06fe0', bg:'rgba(176,111,224,0.12)', initial:'新' },
+};
+
+const ALL_DATA = [
+  {num:1,  year:2008, name:'2008センバツ',        kind:'センバツ',       has_data:true,  scores:{若林:70,太田:70,本川:70},                      ranks:{若林:2,太田:3,本川:4}},
+  {num:2,  year:2008, name:'2008夏甲子園',        kind:'夏の甲子園',     has_data:true,  scores:{若林:140,太田:120,本川:100,新井:90},            ranks:{若林:1,太田:2,本川:3,新井:4}},
+  {num:3,  year:2009, name:'2009箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{若林:67,本川:50,新井:48,太田:20},               ranks:{若林:1,本川:2,新井:3,太田:4}},
+  {num:4,  year:2009, name:'2009夏甲子園',        kind:'夏の甲子園',     has_data:true,  scores:{太田:260,若林:120,新井:70,本川:60},             ranks:{太田:1,若林:3,新井:4,本川:4}},
+  {num:5,  year:2010, name:'2010箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{新井:45,太田:40,若林:34,本川:32},               ranks:{新井:1,太田:2,若林:3,本川:4}},
+  {num:6,  year:2010, name:'2010ワールドカップ',  kind:'ワールドカップ', has_data:true,  scores:{本川:740,新井:695,太田:680,若林:370},                    ranks:{本川:1,新井:2,太田:3,若林:4}},
+  {num:7,  year:2010, name:'2010夏甲子園',        kind:'夏の甲子園',     has_data:false, scores:{},                                                       ranks:{}, note:'ルール書のみ'},
+  {num:8,  year:2011, name:'2011箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{太田:75,新井:42,若林:19,本川:13},               ranks:{太田:1,新井:2,若林:4,本川:4}},
+  {num:9,  year:2011, name:'2011センバツ',        kind:'センバツ',       has_data:false, scores:{},                                                       ranks:{}, note:'ルール書のみ'},
+  {num:10, year:2011, name:'2011夏甲子園',        kind:'夏の甲子園',     has_data:false, scores:{},                                                       ranks:{}, note:'ドラフト記録のみ'},
+  {num:11, year:2012, name:'2012箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{本川:61,太田:55,若林:51,新井:28},                        ranks:{本川:1,太田:2,若林:3,新井:4}},
+  {num:12, year:2012, name:'2012センバツ',        kind:'センバツ',       has_data:false, scores:{},                                                       ranks:{}, note:'ルール書のみ'},
+  {num:13, year:2012, name:'2012夏甲子園',        kind:'夏の甲子園',     has_data:false, scores:{},                                                       ranks:{}, note:'ドラフト記録のみ'},
+  {num:14, year:2013, name:'2013箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{新井:49,若林:48,本川:43,太田:18},                        ranks:{新井:1,若林:2,本川:3,太田:4}},
+  {num:15, year:2013, name:'2013センバツ',        kind:'センバツ',       has_data:true,  scores:{若林:490,本川:400,太田:210,新井:180},                    ranks:{若林:1,本川:2,太田:3,新井:4}},
+  {num:16, year:2013, name:'2013夏甲子園',        kind:'夏の甲子園',     has_data:true,  scores:{太田:610,若林:430,本川:350,新井:320},                    ranks:{太田:1,若林:2,本川:3,新井:4}},
+  {num:17, year:2014, name:'2014箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{太田:84,新井:78,本川:27,若林:26},                        ranks:{太田:1,新井:2,本川:3,若林:4}},
+  {num:18, year:2014, name:'2014センバツ',        kind:'センバツ',       has_data:true,  scores:{若林:120,本川:120,太田:90,新井:90},                      ranks:{若林:1,本川:2,太田:3,新井:4}},
+  {num:19, year:2014, name:'2014ワールドカップ',  kind:'ワールドカップ', has_data:true,  scores:{本川:740,新井:695,太田:680,若林:370},                    ranks:{本川:1,新井:2,太田:3,若林:4}},
+  {num:20, year:2014, name:'2014夏甲子園',        kind:'夏の甲子園',     has_data:true,  scores:{新井:490,本川:480,若林:460,太田:190},                    ranks:{新井:1,本川:2,若林:3,太田:4}},
+  {num:21, year:2015, name:'2015箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{新井:53,本川:50,若林:43,太田:21},                           ranks:{新井:1,本川:2,若林:3,太田:4}},
+  {num:22, year:2015, name:'2015センバツ',        kind:'センバツ',       has_data:true,  scores:{若林:425,新井:325,太田:205,本川:205},                       ranks:{若林:1,新井:2,太田:3,本川:4}},
+  {num:23, year:2015, name:'2015夏甲子園',        kind:'夏の甲子園',     has_data:true,  scores:{本川:970,新井:550,若林:370,太田:230},                       ranks:{本川:1,新井:2,若林:3,太田:4}},
+  {num:24, year:2016, name:'2016箱根駅伝',        kind:'箱根駅伝',       has_data:false, scores:{},                                                          ranks:{}, note:'データなし'},
+  {num:25, year:2016, name:'2016センバツ',        kind:'センバツ',       has_data:true,  scores:{太田:460,本川:390,新井:210,若林:40},                        ranks:{太田:1,本川:2,新井:3,若林:4}},
+  {num:26, year:2016, name:'2016夏甲子園',        kind:'夏の甲子園',     has_data:false, scores:{},                                                          ranks:{}, note:'データなし'},
+  {num:27, year:2017, name:'2017箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{新井:135.5,若林:94.5,太田:80,本川:67},                     ranks:{新井:1,若林:2,太田:3,本川:4}},
+  {num:28, year:2017, name:'2017センバツ',        kind:'センバツ',       has_data:true,  scores:{若林:450,太田:320,本川:290,新井:100},                       ranks:{若林:1,太田:2,本川:3,新井:4}},
+  {num:29, year:2017, name:'2017夏甲子園',        kind:'夏の甲子園',     has_data:false, scores:{},                                                          ranks:{}, note:'ルール書のみ'},
+  {num:30, year:2018, name:'2018箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{新井:120,若林:92.5,本川:85,太田:83.5},                     ranks:{新井:1,若林:2,本川:3,太田:4}},
+  {num:31, year:2018, name:'2018平昌五輪',          kind:'オリンピック',    has_data:true,  scores:{太田:330,若林:250,本川:160,新井:80},                        ranks:{太田:1,若林:2,本川:3,新井:4}},
+  {num:32, year:2018, name:'2018センバツ',          kind:'センバツ',        has_data:false, scores:{},                                                          ranks:{}, note:'組み合わせ表のみ'},
+  {num:33, year:2018, name:'2018ワールドカップ',    kind:'ワールドカップ',  has_data:true,  scores:{新井:790,若林:730,太田:475,本川:305},                       ranks:{新井:1,若林:2,太田:3,本川:4}},
+  {num:34, year:2018, name:'2018夏甲子園',          kind:'夏の甲子園',      has_data:false, scores:{},                                                          ranks:{}, note:'ルール書のみ'},
+  {num:35, year:2019, name:'2019箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{本川:114,新井:77.5,太田:60.5,若林:35},                     ranks:{本川:1,新井:2,太田:3,若林:4}},
+  {num:36, year:2019, name:'2019センバツ',          kind:'センバツ',        has_data:true,  scores:{本川:520,若林:390,新井:160,太田:120},                       ranks:{本川:1,若林:2,新井:3,太田:4}},
+  {num:37, year:2019, name:'2019夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{太田:700,本川:480,若林:440,新井:210},                       ranks:{太田:1,本川:2,若林:3,新井:4}},
+  {num:38, year:2020, name:'2020箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{本川:129,若林:101.5,新井:73,太田:69.5},                    ranks:{本川:1,若林:2,新井:3,太田:4}},
+  {num:39, year:2021, name:'2021箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{太田:110,新井:97,本川:95.5,若林:68.5},                     ranks:{太田:1,新井:2,本川:3,若林:4}},
+  {num:40, year:2021, name:'2021センバツ',          kind:'センバツ',        has_data:false, scores:{},                                                          ranks:{}, note:'組み合わせ表のみ'},
+  {num:41, year:2021, name:'2021夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{太田:670,若林:530,新井:510,本川:380},                       ranks:{太田:1,若林:2,新井:3,本川:4}},
+  {num:42, year:2022, name:'2022箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{本川:120,太田:103.5,新井:91,若林:67.5},                    ranks:{本川:1,太田:2,新井:3,若林:4}},
+  {num:43, year:2022, name:'2022センバツ',          kind:'センバツ',        has_data:true,  scores:{本川:280,新井:270,若林:180,太田:80},                        ranks:{本川:1,新井:2,若林:3,太田:4}},
+  {num:44, year:2022, name:'2022夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{新井:690,太田:560,本川:460,若林:460},                       ranks:{新井:1,太田:2,本川:3,若林:4}},
+  {num:45, year:2022, name:'2022ワールドカップ',    kind:'ワールドカップ',  has_data:true,  scores:{若林:1080,本川:950,新井:520,太田:460},                      ranks:{若林:1,本川:2,新井:3,太田:4}},
+  {num:46, year:2023, name:'2023箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{本川:116.5,若林:80.5,太田:77.5,新井:31.5},                 ranks:{本川:1,太田:2,若林:3,新井:4}},
+  {num:47, year:2023, name:'2023センバツ',          kind:'センバツ',        has_data:true,  scores:{若林:490,本川:430,新井:150,太田:70},                        ranks:{若林:1,本川:2,新井:3,太田:4}},
+  {num:48, year:2023, name:'2023夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{若林:850,本川:660,太田:380,新井:280},                       ranks:{若林:1,本川:2,太田:3,新井:4}},
+  {num:49, year:2024, name:'2024箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{太田:104.5,新井:68.5,本川:79.5,若林:36},                   ranks:{太田:1,新井:2,若林:3,本川:4}},
+  {num:50, year:2024, name:'2024センバツ',          kind:'センバツ',        has_data:true,  scores:{太田:640,本川:250,若林:220,新井:180},                       ranks:{太田:1,本川:2,若林:3,新井:4}},
+  {num:51, year:2024, name:'2024夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{太田:1020,若林:890,新井:310,本川:260},                      ranks:{太田:1,若林:2,新井:3,本川:4}},
+  {num:52, year:2025, name:'2025箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{若林:105.5,太田:77.5,本川:69,新井:68},                     ranks:{若林:1,太田:2,本川:3,新井:4}},
+  {num:53, year:2025, name:'2025夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{太田:870,若林:590,本川:430,新井:310},                       ranks:{太田:1,若林:2,本川:3,新井:4}},
+];
+
+const PLAYERS = ['若林','太田','本川','新井'];
+const valid = ALL_DATA.filter(d => d.has_data);
+
+// ========== 統計計算 ==========
+function calcStats(player) {
+  const events = valid.filter(d => d.ranks[player] >= 1 && d.ranks[player] <= 4);
+  const games = events.length;
+  if (!games) return null;
+  const medals = [0,0,0,0,0]; // 1st~5th
+  let rankSum = 0;
+  events.forEach(d => {
+    const r = d.ranks[player];
+    if (r >= 1 && r <= 4) medals[r-1]++;
+    rankSum += r;
+  });
+  const avgRank = (rankSum / games).toFixed(2);
+  const winRate = ((medals[0] / games)*100).toFixed(0);
+  return { games, medals, avgRank, winRate };
+}
+
+function playerColor(p) { return PLAYER_COLORS[p]?.color || '#888'; }
+function playerBg(p) { return PLAYER_COLORS[p]?.bg || 'rgba(128,128,128,0.1)'; }
+
+// ========== MEDAL TABLE ==========
+function buildMedalTable() {
+  const stats = PLAYERS.map(p => ({ player:p, ...calcStats(p) }))
+    .filter(s => s.games)
+    .sort((a,b) => {
+      if (b.medals[0] !== a.medals[0]) return b.medals[0]-a.medals[0];
+      if (b.medals[1] !== a.medals[1]) return b.medals[1]-a.medals[1];
+      return b.medals[2]-a.medals[2];
+    });
+
+  const tb = document.getElementById('medal-table');
+  tb.innerHTML = `<thead><tr>
+    <th>RANK</th><th>PLAYER</th>
+    <th style="color:var(--gold)">🥇 金</th>
+    <th style="color:var(--silver)">🥈 銀</th>
+    <th style="color:var(--bronze)">🥉 銅</th>
+    <th style="color:#6b7a96">4位</th>
+    <th>出場</th><th>平均順位</th>
+  </tr></thead>`;
+  const tbody = document.createElement('tbody');
+  stats.forEach((s,i) => {
+    const c = playerColor(s.player);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="rank-cell"><span class="rank-badge rank-${i+1}">${i+1}</span></td>
+      <td><div class="player-name">
+        <span class="player-dot" style="background:${c}"></span>
+        <strong>${s.player}</strong>
+      </div></td>
+      <td><span class="medal-count gold-c">${s.medals[0]}</span></td>
+      <td><span class="medal-count silver-c">${s.medals[1]}</span></td>
+      <td><span class="medal-count bronze-c">${s.medals[2]}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;color:#6b7a96">${s.medals[3]}</td>
+      <td style="font-family:'JetBrains Mono',monospace">${s.games}</td>
+      <td style="font-family:'JetBrains Mono',monospace">${s.avgRank}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  tb.appendChild(tbody);
+}
+
+// ========== OVERVIEW TABLE ==========
+function buildOverviewTable() {
+  const stats = PLAYERS.map(p => ({ player:p, ...calcStats(p) }))
+    .filter(s => s.games)
+    .sort((a,b) => parseFloat(a.avgRank)-parseFloat(b.avgRank));
+
+  const tbody = document.getElementById('overview-tbody');
+  stats.forEach((s,i) => {
+    const c = playerColor(s.player);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="rank-cell"><span class="rank-badge rank-${i+1}">${i+1}</span></td>
+      <td><div class="player-name">
+        <span class="player-dot" style="background:${c}"></span>
+        <strong>${s.player}</strong>
+      </div></td>
+      <td class="num">${s.games}</td>
+      <td class="num gold-c">${s.medals[0]}</td>
+      <td class="num silver-c">${s.medals[1]}</td>
+      <td class="num bronze-c">${s.medals[2]}</td>
+      <td class="num" style="color:#6b7a96">${s.medals[3]}</td>
+      <td class="score-cell" style="color:${c}">${s.avgRank}</td>
+      <td><div class="winrate-bar">
+        <div class="bar-track"><div class="bar-fill" style="width:${s.winRate}%;background:${c}"></div></div>
+        <span class="winrate-label" style="color:${c};font-family:'JetBrains Mono',monospace">${s.winRate}%</span>
+      </div></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ========== PLAYER STATS CARDS ==========
+function buildPlayerStats() {
+  const grid = document.getElementById('player-stats-grid');
+  PLAYERS.filter(p => calcStats(p)).forEach(p => {
+    const s = calcStats(p);
+    const c = playerColor(p);
+    const bg = playerBg(p);
+    const init = PLAYER_COLORS[p].initial;
+    
+    // 種別成績
+    const kinds = ['センバツ','夏の甲子園','箱根駅伝','ワールドカップ','オリンピック'];
+    let kindRows = '';
+    kinds.forEach(k => {
+      const kindGames = valid.filter(d => d.kind === k && d.ranks[p]);
+      if (!kindGames.length) return;
+      const wins = kindGames.filter(d => d.ranks[p] === 1).length;
+      const avgR = (kindGames.reduce((a,d)=>a+d.ranks[p],0)/kindGames.length).toFixed(1);
+      kindRows += `<div class="stat-row">
+        <span class="stat-label"><span class="kind-badge kind-${k}">${k}</span></span>
+        <span class="stat-value" style="color:${c}">${wins}勝 / ${kindGames.length}戦 (avg.${avgR}位)</span>
+      </div>`;
+    });
+
+    // 最高スコア大会
+    const bestEvent = valid.filter(d => d.scores[p]).sort((a,b) => b.scores[p]-a.scores[p])[0];
+    
+    const div = document.createElement('div');
+    div.className = 'player-card';
+    div.style.borderColor = `${c}30`;
+    div.innerHTML = `
+      <div class="player-card-header" style="background:${bg}">
+        <div class="player-avatar" style="background:${bg};color:${c};border:1px solid ${c}40">${init}</div>
+        <div>
+          <div class="player-card-name" style="color:${c}">${p}</div>
+          <div class="player-card-sub">${s.games}大会出場 ／ 平均${s.avgRank}位</div>
+        </div>
+      </div>
+      <div class="player-card-body">
+        <div class="stat-row">
+          <span class="stat-label">🥇 優勝回数</span>
+          <span class="stat-value" style="color:var(--gold)">${s.medals[0]}回</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">🥈 準優勝</span>
+          <span class="stat-value" style="color:var(--silver)">${s.medals[1]}回</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">🥉 3位</span>
+          <span class="stat-value" style="color:var(--bronze)">${s.medals[2]}回</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">🏆 優勝率</span>
+          <span class="stat-value" style="color:${c}">${s.winRate}%</span>
+        </div>
+        ${bestEvent ? `<div class="stat-row">
+          <span class="stat-label">📈 最高スコア</span>
+          <span class="stat-value" style="color:${c}">${bestEvent.scores[p].toLocaleString()}pt<span style="font-size:11px;color:var(--muted);font-family:sans-serif;margin-left:4px">(${bestEvent.name})</span></span>
+        </div>` : ''}
+        <div style="margin-top:12px">${kindRows}</div>
+      </div>`;
+    grid.appendChild(div);
+  });
+}
+
+// ========== HISTORY TABLE ==========
+let currentFilter = 'all';
+function buildHistoryTable(filter='all') {
+  currentFilter = filter;
+  const tbody = document.getElementById('history-tbody');
+  tbody.innerHTML = '';
+  ALL_DATA
+    .filter(d => filter==='all' || d.kind===filter)
+    .forEach(d => {
+      const tr = document.createElement('tr');
+      let rankCells = '';
+      for (let r=1; r<=5; r++) {
+        const p = Object.entries(d.ranks).find(([,v])=>v===r)?.[0];
+        if (p) {
+          const c = playerColor(p);
+          const score = d.scores[p] != null ? `<br><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">${d.scores[p].toLocaleString()}pt</span>` : '';
+          rankCells += `<td style="white-space:nowrap"><span class="player-dot" style="background:${c};display:inline-block;margin-right:4px"></span><strong style="color:${c}">${p}</strong>${score}</td>`;
+        } else {
+          rankCells += `<td></td>`;
+        }
+      }
+      tr.innerHTML = `
+        <td class="num">${d.num}</td>
+        <td><strong>${d.name}</strong></td>
+        <td><span class="kind-badge kind-${d.kind}">${d.kind}</span></td>
+        ${d.has_data ? rankCells : `<td colspan="5" class="no-data">データなし</td>`}
+      `;
+      tbody.appendChild(tr);
+    });
+}
+function filterHistory(kind, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildHistoryTable(kind);
+}
+
+// ========== TREND CHART (SVG) ==========
+function buildTrendChart() {
+  const events = valid;
+  const W = 900, H = 320, PL = 60, PR = 20, PT = 30, PB = 50;
+  const innerW = W - PL - PR;
+  const innerH = H - PT - PB;
+  
+  // 各プレイヤーのポイントシリーズ（大会順）
+  const series = {};
+  PLAYERS.forEach(p => { series[p] = []; });
+  
+  events.forEach((d,xi) => {
+    PLAYERS.forEach(p => {
+      if (d.scores[p] !== undefined) series[p].push({ x:xi, val:d.scores[p], name:d.name });
+    });
+  });
+
+  const allVals = events.flatMap(d => Object.values(d.scores));
+  const minV = 0, maxV = Math.max(...allVals) * 1.1;
+  const xScale = i => PL + (i / (events.length-1)) * innerW;
+  const yScale = v => PT + innerH - ((v - minV)/(maxV-minV)) * innerH;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" class="trend-chart" xmlns="http://www.w3.org/2000/svg" style="background:transparent">`;
+  
+  // グリッド
+  for (let i=0; i<=4; i++) {
+    const y = PT + (i/4)*innerH;
+    const val = Math.round(maxV * (1 - i/4));
+    svg += `<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="#232d40" stroke-width="1"/>`;
+    svg += `<text x="${PL-8}" y="${y+4}" fill="#6b7a96" font-size="10" text-anchor="end" font-family="JetBrains Mono">${val}</text>`;
+  }
+
+  // X軸ラベル
+  events.forEach((d,i) => {
+    if (i % 2 === 0 || events.length <= 10) {
+      const x = xScale(i);
+      const label = d.name.replace(/20\d\d/,'').substring(0,5);
+      svg += `<text x="${x}" y="${H-5}" fill="#6b7a96" font-size="9" text-anchor="middle" font-family="Noto Sans JP">${d.name.slice(0,7)}</text>`;
+    }
+  });
+
+  // ラインとドット
+  PLAYERS.forEach(p => {
+    const pts = series[p];
+    if (pts.length < 2) return;
+    const c = playerColor(p);
+    
+    // ライン
+    const pathD = pts.map((pt,i) => {
+      const x = xScale(pt.x);
+      const y = yScale(pt.val);
+      return (i===0?'M':'L') + `${x},${y}`;
+    }).join(' ');
+    svg += `<path d="${pathD}" fill="none" stroke="${c}" stroke-width="2" opacity="0.85"/>`;
+    
+    // ドット
+    pts.forEach(pt => {
+      const x = xScale(pt.x);
+      const y = yScale(pt.val);
+      svg += `<circle cx="${x}" cy="${y}" r="4" fill="${c}" stroke="var(--bg)" stroke-width="2"/>`;
+    });
+  });
+
+  // 凡例
+  let lx = PL;
+  PLAYERS.filter(p => series[p].length > 0).forEach(p => {
+    const c = playerColor(p);
+    svg += `<line x1="${lx}" y1="${PT-15}" x2="${lx+16}" y2="${PT-15}" stroke="${c}" stroke-width="2"/>`;
+    svg += `<text x="${lx+20}" y="${PT-10}" fill="${c}" font-size="12" font-family="Noto Sans JP">${p}</text>`;
+    lx += 60;
+  });
+
+  svg += '</svg>';
+  document.getElementById('trend-svg-wrap').innerHTML = svg;
+}
+
+// ========== KIND BAR CHART ==========
+function buildKindBar() {
+  const kinds = ['センバツ','夏の甲子園','箱根駅伝','ワールドカップ','オリンピック'];
+  const W = 800, H = 260, PL = 80, PR = 20, PT = 30, PB = 40;
+  const innerW = W - PL - PR;
+  const innerH = H - PT - PB;
+  
+  // 種別×プレイヤー 平均スコア
+  // プレイヤー別に種別平均を計算
+  const data = {};
+  PLAYERS.forEach(p => {
+    data[p] = {};
+    kinds.forEach(k => {
+      const evs = valid.filter(d => d.kind===k && d.scores[p] !== undefined);
+      data[p][k] = evs.length ? evs.reduce((a,d)=>a+d.scores[p],0)/evs.length : null;
+    });
+  });
+
+  const allAvgs = Object.values(data).flatMap(d => Object.values(d).filter(v=>v!==null));
+  const maxV = Math.max(...allAvgs) * 1.1;
+  
+  const barW = (innerW / kinds.length) / (PLAYERS.length + 1);
+  
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  
+  // グリッド
+  for (let i=0;i<=4;i++) {
+    const y = PT + (i/4)*innerH;
+    const val = Math.round(maxV*(1-i/4));
+    svg += `<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="#232d40" stroke-width="1"/>`;
+    svg += `<text x="${PL-8}" y="${y+4}" fill="#6b7a96" font-size="10" text-anchor="end" font-family="JetBrains Mono">${val}</text>`;
+  }
+  
+  kinds.forEach((k,ki) => {
+    const groupX = PL + ki * (innerW/kinds.length);
+    const label = k;
+    svg += `<text x="${groupX + (innerW/kinds.length)/2}" y="${H-5}" fill="#6b7a96" font-size="11" text-anchor="middle" font-family="Noto Sans JP">${label}</text>`;
+    
+    PLAYERS.forEach((p,pi) => {
+      const val = data[p][k];
+      if (!val) return;
+      const c = playerColor(p);
+      const x = groupX + (pi+0.5)*barW + barW*0.5;
+      const barH2 = (val/maxV)*innerH;
+      const y = PT + innerH - barH2;
+      svg += `<rect x="${x}" y="${y}" width="${barW*0.8}" height="${barH2}" fill="${c}" opacity="0.75" rx="2"/>`;
+    });
+  });
+
+  // 凡例
+  let lx = PL;
+  PLAYERS.filter(p => Object.values(data[p]).some(v=>v!==null)).forEach(p => {
+    const c = playerColor(p);
+    svg += `<rect x="${lx}" y="${PT-20}" width="12" height="12" fill="${c}" opacity="0.75" rx="2"/>`;
+    svg += `<text x="${lx+16}" y="${PT-10}" fill="${c}" font-size="12" font-family="Noto Sans JP">${p}</text>`;
+    lx += 56;
+  });
+
+  svg += '</svg>';
+  document.getElementById('kind-bar-wrap').innerHTML = svg;
+}
+
+// ========== TAB CONTROL ==========
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  
+}
+
+// ========== INIT ==========
+buildMedalTable();
+buildOverviewTable();
+buildPlayerStats();
+buildHistoryTable();
+</script>
+</body>
+</html>
