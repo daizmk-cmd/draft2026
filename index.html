@@ -13,7 +13,7 @@
 // 🔥 FIREBASE CONFIG — ここを書き換えてください
 // ========================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDh-2-vXUJMOrcwLAyG7Bz6PEUXa-VsPR4",
@@ -33,6 +33,7 @@ const DB_KEY = "senbatsu2026";
 
 // グローバルに公開（非モジュールスクリプトから呼べるように）
 window._fbSet = (data) => set(ref(db, DB_KEY), data);
+window._fbUpdate = (data) => update(ref(db, DB_KEY), data);
 window._fbListen = (cb) => onValue(ref(db, DB_KEY), snap => cb(snap.val()));
 </script>
 <style>
@@ -325,7 +326,16 @@ let amidaContext=null; // {school, players, winner}
 const EMPTY_ST=()=>({ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{},sc:{},amidaResults:{},fetchLocked:false});
 
 async function sv(){
-  try{ _savePkBackup(); await window._fbSet(ST); }catch(e){ console.error('Firebase write error',e); }
+  try{
+    const _pkCount=ST.pk?Object.keys(ST.pk).length:0;
+    if(_pkCount===0){
+      const _bk=_loadPkBackup();
+      if(_bk&&Object.keys(_bk).length>0){ST.pk=_bk;console.warn('[sv] pk restored from backup');}
+      else{console.warn('[sv] pk empty + no backup -> ABORT');return;}
+    }
+    _savePkBackup();
+    await window._fbSet(ST);
+  }catch(e){console.error('Firebase write error',e);}
 }
 async function ld(){
   // 初回ロードはリスナー側で処理するため sv/ld パターンは書き込みのみ使用
@@ -353,6 +363,7 @@ function mergeData(d){
     }
   }
   ST = {...EMPTY_ST(), ...incoming};
+  if(ST.ri===0&&ST.pk&&Object.keys(ST.pk).length===32){ST.ri=8;ST.wi=0;}
 }
 function _savePkBackup(){
   try{ if(ST.pk && Object.keys(ST.pk).length > 0) localStorage.setItem('senbatsu2026_pk_backup', JSON.stringify(ST.pk)); }catch(e){}
@@ -1435,8 +1446,6 @@ let fbReady = false;
       rAll();
     });
 
-    // 大会期間中・20時以降なら自動取得（初回のみ）
-    autoFetchIfNeeded();
     // 1時間ごとに自動再取得チェック
     setInterval(()=>autoFetchIfNeeded(), 3600000);
   }, 200);
