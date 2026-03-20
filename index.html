@@ -331,6 +331,10 @@ async function ld(){
   // 初回ロードはリスナー側で処理するため sv/ld パターンは書き込みのみ使用
 }
 function mergeData(d){
+  if(d === null || d === undefined){
+    console.warn('[mergeData] received null from Firebase - ignoring');
+    return;
+  }
   const incoming = d || {};
   const prev = ST || {};
   const incomingPkCount = incoming.pk ? Object.keys(incoming.pk).length : 0;
