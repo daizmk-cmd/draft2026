@@ -878,11 +878,39 @@ function rResults(){
       <button class="fetch-btn" id="fbtn" onclick="fetchResults()">🔄 今すぐ取得</button>
     </div>
   </div>`;
-  h+=`<div class="card"><div class="ch">1回戦</div>`;R1P.forEach((pair,i)=>{h+=mrow(`r1_${i}`,pair[0],pair[1]);});h+=`</div>`;
-  h+=`<div class="card"><div class="ch">2回戦</div>`;for(let i=0;i<8;i++){const a=ST.rs[`r1_${i*2}`],b=ST.rs[`r1_${i*2+1}`];h+=a&&b?mrow(`r2_${i}`,a,b):`<div class="mpend">1回戦結果待ち</div>`;}h+=`</div>`;
-  h+=`<div class="card"><div class="ch">準々決勝</div>`;for(let i=0;i<4;i++){const a=ST.rs[`r2_${i*2}`],b=ST.rs[`r2_${i*2+1}`];h+=a&&b?mrow(`qf_${i}`,a,b):`<div class="mpend">2回戦結果待ち</div>`;}h+=`</div>`;
-  h+=`<div class="card"><div class="ch">準決勝</div>`;for(let i=0;i<2;i++){const a=ST.rs[`qf_${i*2}`],b=ST.rs[`qf_${i*2+1}`];h+=a&&b?mrow(`sf_${i}`,a,b):`<div class="mpend">準々決勝結果待ち</div>`;}h+=`</div>`;
-  h+=`<div class="card"><div class="ch">決勝 🏆</div>`;const fa=ST.rs.sf_0,fb=ST.rs.sf_1;h+=fa&&fb?mrow('final',fa,fb):`<div class="mpend">準決勝結果待ち</div>`;h+=`</div>`;
+  // 1回戦：日付ごとにグループ化
+  const R1_DAYS=[
+    {date:'3月19日（木）',ids:[0,1,2]},
+    {date:'3月20日（祝）',ids:[3,4,5]},
+    {date:'3月21日（土）',ids:[6,7,8]},
+    {date:'3月22日（日）',ids:[9,10,11]},
+    {date:'3月23日（月）',ids:[12,13,14]},
+    {date:'3月24日（火）',ids:[15]},
+  ];
+  function dayHeader(label,ids){
+    const allDone=ids.every(i=>ST.rs['r1_'+i]);
+    const badge=allDone
+      ?`<span style="font-size:10px;padding:2px 8px;border-radius:3px;font-weight:700;background:rgba(62,207,142,.1);color:#3ecf8e">終了</span>`
+      :`<span style="font-size:10px;padding:2px 8px;border-radius:3px;font-weight:700;background:#2a2a2a;color:#666">試合前</span>`;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;color:#a0a0a0;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid #2a2a2a"><span>1回戦 — ${label}</span>${badge}</div>`;
+  }
+  R1_DAYS.forEach(d=>{
+    h+=dayHeader(d.date,d.ids);
+    d.ids.forEach(i=>{h+=`<div class="card">`+mrow('r1_'+i,R1P[i][0],R1P[i][1])+`</div>`;});
+  });
+
+  // 2回戦以降
+  function roundHeader(label){
+    return `<div style="font-size:11px;font-weight:700;color:#a0a0a0;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid #2a2a2a">${label}</div>`;
+  }
+  h+=roundHeader('2回戦');
+  for(let i=0;i<8;i++){const a=ST.rs[`r1_${i*2}`],b=ST.rs[`r1_${i*2+1}`];h+=`<div class="card">`+(a&&b?mrow(`r2_${i}`,a,b):`<div class="mpend">1回戦結果待ち</div>`)+`</div>`;}
+  h+=roundHeader('準々決勝');
+  for(let i=0;i<4;i++){const a=ST.rs[`r2_${i*2}`],b=ST.rs[`r2_${i*2+1}`];h+=`<div class="card">`+(a&&b?mrow(`qf_${i}`,a,b):`<div class="mpend">2回戦結果待ち</div>`)+`</div>`;}
+  h+=roundHeader('準決勝');
+  for(let i=0;i<2;i++){const a=ST.rs[`qf_${i*2}`],b=ST.rs[`qf_${i*2+1}`];h+=`<div class="card">`+(a&&b?mrow(`sf_${i}`,a,b):`<div class="mpend">準々決勝結果待ち</div>`)+`</div>`;}
+  h+=roundHeader('決勝 🏆');
+  const fa=ST.rs.sf_0,fb=ST.rs.sf_1;h+=`<div class="card">`+(fa&&fb?mrow('final',fa,fb):`<div class="mpend">準決勝結果待ち</div>`)+`</div>`;
   el.innerHTML=h;
 }
 
@@ -946,28 +974,26 @@ async function fetchResults(){
   const TARGET='https://koshien.hanshin.co.jp/highschool/spring2026/schedule.html';
   const PROXY=`https://api.allorigins.win/get?url=${encodeURIComponent(TARGET)}`;
 
-  async function tryFetch(url,ms){
-    return new Promise((res,rej)=>{
-      const t=setTimeout(()=>rej(new Error('タイムアウト')),ms);
-      fetch(url).then(async r=>{
-        clearTimeout(t);
-        if(!r.ok)throw new Error('HTTP '+r.status);
-        const text=await r.text();
-        let j; try{j=JSON.parse(text);}catch(e){j=null;}
-        res(j&&j.contents?j.contents:text);
-      }).catch(e=>{clearTimeout(t);rej(e);});
-    });
-  }
-
   let html=null;
+  let fetchErr='接続失敗';
   try{
-    const result=await tryFetch(PROXY,15000);
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),12000);
+    const r=await fetch(PROXY,{signal:controller.signal});
+    clearTimeout(timer);
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const text=await r.text();
+    let j;try{j=JSON.parse(text);}catch(e){j=null;}
+    const result=j&&j.contents?j.contents:text;
     if(result&&result.length>500)html=result;
-  }catch(e){}
+    else fetchErr='ページ内容が空でした';
+  }catch(e){
+    fetchErr=e.name==='AbortError'?'タイムアウト':e.message;
+  }
 
   if(!html){
     fetchClass='err';
-    fetchLog='❌ 取得失敗: '+e.message;
+    fetchLog='❌ 取得失敗: '+fetchErr;
     if(statusEl){statusEl.className='fetch-status err';statusEl.textContent=fetchLog;}
     if(btn)btn.disabled=false;
     return;
