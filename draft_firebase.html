@@ -318,7 +318,7 @@ let amidaContext=null; // {school, players, winner}
 // ==============================
 // STORAGE — Firebase Realtime Database
 // ==============================
-const EMPTY_ST=()=>({ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{},amidaResults:{},fetchLocked:false});
+const EMPTY_ST=()=>({ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{},sc:{},amidaResults:{},fetchLocked:false});
 
 async function sv(){
   try{ await window._fbSet(ST); }catch(e){ console.error('Firebase write error',e); }
@@ -984,7 +984,7 @@ async function fetchResults(){
   // ページ内のテキストを取得
   const parser=new DOMParser();
   const doc=parser.parseFromString(html,'text/html');
-  const bodyText=(doc.body?.innerText||doc.body?.textContent||'').replace(/[ \t]+/g,' ');
+  const bodyText=(doc.body?.textContent||'').replace(/[ \t]+/g,' ');
 
   const fetched={};
 
@@ -998,16 +998,21 @@ async function fetchResults(){
   function normSite(n){return (nameMap[n.trim()]||n.trim());}
 
   // パターン: "校名 (都道府県)数字 - 数字校名 (都道府県)"
-  const pat=/([^()\d]{2,8})\s*\([^)]{1,10}\)(\d+)\s*-\s*(\d+)([^()\d]{2,8})\s*\([^)]{1,10}\)/g;
+  const pat=/([^()\d\s][^()\d]{0,7})\s*\(([^)]{1,6})\)(\d+)\s*-\s*(\d+)([^()\d\s][^()\d]{0,7})\s*\(([^)]{1,6})\)/g;
   let m;
+  const fetchedSc={};
   while((m=pat.exec(bodyText))!==null){
-    const a=normSite(m[1]),sa=parseInt(m[2]),sb=parseInt(m[3]),b=normSite(m[4]);
+    const a=normSite(m[1]),sa=parseInt(m[3]),sb=parseInt(m[4]),b=normSite(m[5]);
     if(sa===sb)continue;
     const winner=sa>sb?a:b;
     R1P.forEach((pair,i)=>{
       const [ra,rb]=pair;
       if((ra===a&&rb===b)||(ra===b&&rb===a)){
-        if(!fetched['r1_'+i])fetched['r1_'+i]=winner;
+        if(!fetched['r1_'+i]){
+          fetched['r1_'+i]=winner;
+          // スコア保存: [tAのスコア, tBのスコア]（R1Pの順番に合わせる）
+          fetchedSc['r1_'+i]=ra===a?[sa,sb]:[sb,sa];
+        }
       }
     });
   }
@@ -1037,25 +1042,56 @@ async function autoFetchIfNeeded(){
 function mrow(mid,tA,tB){
   const w=ST.rs[mid];
   const isMotoKawa=localPlayer==='本川';
-  const nm=t=>{const pi=pki(t);return pi?`<span class="${pi.pl.c}" style="font-weight:700">${t}</span><span class="rt rt${pi.rd.id}" style="margin-left:3px">${pi.rd.lb}</span>`:t;};
-  if(w){
-    // 入力済み：グレーアウト + 本川のみ修正ボタン表示
-    const fixBtn=isMotoKawa?`<button onclick="clearR('${mid}')" style="background:none;border:none;color:#666;font-size:10px;cursor:pointer;padding:0;margin-top:2px;text-decoration:underline">修正</button>`:'';
-    return `<div class="mr" style="opacity:.6;flex-direction:column;align-items:stretch;gap:4px">
-      <div style="display:flex;align-items:center;gap:6px">
-        <div class="mt" style="text-align:right;font-size:13px;flex:1">${nm(tA)}</div>
-        <span class="mv" style="font-size:11px;background:rgba(62,207,142,.15);color:#3ecf8e;border-radius:4px;padding:3px 8px;white-space:nowrap">✓ ${w} 勝</span>
-        <div class="mt" style="text-align:left;font-size:13px;flex:1">${nm(tB)}</div>
-      </div>
-      <div style="text-align:center">${fixBtn}</div>
+  // チーム情報（プレイヤーカラー・巡目）
+  function teamCell(t,align){
+    const pi=pki(t);
+    const col=pi?pi.pl.col:'#ffffff';
+    const rb=pi?`<span class="rt rt${pi.rd.id}" style="display:inline-block;margin-top:3px">${pi.rd.lb}</span>`:'';
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:${align==='right'?'flex-end':'flex-start'};gap:2px">
+      <span style="font-size:13px;font-weight:700;color:${col}">${t}</span>
+      ${rb}
     </div>`;
   }
-  // 未入力：大きなボタンで入力可能（全員操作可）
+  function teamCellLoser(t,align){
+    const pi=pki(t);
+    const rb=pi?`<span class="rt" style="display:inline-block;margin-top:3px;background:#2a2a2a;color:#444">${pi.rd.lb}</span>`:'';
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:${align==='right'?'flex-end':'flex-start'};gap:2px;opacity:.35">
+      <span style="font-size:13px">${t}</span>
+      ${rb}
+    </div>`;
+  }
+  if(w){
+    const sc=ST.sc&&ST.sc[mid];
+    const sA=sc?sc[0]:'';const sB=sc?sc[1]:'';
+    const scoreBox=sA!==''?
+      `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;background:#111;border-radius:6px;padding:4px 10px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="font-family:monospace;font-size:18px;font-weight:700;min-width:20px;text-align:center;color:${w===tA?pki(tA)?.pl?.col||'#fff':'#555'}">${sA}</span>
+          <span style="color:#555;font-size:14px">-</span>
+          <span style="font-family:monospace;font-size:18px;font-weight:700;min-width:20px;text-align:center;color:${w===tB?pki(tB)?.pl?.col||'#fff':'#555'}">${sB}</span>
+        </div>
+        <span style="font-size:9px;background:#2a2a2a;color:#888;border-radius:3px;padding:2px 6px;font-weight:700">✓ 終了</span>
+      </div>`:
+      `<div style="background:#111;border-radius:6px;padding:6px 10px;flex-shrink:0">
+        <span style="font-size:9px;background:#2a2a2a;color:#888;border-radius:3px;padding:2px 6px;font-weight:700">✓ 終了</span>
+      </div>`;
+    const fixBtn=isMotoKawa?`<div style="text-align:center;margin-top:2px"><button onclick="clearR('${mid}')" style="background:none;border:none;color:#555;font-size:10px;cursor:pointer;text-decoration:underline">修正</button></div>`:'';
+    return `<div class="mr" style="flex-direction:column;align-items:stretch;gap:4px">
+      <div style="display:flex;align-items:center;gap:6px">
+        ${w===tA?teamCell(tA,'right'):teamCellLoser(tA,'right')}
+        ${scoreBox}
+        ${w===tB?teamCell(tB,'left'):teamCellLoser(tB,'left')}
+      </div>${fixBtn}
+    </div>`;
+  }
+  // 未入力：両チームともプレイヤーカラー＋巡目、ボタンあり
   return `<div class="mr" style="flex-direction:column;align-items:stretch;gap:8px">
     <div style="display:flex;align-items:center;gap:6px">
-      <div class="mt" style="text-align:right;font-size:13px;flex:1">${nm(tA)}</div>
-      <span class="mv">vs</span>
-      <div class="mt" style="text-align:left;font-size:13px;flex:1">${nm(tB)}</div>
+      ${teamCell(tA,'right')}
+      <div style="background:#111;border-radius:6px;padding:4px 10px;flex-shrink:0">
+        <span style="color:#555;font-size:12px;font-weight:700">vs</span>
+      </div>
+      ${teamCell(tB,'left')}
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
       <button class="mw" onclick="setR('${mid}','${tA}')" style="padding:10px 8px;font-size:13px;font-weight:700;text-align:center">◀ ${tA} 勝</button>
