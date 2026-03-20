@@ -1444,6 +1444,8 @@ let fbReady = false;
         if(backup && Object.keys(backup).length > 0){ ST.pk = backup; sv(); }
       }
       rAll();
+      // 初回Firebase受信後のみautoFetch実行
+      if(!window._fbFirstLoaded){window._fbFirstLoaded=true;setTimeout(autoFetchIfNeeded,3000);}
     });
 
     // 1時間ごとに自動再取得チェック
