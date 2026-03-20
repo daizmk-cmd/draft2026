@@ -950,6 +950,7 @@ function applyFetchedResults(fetched){
     'qf_0','qf_1','qf_2','qf_3','sf_0','sf_1','final'
   ];
   let updated=0;
+  if(!ST.sc)ST.sc={};
   VALID_KEYS.forEach(k=>{
     const raw=fetched[k];
     if(!raw||raw==='null')return;
@@ -957,7 +958,8 @@ function applyFetchedResults(fetched){
     const valid=SC.some(s=>s.n===norm);
     if(!valid){console.warn('不明な学校名:',raw,'→',norm);return;}
     if(ST.rs[k]!==norm){ST.rs[k]=norm;updated++;}
-  ST.fetchLocked=true;
+    if(fetchedSc&&fetchedSc[k])ST.sc[k]=fetchedSc[k];
+    ST.fetchLocked=true;
   });
   return updated;
 }
@@ -1026,7 +1028,8 @@ async function fetchResults(){
   // パターン: "校名 (都道府県)数字 - 数字校名 (都道府県)"
   const pat=/([^()\d\s][^()\d]{0,7})\s*\(([^)]{1,6})\)(\d+)\s*-\s*(\d+)([^()\d\s][^()\d]{0,7})\s*\(([^)]{1,6})\)/g;
   let m;
-  const fetchedSc={};
+  window._fetchedSc={};
+  const fetchedSc=window._fetchedSc;
   while((m=pat.exec(bodyText))!==null){
     const a=normSite(m[1]),sa=parseInt(m[3]),sb=parseInt(m[4]),b=normSite(m[5]);
     if(sa===sb)continue;
