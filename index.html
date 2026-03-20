@@ -10,7 +10,7 @@
 <title>SENBATSU DRAFT 2026</title>
 <script type="module">
 // ========================================
-// 🔥 FIREBASE CONFIG — ここを書き換えてください
+// ð¥ FIREBASE CONFIG â ãããæ¸ãæãã¦ãã ãã
 // ========================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -31,7 +31,7 @@ const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 const DB_KEY = "senbatsu2026";
 
-// グローバルに公開（非モジュールスクリプトから呼べるように）
+// ã°ã­ã¼ãã«ã«å¬éï¼éã¢ã¸ã¥ã¼ã«ã¹ã¯ãªããããå¼ã¹ãããã«ï¼
 window._fbSet = (data) => set(ref(db, DB_KEY), data);
 window._fbListen = (cb) => onValue(ref(db, DB_KEY), snap => cb(snap.val()));
 </script>
@@ -217,10 +217,10 @@ body{background:var(--bg);color:var(--txt);font-family:'Noto Sans JP',sans-serif
 <div class="hdr">
   <div style="display:flex;flex-direction:column;gap:2px">
     <div class="hdr-t">SENBATSU DRAFT <span style="color:var(--nf)">2026</span></div>
-    <div class="hdr-s"><span class="dot"></span>98th KOSHIEN SELECTION &nbsp;·&nbsp; 4-PLAYER LIVE DRAFT</div>
+    <div class="hdr-s"><span class="dot"></span>98th KOSHIEN SELECTION &nbsp;Â·&nbsp; 4-PLAYER LIVE DRAFT</div>
   </div>
   <div style="display:flex;align-items:center;gap:8px">
-    <button class="sync-btn" id="refresh-btn" onclick="location.reload()" style="font-size:13px;padding:6px 12px;border-radius:6px">↻</button>
+    <button class="sync-btn" id="refresh-btn" onclick="location.reload()" style="font-size:13px;padding:6px 12px;border-radius:6px">â»</button>
     <div style="display:flex;align-items:center;gap:6px;background:rgba(229,9,20,.15);border:1px solid rgba(229,9,20,.4);border-radius:4px;padding:4px 10px">
       <span class="dot" style="background:var(--nf)"></span>
       <span style="font-size:10px;font-weight:700;color:var(--nf);letter-spacing:.1em">LIVE</span>
@@ -228,12 +228,12 @@ body{background:var(--bg);color:var(--txt);font-family:'Noto Sans JP',sans-serif
   </div>
 </div>
 <div class="nav">
-  <button class="nb on" onclick="gp('draft',this)"><span class="ni">📋</span>ドラフト</button>
-  <button class="nb" onclick="gp('picks',this)"><span class="ni">🃏</span>指名</button>
-  <button class="nb" onclick="gp('results',this)"><span class="ni">⚾</span>結果</button>
-  <button class="nb" onclick="gp('score',this)"><span class="ni">🏆</span>順位</button>
-  <button class="nb" onclick="gp('rules',this)"><span class="ni">📋</span>ルール</button>
-  <button class="nb" onclick="gp('cfg',this)"><span class="ni">⚙️</span>設定</button>
+  <button class="nb on" onclick="gp('draft',this)"><span class="ni">ð</span>ãã©ãã</button>
+  <button class="nb" onclick="gp('picks',this)"><span class="ni">ð</span>æå</button>
+  <button class="nb" onclick="gp('results',this)"><span class="ni">â¾</span>çµæ</button>
+  <button class="nb" onclick="gp('score',this)"><span class="ni">ð</span>é ä½</button>
+  <button class="nb" onclick="gp('rules',this)"><span class="ni">ð</span>ã«ã¼ã«</button>
+  <button class="nb" onclick="gp('cfg',this)"><span class="ni">âï¸</span>è¨­å®</button>
 </div>
 <div class="main">
   <div class="pg on" id="pg-draft"></div>
@@ -244,16 +244,16 @@ body{background:var(--bg);color:var(--txt);font-family:'Noto Sans JP',sans-serif
   <div class="pg" id="pg-cfg"></div>
 </div>
 
-<!-- あみだくじ モーダル -->
+<!-- ãã¿ã ãã ã¢ã¼ãã« -->
 <div id="amida-overlay">
   <div class="amida-box">
-    <div class="amida-ttl">🎲 あみだくじ</div>
+    <div class="amida-ttl">ð² ãã¿ã ãã</div>
     <div class="amida-school" id="amida-school-name"></div>
     <div class="amida-cards" id="amida-cards"></div>
     <div class="amida-result" id="amida-result"></div>
     <div class="amida-note" id="amida-note"></div>
-    <button class="btn btn-g bblock" id="amida-btn" onclick="startAmida()">くじを引く！</button>
-    <button class="btn btn-o bblock" id="amida-confirm" style="display:none" onclick="confirmAmida()">✅ この結果で確定</button>
+    <button class="btn btn-g bblock" id="amida-btn" onclick="startAmida()">ãããå¼ãï¼</button>
+    <button class="btn btn-o bblock" id="amida-confirm" style="display:none" onclick="confirmAmida()">â ãã®çµæã§ç¢ºå®</button>
   </div>
 </div>
 
@@ -262,65 +262,65 @@ body{background:var(--bg);color:var(--txt);font-family:'Noto Sans JP',sans-serif
 // CONSTANTS
 // ==============================
 const PL=[
-  {name:'太田',i:1,c:'c1',bg:'bg1',bc:'bcrd1',col:'#3ecf8e',w:1},
-  {name:'新井',i:2,c:'c2',bg:'bg2',bc:'bcrd2',col:'#b06fe0',w:2},
-  {name:'若林',i:3,c:'c3',bg:'bg3',bc:'bcrd3',col:'#4a90e2',w:3},
-  {name:'本川',i:4,c:'c4',bg:'bg4',bc:'bcrd4',col:'#E50914',w:4},
+  {name:'å¤ªç°',i:1,c:'c1',bg:'bg1',bc:'bcrd1',col:'#3ecf8e',w:1},
+  {name:'æ°äº',i:2,c:'c2',bg:'bg2',bc:'bcrd2',col:'#b06fe0',w:2},
+  {name:'è¥æ',i:3,c:'c3',bg:'bg3',bc:'bcrd3',col:'#4a90e2',w:3},
+  {name:'æ¬å·',i:4,c:'c4',bg:'bg4',bc:'bcrd4',col:'#E50914',w:4},
 ];
-const WV_ODD=['太田','新井','若林','本川'];  // A,C,E,G巡
-const WV_EVN=['本川','若林','新井','太田'];  // B,D,F巡
+const WV_ODD=['å¤ªç°','æ°äº','è¥æ','æ¬å·'];  // A,C,E,Gå·¡
+const WV_EVN=['æ¬å·','è¥æ','æ°äº','å¤ªç°'];  // B,D,Få·¡
 function getWV(ri){
   // ri=1:A, ri=2:B, ri=3:C, ...
   return (ri%2===1)?WV_ODD:WV_EVN;
 }
 const RD=[
-  {id:'S',lb:'S巡',rk:1},{id:'A',lb:'A巡',rk:2},{id:'B',lb:'B巡',rk:3},
-  {id:'C',lb:'C巡',rk:4},{id:'D',lb:'D巡',rk:5},{id:'E',lb:'E巡',rk:6},
-  {id:'F',lb:'F巡',rk:7},{id:'G',lb:'G巡',rk:8},
+  {id:'S',lb:'Så·¡',rk:1},{id:'A',lb:'Aå·¡',rk:2},{id:'B',lb:'Bå·¡',rk:3},
+  {id:'C',lb:'Cå·¡',rk:4},{id:'D',lb:'Då·¡',rk:5},{id:'E',lb:'Eå·¡',rk:6},
+  {id:'F',lb:'Få·¡',rk:7},{id:'G',lb:'Gå·¡',rk:8},
 ];
 const SC=[
-  {n:'帝京',p:'東京',bl:'A',r1:'沖縄尚学',sr:10},{n:'沖縄尚学',p:'沖縄',bl:'A',r1:'帝京',sr:6},
-  {n:'阿南光',p:'徳島',bl:'A',r1:'中京大中京',sr:24},{n:'中京大中京',p:'愛知',bl:'A',r1:'阿南光',sr:12},
-  {n:'八戸学院光星',p:'青森',bl:'A',r1:'崇徳',sr:14},{n:'崇徳',p:'広島',bl:'A',r1:'八戸学院光星',sr:9},
-  {n:'滋賀学園',p:'滋賀',bl:'A',r1:'長崎西',sr:16},{n:'長崎西',p:'長崎',bl:'A',r1:'滋賀学園',sr:31},
-  {n:'横浜',p:'神奈川',bl:'B',r1:'神村学園',sr:2},{n:'神村学園',p:'鹿児島',bl:'B',r1:'横浜',sr:29},
-  {n:'花巻東',p:'岩手',bl:'B',r1:'智弁学園',sr:7},{n:'智弁学園',p:'奈良',bl:'B',r1:'花巻東',sr:11},
-  {n:'東洋大姫路',p:'兵庫',bl:'B',r1:'花咲徳栄',sr:15},{n:'花咲徳栄',p:'埼玉',bl:'B',r1:'東洋大姫路',sr:13},
-  {n:'高知農',p:'高知',bl:'B',r1:'日本文理',sr:32},{n:'日本文理',p:'新潟',bl:'B',r1:'高知農',sr:27},
-  {n:'北照',p:'北海道',bl:'C',r1:'専大松戸',sr:28},{n:'専大松戸',p:'千葉',bl:'C',r1:'北照',sr:18},
-  {n:'神戸国際大付',p:'兵庫',bl:'C',r1:'九州国際大付',sr:4},{n:'九州国際大付',p:'福岡',bl:'C',r1:'神戸国際大付',sr:1},
-  {n:'近江',p:'滋賀',bl:'C',r1:'大垣日大',sr:20},{n:'大垣日大',p:'岐阜',bl:'C',r1:'近江',sr:8},
-  {n:'山梨学院',p:'山梨',bl:'C',r1:'長崎日大',sr:5},{n:'長崎日大',p:'長崎',bl:'C',r1:'山梨学院',sr:30},
-  {n:'東北',p:'宮城',bl:'D',r1:'帝京長岡',sr:25},{n:'帝京長岡',p:'新潟',bl:'D',r1:'東北',sr:26},
-  {n:'高川学園',p:'山口',bl:'D',r1:'英明',sr:30},{n:'英明',p:'香川',bl:'D',r1:'高川学園',sr:23},
-  {n:'三重',p:'三重',bl:'D',r1:'佐野日大',sr:19},{n:'佐野日大',p:'栃木',bl:'D',r1:'三重',sr:21},
-  {n:'熊本工',p:'熊本',bl:'D',r1:'大阪桐蔭',sr:22},{n:'大阪桐蔭',p:'大阪',bl:'D',r1:'熊本工',sr:3},
+  {n:'å¸äº¬',p:'æ±äº¬',bl:'A',r1:'æ²ç¸å°å­¦',sr:10},{n:'æ²ç¸å°å­¦',p:'æ²ç¸',bl:'A',r1:'å¸äº¬',sr:6},
+  {n:'é¿åå',p:'å¾³å³¶',bl:'A',r1:'ä¸­äº¬å¤§ä¸­äº¬',sr:24},{n:'ä¸­äº¬å¤§ä¸­äº¬',p:'æç¥',bl:'A',r1:'é¿åå',sr:12},
+  {n:'å«æ¸å­¦é¢åæ',p:'éæ£®',bl:'A',r1:'å´å¾³',sr:14},{n:'å´å¾³',p:'åºå³¶',bl:'A',r1:'å«æ¸å­¦é¢åæ',sr:9},
+  {n:'æ»è³å­¦å',p:'æ»è³',bl:'A',r1:'é·å´è¥¿',sr:16},{n:'é·å´è¥¿',p:'é·å´',bl:'A',r1:'æ»è³å­¦å',sr:31},
+  {n:'æ¨ªæµ',p:'ç¥å¥å·',bl:'B',r1:'ç¥æå­¦å',sr:2},{n:'ç¥æå­¦å',p:'é¹¿åå³¶',bl:'B',r1:'æ¨ªæµ',sr:29},
+  {n:'è±å·»æ±',p:'å²©æ',bl:'B',r1:'æºå¼å­¦å',sr:7},{n:'æºå¼å­¦å',p:'å¥è¯',bl:'B',r1:'è±å·»æ±',sr:11},
+  {n:'æ±æ´å¤§å§«è·¯',p:'åµåº«',bl:'B',r1:'è±å²å¾³æ ',sr:15},{n:'è±å²å¾³æ ',p:'å¼ç',bl:'B',r1:'æ±æ´å¤§å§«è·¯',sr:13},
+  {n:'é«ç¥è¾²',p:'é«ç¥',bl:'B',r1:'æ¥æ¬æç',sr:32},{n:'æ¥æ¬æç',p:'æ°æ½',bl:'B',r1:'é«ç¥è¾²',sr:27},
+  {n:'åç§',p:'åæµ·é',bl:'C',r1:'å°å¤§æ¾æ¸',sr:28},{n:'å°å¤§æ¾æ¸',p:'åè',bl:'C',r1:'åç§',sr:18},
+  {n:'ç¥æ¸å½éå¤§ä»',p:'åµåº«',bl:'C',r1:'ä¹å·å½éå¤§ä»',sr:4},{n:'ä¹å·å½éå¤§ä»',p:'ç¦å²¡',bl:'C',r1:'ç¥æ¸å½éå¤§ä»',sr:1},
+  {n:'è¿æ±',p:'æ»è³',bl:'C',r1:'å¤§å£æ¥å¤§',sr:20},{n:'å¤§å£æ¥å¤§',p:'å²é',bl:'C',r1:'è¿æ±',sr:8},
+  {n:'å±±æ¢¨å­¦é¢',p:'å±±æ¢¨',bl:'C',r1:'é·å´æ¥å¤§',sr:5},{n:'é·å´æ¥å¤§',p:'é·å´',bl:'C',r1:'å±±æ¢¨å­¦é¢',sr:30},
+  {n:'æ±å',p:'å®®å',bl:'D',r1:'å¸äº¬é·å²¡',sr:25},{n:'å¸äº¬é·å²¡',p:'æ°æ½',bl:'D',r1:'æ±å',sr:26},
+  {n:'é«å·å­¦å',p:'å±±å£',bl:'D',r1:'è±æ',sr:30},{n:'è±æ',p:'é¦å·',bl:'D',r1:'é«å·å­¦å',sr:23},
+  {n:'ä¸é',p:'ä¸é',bl:'D',r1:'ä½éæ¥å¤§',sr:19},{n:'ä½éæ¥å¤§',p:'æ æ¨',bl:'D',r1:'ä¸é',sr:21},
+  {n:'çæ¬å·¥',p:'çæ¬',bl:'D',r1:'å¤§éªæ¡è­',sr:22},{n:'å¤§éªæ¡è­',p:'å¤§éª',bl:'D',r1:'çæ¬å·¥',sr:3},
 ];
 const R1P=[
-  ['帝京','沖縄尚学'],['阿南光','中京大中京'],['八戸学院光星','崇徳'],['滋賀学園','長崎西'],
-  ['横浜','神村学園'],['花巻東','智弁学園'],['東洋大姫路','花咲徳栄'],['高知農','日本文理'],
-  ['北照','専大松戸'],['神戸国際大付','九州国際大付'],['近江','大垣日大'],['山梨学院','長崎日大'],
-  ['東北','帝京長岡'],['高川学園','英明'],['三重','佐野日大'],['熊本工','大阪桐蔭'],
+  ['å¸äº¬','æ²ç¸å°å­¦'],['é¿åå','ä¸­äº¬å¤§ä¸­äº¬'],['å«æ¸å­¦é¢åæ','å´å¾³'],['æ»è³å­¦å','é·å´è¥¿'],
+  ['æ¨ªæµ','ç¥æå­¦å'],['è±å·»æ±','æºå¼å­¦å'],['æ±æ´å¤§å§«è·¯','è±å²å¾³æ '],['é«ç¥è¾²','æ¥æ¬æç'],
+  ['åç§','å°å¤§æ¾æ¸'],['ç¥æ¸å½éå¤§ä»','ä¹å·å½éå¤§ä»'],['è¿æ±','å¤§å£æ¥å¤§'],['å±±æ¢¨å­¦é¢','é·å´æ¥å¤§'],
+  ['æ±å','å¸äº¬é·å²¡'],['é«å·å­¦å','è±æ'],['ä¸é','ä½éæ¥å¤§'],['çæ¬å·¥','å¤§éªæ¡è­'],
 ];
 
 // ==============================
 // STATE
 // ==============================
-// ST.sd  = {playerName: schoolName}  ← S巡宣言（開票まで非表示）
-// ST.ss  = {playerName: true}        ← 提出済みフラグ（学校名は非表示）
-// ST.so  = bool                      ← 開票済み
-// ST.snr = [playerName, ...]         ← 再指名待ちキュー
-// ST.pk  = {school: {pl,ri}}         ← 確定指名
-// ST.rs  = {matchId: winnerName}     ← 試合結果
+// ST.sd  = {playerName: schoolName}  â Så·¡å®£è¨ï¼éç¥¨ã¾ã§éè¡¨ç¤ºï¼
+// ST.ss  = {playerName: true}        â æåºæ¸ã¿ãã©ã°ï¼å­¦æ ¡åã¯éè¡¨ç¤ºï¼
+// ST.so  = bool                      â éç¥¨æ¸ã¿
+// ST.snr = [playerName, ...]         â åæåå¾ã¡ã­ã¥ã¼
+// ST.pk  = {school: {pl,ri}}         â ç¢ºå®æå
+// ST.rs  = {matchId: winnerName}     â è©¦åçµæ
 let ST={ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{}};
 const KEY='sb2026v5';
 
-// ローカル変数（共有しない）
-let localPlayer=null; // このデバイスで操作中のプレイヤー
+// ã­ã¼ã«ã«å¤æ°ï¼å±æããªãï¼
+let localPlayer=null; // ãã®ããã¤ã¹ã§æä½ä¸­ã®ãã¬ã¤ã¤ã¼
 let amidaContext=null; // {school, players, winner}
 
 // ==============================
-// STORAGE — Firebase Realtime Database
+// STORAGE â Firebase Realtime Database
 // ==============================
 const EMPTY_ST=()=>({ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{},sc:{},amidaResults:{},fetchLocked:false});
 
@@ -328,7 +328,7 @@ async function sv(){
   try{ await window._fbSet(ST); }catch(e){ console.error('Firebase write error',e); }
 }
 async function ld(){
-  // 初回ロードはリスナー側で処理するため sv/ld パターンは書き込みのみ使用
+  // ååã­ã¼ãã¯ãªã¹ãã¼å´ã§å¦çãããã sv/ld ãã¿ã¼ã³ã¯æ¸ãè¾¼ã¿ã®ã¿ä½¿ç¨
 }
 function mergeData(d){
   ST = {...EMPTY_ST(), ...(d||{})};
@@ -346,10 +346,10 @@ const cw=()=>getWV(ST.ri)[ST.wi];
 function pki(nm){const p=ST.pk[nm];if(!p)return null;return{...p,pl:plr(p.pl),rd:RD[p.ri]};}
 function wns(s){return Object.values(ST.rs).filter(w=>w===s).length;}
 function isOut(s){
-  // 全試合結果を見て、sが負けた試合があればtrue
+  // å¨è©¦åçµæãè¦ã¦ãsãè² ããè©¦åãããã°true
   for(const [mid,w] of Object.entries(ST.rs)){
     if(w && w!==s){
-      // この試合にsが出場していたか確認
+      // ãã®è©¦åã«sãåºå ´ãã¦ãããç¢ºèª
       const l=loser(mid,w);
       if(l===s)return true;
     }
@@ -392,13 +392,13 @@ function allScores(){
 }
 
 // ==============================
-// 未解決競合を計算
+// æªè§£æ±ºç«¶åãè¨ç®
 // ==============================
 function getPendingConflicts(){
-  // sd のうち複数人が同じ学校を選んでいて、まだ pk に入っていないもの
+  // sd ã®ãã¡è¤æ°äººãåãå­¦æ ¡ãé¸ãã§ãã¦ãã¾ã  pk ã«å¥ã£ã¦ããªããã®
   const grp={};
   Object.entries(ST.sd).forEach(([pl,s])=>{
-    if(ST.pk[s]) return; // すでに確定済み
+    if(ST.pk[s]) return; // ãã§ã«ç¢ºå®æ¸ã¿
     if(!grp[s])grp[s]=[];
     grp[s].push(pl);
   });
@@ -411,86 +411,86 @@ function getPendingConflicts(){
 function rDraft(){
   const el=document.getElementById('pg-draft');
   if(done()){
-    el.innerHTML=`<div class="hero"><div class="hr">ドラフト完了！</div><div class="hd">全32校の指名が完了しました</div></div><div class="alrt alrt-g" style="text-align:center">「結果」タブで試合結果を入力してください<br><button class="btn btn-g" style="margin-top:9px" onclick="gp('results',document.querySelectorAll('.nb')[2])">⚾ 結果入力へ →</button></div>`;
+    el.innerHTML=`<div class="hero"><div class="hr">ãã©ããå®äºï¼</div><div class="hd">å¨32æ ¡ã®æåãå®äºãã¾ãã</div></div><div class="alrt alrt-g" style="text-align:center">ãçµæãã¿ãã§è©¦åçµæãå¥åãã¦ãã ãã<br><button class="btn btn-g" style="margin-top:9px" onclick="gp('results',document.querySelectorAll('.nb')[2])">â¾ çµæå¥åã¸ â</button></div>`;
     return;
   }
   if(ST.ri!==0){el.innerHTML=rWaiver();return;}
-  // S巡フロー
+  // Så·¡ãã­ã¼
   if(ST.so){
     const pending=getPendingConflicts();
-    if(pending.length>0){el.innerHTML=rSReveal();return;}   // 未解決競合あり→開票画面
-    if(ST.snr.length>0){                                    // 全競合解決済み→再指名フェーズ
+    if(pending.length>0){el.innerHTML=rSReveal();return;}   // æªè§£æ±ºç«¶åããâéç¥¨ç»é¢
+    if(ST.snr.length>0){                                    // å¨ç«¶åè§£æ±ºæ¸ã¿âåæåãã§ã¼ãº
       if(ST.snro){
         const rPending=getRepickConflicts();
-        if(rPending.length>0){el.innerHTML=rSRepickReveal();return;} // 再指名も競合
-        if(anyRepickPending()){el.innerHTML=rSRepickReveal();return;} // 確定待ち
+        if(rPending.length>0){el.innerHTML=rSRepickReveal();return;} // åæåãç«¶å
+        if(anyRepickPending()){el.innerHTML=rSRepickReveal();return;} // ç¢ºå®å¾ã¡
         el.innerHTML=rSRepickReveal();return;
       }
       el.innerHTML=rSRepickSelect();return;
     }
-    el.innerHTML=rSReveal();return;                         // 全員確定→A巡ボタン
+    el.innerHTML=rSReveal();return;                         // å¨å¡ç¢ºå®âAå·¡ãã¿ã³
   }
   el.innerHTML=rSSelect();
 }
 
-// ------ S巡①: 個人選択画面 ------
+// ------ Så·¡â : åäººé¸æç»é¢ ------
 function rSSelect(){
   const allSub=PL.every(p=>ST.ss[p.name]);
   
-  // まだ自分を選んでいない
+  // ã¾ã èªåãé¸ãã§ããªã
   if(!localPlayer){
     return `<div class="hero">
-      <div class="hr">S巡 — 一斉指名</div>
-      <div class="hd">あなたは誰ですか？</div>
-      <div class="hn">自分の名前を選んで学校を指名してください</div>
+      <div class="hr">Så·¡ â ä¸ææå</div>
+      <div class="hd">ããªãã¯èª°ã§ããï¼</div>
+      <div class="hn">èªåã®ååãé¸ãã§å­¦æ ¡ãæåãã¦ãã ãã</div>
     </div>
     <div class="pl-grid">
       ${PL.map(p=>{
         const sub=ST.ss[p.name];
         return `<button class="pl-btn" style="color:${p.col};border-color:${p.col}44" onclick="setLocalPlayer('${p.name}')" ${sub?'disabled':''}>
           ${p.name}
-          <div class="pl-btn-sub">${sub?'✅ 選択済み（待機中）':'▶ 選択する'}</div>
+          <div class="pl-btn-sub">${sub?'â é¸ææ¸ã¿ï¼å¾æ©ä¸­ï¼':'â¶ é¸æãã'}</div>
         </button>`;
       }).join('')}
     </div>
     ${ssStatusHtml()}
-    ${allSub?`<button class="btn btn-g bblock btn-big" onclick="openS()">🎯 全員が選択完了！開票する</button>`:''}`;
+    ${allSub?`<button class="btn btn-g bblock btn-big" onclick="openS()">ð¯ å¨å¡ãé¸æå®äºï¼éç¥¨ãã</button>`:''}`;
   }
 
   const me=plr(localPlayer);
-  // 自分がすでに提出済み
+  // èªåããã§ã«æåºæ¸ã¿
   if(ST.ss[localPlayer]){
     const submitted=PL.filter(p=>ST.ss[p.name]).length;
     return `<div class="hero">
-      <div class="hr" style="font-size:24px">✅ 選択完了！</div>
-      <div class="hw"><span class="${me.c}">${localPlayer}</span>さんの選択は送信済み</div>
-      <div class="hn">他のメンバーが選択するまでお待ちください</div>
+      <div class="hr" style="font-size:24px">â é¸æå®äºï¼</div>
+      <div class="hw"><span class="${me.c}">${localPlayer}</span>ããã®é¸æã¯éä¿¡æ¸ã¿</div>
+      <div class="hn">ä»ã®ã¡ã³ãã¼ãé¸æããã¾ã§ãå¾ã¡ãã ãã</div>
     </div>
     ${allSub?
-      `<button class="btn btn-g bblock btn-big" onclick="openS()">🎯 全員完了！開票する →</button>`:
-      `<div class="alrt" style="text-align:center">⏳ ${submitted}/4 人が選択完了 — あと ${4-submitted} 人</div>`
+      `<button class="btn btn-g bblock btn-big" onclick="openS()">ð¯ å¨å¡å®äºï¼éç¥¨ãã â</button>`:
+      `<div class="alrt" style="text-align:center">â³ ${submitted}/4 äººãé¸æå®äº â ãã¨ ${4-submitted} äºº</div>`
     }
     ${ssStatusHtml()}
-    <button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">← 戻る（別の人が操作）</button>`;
+    <button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">â æ»ãï¼å¥ã®äººãæä½ï¼</button>`;
   }
 
-  // 自分の選択画面
+  // èªåã®é¸æç»é¢
   return `<div class="hero">
-    <div class="hr">S巡</div>
-    <div class="hw"><span class="${me.c}">${localPlayer}</span>さんの指名</div>
-    <div class="hn">🔒 あなたの選択は他の人には見えません</div>
+    <div class="hr">Så·¡</div>
+    <div class="hw"><span class="${me.c}">${localPlayer}</span>ããã®æå</div>
+    <div class="hn">ð ããªãã®é¸æã¯ä»ã®äººã«ã¯è¦ãã¾ãã</div>
   </div>
   <div style="background:var(--s2);border:1px solid var(--bdr2);border-radius:12px;padding:14px;margin-bottom:12px">
-    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;letter-spacing:.05em">指名したい学校を選択</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;letter-spacing:.05em">æåãããå­¦æ ¡ãé¸æ</div>
     <select id="s-school-sel" class="dsel">
-      <option value="">-- 学校を選択してください --</option>
-      ${SC.map(s=>`<option value="${s.n}">${s.n}（${s.bl}ブロック | 初戦：${s.r1}）</option>`).join('')}
+      <option value="">-- å­¦æ ¡ãé¸æãã¦ãã ãã --</option>
+      ${SC.map(s=>`<option value="${s.n}">${s.n}ï¼${s.bl}ãã­ãã¯ | åæ¦ï¼${s.r1}ï¼</option>`).join('')}
     </select>
   </div>
-  <button class="btn btn-g bblock btn-big" onclick="submitS()">🔒 決定（非公開で送信）</button>
-  <div class="sl" style="margin-top:14px">全員の選択状況</div>
+  <button class="btn btn-g bblock btn-big" onclick="submitS()">ð æ±ºå®ï¼éå¬éã§éä¿¡ï¼</button>
+  <div class="sl" style="margin-top:14px">å¨å¡ã®é¸æç¶æ³</div>
   ${ssStatusHtml()}
-  <button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">← 戻る（別の人が操作）</button>`;
+  <button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">â æ»ãï¼å¥ã®äººãæä½ï¼</button>`;
 }
 
 function ssStatusHtml(){
@@ -499,74 +499,74 @@ function ssStatusHtml(){
       const sub=ST.ss[p.name];
       return `<div class="ss-card ${sub?'done':'waiting'}">
         <div class="ss-name ${p.c}">${p.name}</div>
-        <div class="ss-badge">${sub?'✅ 選択済み':'⏳ 未選択'}</div>
+        <div class="ss-badge">${sub?'â é¸ææ¸ã¿':'â³ æªé¸æ'}</div>
       </div>`;
     }).join('')}
   </div>`;
 }
 
-// ------ S巡②: 開票・競合処理 ------
+// ------ Så·¡â¡: éç¥¨ã»ç«¶åå¦ç ------
 function rSReveal(){
-  // 競合グループを計算（未解決のみ）
+  // ç«¶åã°ã«ã¼ããè¨ç®ï¼æªè§£æ±ºã®ã¿ï¼
   const pending=getPendingConflicts();
 
-  // 競合なし・全員確定 → A巡へ
+  // ç«¶åãªãã»å¨å¡ç¢ºå® â Aå·¡ã¸
   const allConfirmed=PL.every(p=>{
     const s=ST.sd[p.name];
     return s && ST.pk[s]?.pl === p.name;
   });
 
   let h=`<div class="hero">
-    <div class="hr">S巡 — 開票結果</div>
-    <div class="hd">${pending.length>0?`⚠️ 競合あり（あみだくじで解決）`:`✅ 全員の指名が確定しました`}</div>
+    <div class="hr">Så·¡ â éç¥¨çµæ</div>
+    <div class="hd">${pending.length>0?`â ï¸ ç«¶åããï¼ãã¿ã ããã§è§£æ±ºï¼`:`â å¨å¡ã®æåãç¢ºå®ãã¾ãã`}</div>
   </div>`;
 
-  // 4人の選択を表示
+  // 4äººã®é¸æãè¡¨ç¤º
   h+=`<div class="rv-grid">`;
   PL.forEach(p=>{
-    const s=ST.sd[p.name]||'？';
+    const s=ST.sd[p.name]||'ï¼';
     const sc=SC.find(x=>x.n===s);
     const isConflict=pending.some(c=>c.players.includes(p.name));
     const isOk=ST.pk[s]?.pl===p.name;
     h+=`<div class="rv-card ${isConflict?'conflict':isOk?'ok':''}">
       <div class="rv-player ${p.c}">${p.name}</div>
       <div class="rv-school">${s}</div>
-      ${sc?`<div class="rv-r1">初戦：${sc.r1}</div>`:''}
-      <div>${isOk?'<span class="rv-tag tag-ok">✅ 確定</span>':isConflict?'<span class="rv-tag tag-ng">⚠️ 競合</span>':'<span class="rv-tag" style="background:var(--s3);color:var(--muted)">待機中</span>'}</div>
+      ${sc?`<div class="rv-r1">åæ¦ï¼${sc.r1}</div>`:''}
+      <div>${isOk?'<span class="rv-tag tag-ok">â ç¢ºå®</span>':isConflict?'<span class="rv-tag tag-ng">â ï¸ ç«¶å</span>':'<span class="rv-tag" style="background:var(--s3);color:var(--muted)">å¾æ©ä¸­</span>'}</div>
     </div>`;
   });
   h+=`</div>`;
 
-  // 競合グループとあみだくじボタン
+  // ç«¶åã°ã«ã¼ãã¨ãã¿ã ãããã¿ã³
   if(pending.length>0){
-    h+=`<div class="sl">あみだくじで解決</div>`;
+    h+=`<div class="sl">ãã¿ã ããã§è§£æ±º</div>`;
     conflictList=pending;
     pending.forEach((c,idx)=>{
       h+=`<div class="cfl-box">
-        <div class="cfl-title">🎲 「${c.school}」が競合（${c.players.length}人）</div>
+        <div class="cfl-title">ð² ã${c.school}ããç«¶åï¼${c.players.length}äººï¼</div>
         <div class="cfl-players">
           ${c.players.map(name=>{const p=plr(name);return`<span class="cfl-p" style="color:${p.col};border-color:${p.col}44;background:${p.col}15">${name}</span>`;}).join('')}
         </div>
-        <button class="btn btn-g bblock" onclick="showAmidaByIdx(${idx})">🎲 あみだくじを引く</button>
+        <button class="btn btn-g bblock" onclick="showAmidaByIdx(${idx})">ð² ãã¿ã ãããå¼ã</button>
       </div>`;
     });
   } else if(allConfirmed){
-    h+=`<div class="alrt alrt-g" style="text-align:center;margin-top:8px">全員の指名が確定しました！<br><button class="btn btn-g" style="margin-top:8px" onclick="finishS()">A巡へ進む →</button></div>`;
+    h+=`<div class="alrt alrt-g" style="text-align:center;margin-top:8px">å¨å¡ã®æåãç¢ºå®ãã¾ããï¼<br><button class="btn btn-g" style="margin-top:8px" onclick="finishS()">Aå·¡ã¸é²ã â</button></div>`;
   } else if(ST.snr.length>0){
-    // 再指名待ちの人がいる → 再指名フェーズへ誘導
+    // åæåå¾ã¡ã®äººããã â åæåãã§ã¼ãºã¸èªå°
     h+=`<div class="alrt" style="text-align:center;margin-top:8px">
-      ⚠️ 外れた <strong>${ST.snr.join('・')}さん</strong> は再指名してください
-      <br><button class="btn btn-g" style="margin-top:8px" onclick="goRepick()">🔄 再指名へ進む →</button>
+      â ï¸ å¤ãã <strong>${ST.snr.join('ã»')}ãã</strong> ã¯åæåãã¦ãã ãã
+      <br><button class="btn btn-g" style="margin-top:8px" onclick="goRepick()">ð åæåã¸é²ã â</button>
     </div>`;
   } else {
-    // 全員確定（保険）
-    h+=`<button class="btn btn-g bblock" onclick="finishS()">A巡へ進む →</button>`;
+    // å¨å¡ç¢ºå®ï¼ä¿éºï¼
+    h+=`<button class="btn btn-g bblock" onclick="finishS()">Aå·¡ã¸é²ã â</button>`;
   }
 
-  // 確定済みのものを表示
+  // ç¢ºå®æ¸ã¿ã®ãã®ãè¡¨ç¤º
   const confirmed=Object.entries(ST.pk).filter(([,v])=>v.ri===0);
   if(confirmed.length>0){
-    h+=`<div class="sl" style="margin-top:14px">確定済み (${confirmed.length}/4)</div>`;
+    h+=`<div class="sl" style="margin-top:14px">ç¢ºå®æ¸ã¿ (${confirmed.length}/4)</div>`;
     confirmed.forEach(([s,v])=>{
       const p=plr(v.pl);
       h+=`<div class="mr"><span class="${p.c}" style="font-weight:700;font-size:12px;width:40px;flex-shrink:0">${v.pl}</span><strong style="font-size:13px">${s}</strong></div>`;
@@ -576,7 +576,7 @@ function rSReveal(){
   return h;
 }
 
-// ------ S巡③: 再指名 — 非公開一斉選択 ------
+// ------ Så·¡â¢: åæå â éå¬éä¸æé¸æ ------
 function getRepickConflicts(){
   const already=new Set(Object.keys(ST.pk));
   const grp={};
@@ -596,34 +596,34 @@ function ssRepickStatusHtml(){
     const p=plr(name);const sub=ST.snrs[name];
     h+=`<div class="ss-card ${sub?'done':'waiting'}">
       <div class="ss-name ${p.c}">${name}</div>
-      <div class="ss-badge">${sub?'✅ 選択済み':'⏳ 未選択'}</div>
+      <div class="ss-badge">${sub?'â é¸ææ¸ã¿':'â³ æªé¸æ'}</div>
     </div>`;
   });
   h+='</div>';
   return h;
 }
 
-// 再指名①: 各自の非公開選択画面
+// åæåâ : åèªã®éå¬éé¸æç»é¢
 function rSRepickSelect(){
   const allSub=ST.snr.every(n=>ST.snrs[n]);
   const already=new Set(Object.keys(ST.pk));
   const avail=SC.filter(s=>!already.has(s.n));
 
-  // 誰が操作するか選ぶ
+  // èª°ãæä½ãããé¸ã¶
   if(!localPlayer||!ST.snr.includes(localPlayer)){
     let h=`<div class="hero">
-      <div class="hr">S巡 — 再指名</div>
-      <div class="hd">あみだくじで外れた方は再指名してください</div>
-      <div class="hn">🔒 各自が非公開で選択 → 一斉開票</div>
+      <div class="hr">Så·¡ â åæå</div>
+      <div class="hd">ãã¿ã ããã§å¤ããæ¹ã¯åæåãã¦ãã ãã</div>
+      <div class="hn">ð åèªãéå¬éã§é¸æ â ä¸æéç¥¨</div>
     </div><div class="pl-grid">`;
     ST.snr.forEach(name=>{
       const p=plr(name);const sub=ST.snrs[name];
       h+=`<button class="pl-btn" style="color:${p.col};border-color:${p.col}44" onclick="setLocalPlayer('${name}')" ${sub?'disabled':''}>
-        ${name}<div class="pl-btn-sub">${sub?'✅ 選択済み':'▶ 再指名する'}</div>
+        ${name}<div class="pl-btn-sub">${sub?'â é¸ææ¸ã¿':'â¶ åæåãã'}</div>
       </button>`;
     });
     h+=`</div>${ssRepickStatusHtml()}`;
-    if(allSub) h+=`<button class="btn btn-g bblock btn-big" onclick="openRepick()">🎯 開票する</button>`;
+    if(allSub) h+=`<button class="btn btn-g bblock btn-big" onclick="openRepick()">ð¯ éç¥¨ãã</button>`;
     return h;
   }
 
@@ -631,37 +631,37 @@ function rSRepickSelect(){
   if(ST.snrs[localPlayer]){
     const done2=ST.snr.filter(n=>ST.snrs[n]).length;
     let h=`<div class="hero">
-      <div class="hr" style="font-size:24px">✅ 選択完了！</div>
-      <div class="hw"><span class="${me.c}">${localPlayer}</span>さんの選択は送信済み</div>
-      <div class="hn">他の方の選択をお待ちください</div>
+      <div class="hr" style="font-size:24px">â é¸æå®äºï¼</div>
+      <div class="hw"><span class="${me.c}">${localPlayer}</span>ããã®é¸æã¯éä¿¡æ¸ã¿</div>
+      <div class="hn">ä»ã®æ¹ã®é¸æããå¾ã¡ãã ãã</div>
     </div>`;
-    if(allSub) h+=`<button class="btn btn-g bblock btn-big" onclick="openRepick()">🎯 全員完了！開票する →</button>`;
-    else h+=`<div class="alrt" style="text-align:center">⏳ ${done2}/${ST.snr.length} 人が選択完了</div>`;
+    if(allSub) h+=`<button class="btn btn-g bblock btn-big" onclick="openRepick()">ð¯ å¨å¡å®äºï¼éç¥¨ãã â</button>`;
+    else h+=`<div class="alrt" style="text-align:center">â³ ${done2}/${ST.snr.length} äººãé¸æå®äº</div>`;
     h+=ssRepickStatusHtml();
-    h+=`<button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">← 戻る（別の人が操作）</button>`;
+    h+=`<button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">â æ»ãï¼å¥ã®äººãæä½ï¼</button>`;
     return h;
   }
 
-  // 自分の選択画面
+  // èªåã®é¸æç»é¢
   let h=`<div class="hero">
-    <div class="hr">S巡 — 再指名</div>
-    <div class="hw"><span class="${me.c}">${localPlayer}</span>さんの再指名</div>
-    <div class="hn">🔒 あなたの選択は他の人には見えません</div>
+    <div class="hr">Så·¡ â åæå</div>
+    <div class="hw"><span class="${me.c}">${localPlayer}</span>ããã®åæå</div>
+    <div class="hn">ð ããªãã®é¸æã¯ä»ã®äººã«ã¯è¦ãã¾ãã</div>
   </div>
   <div style="background:var(--s2);border:1px solid var(--bdr2);border-radius:12px;padding:14px;margin-bottom:12px">
-    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700">指名したい学校を選択（残り${avail.length}校）</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700">æåãããå­¦æ ¡ãé¸æï¼æ®ã${avail.length}æ ¡ï¼</div>
     <select id="rp-school-sel" class="dsel">
-      <option value="">-- 学校を選択してください --</option>`;
-  avail.forEach(s=>{h+=`<option value="${s.n}">${s.n}（${s.bl}ブロック | 初戦：${s.r1}）</option>`;});
+      <option value="">-- å­¦æ ¡ãé¸æãã¦ãã ãã --</option>`;
+  avail.forEach(s=>{h+=`<option value="${s.n}">${s.n}ï¼${s.bl}ãã­ãã¯ | åæ¦ï¼${s.r1}ï¼</option>`;});
   h+=`</select></div>
-  <button class="btn btn-g bblock btn-big" onclick="submitRepick()">🔒 決定（非公開で送信）</button>`;
-  h+=`<div class="sl" style="margin-top:14px">再指名対象者の状況</div>`;
+  <button class="btn btn-g bblock btn-big" onclick="submitRepick()">ð æ±ºå®ï¼éå¬éã§éä¿¡ï¼</button>`;
+  h+=`<div class="sl" style="margin-top:14px">åæåå¯¾è±¡èã®ç¶æ³</div>`;
   h+=ssRepickStatusHtml();
-  h+=`<button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">← 戻る</button>`;
+  h+=`<button class="btn btn-o bblock" style="margin-top:10px" onclick="localPlayer=null;rDraft()">â æ»ã</button>`;
   return h;
 }
 
-// 再指名②: 開票・競合処理
+// åæåâ¡: éç¥¨ã»ç«¶åå¦ç
 function rSRepickReveal(){
   const already=new Set(Object.keys(ST.pk));
   const rPending=getRepickConflicts();
@@ -670,11 +670,11 @@ function rSRepickReveal(){
   });
 
   let h=`<div class="hero">
-    <div class="hr">再指名 — 開票</div>
-    <div class="hd">${rPending.length>0?'⚠️ 競合あり — あみだくじで解決':'✅ 再指名が確定しました'}</div>
+    <div class="hr">åæå â éç¥¨</div>
+    <div class="hd">${rPending.length>0?'â ï¸ ç«¶åãã â ãã¿ã ããã§è§£æ±º':'â åæåãç¢ºå®ãã¾ãã'}</div>
   </div><div class="rv-grid">`;
   ST.snr.forEach(name=>{
-    const s=ST.snrd[name]||'？';
+    const s=ST.snrd[name]||'ï¼';
     const sc2=SC.find(x=>x.n===s);
     const isConflict=rPending.some(c=>c.players.includes(name));
     const isOk=ST.pk[s]?.pl===name;
@@ -682,50 +682,50 @@ function rSRepickReveal(){
     h+=`<div class="rv-card ${isConflict?'conflict':isOk?'ok':''}">
       <div class="rv-player ${p.c}">${name}</div>
       <div class="rv-school">${s}</div>
-      ${sc2?`<div class="rv-r1">初戦：${sc2.r1}</div>`:''}
-      <div>${isOk?'<span class="rv-tag tag-ok">✅ 確定</span>':isConflict?'<span class="rv-tag tag-ng">⚠️ 競合</span>':'<span class="rv-tag" style="background:var(--s3);color:var(--muted)">待機中</span>'}</div>
+      ${sc2?`<div class="rv-r1">åæ¦ï¼${sc2.r1}</div>`:''}
+      <div>${isOk?'<span class="rv-tag tag-ok">â ç¢ºå®</span>':isConflict?'<span class="rv-tag tag-ng">â ï¸ ç«¶å</span>':'<span class="rv-tag" style="background:var(--s3);color:var(--muted)">å¾æ©ä¸­</span>'}</div>
     </div>`;
   });
   h+=`</div>`;
 
   if(rPending.length>0){
     conflictList=rPending;
-    h+=`<div class="sl">あみだくじで解決</div>`;
+    h+=`<div class="sl">ãã¿ã ããã§è§£æ±º</div>`;
     rPending.forEach((c,idx)=>{
       h+=`<div class="cfl-box">
-        <div class="cfl-title">🎲 「${c.school}」が競合（${c.players.length}人）</div>
+        <div class="cfl-title">ð² ã${c.school}ããç«¶åï¼${c.players.length}äººï¼</div>
         <div class="cfl-players">`;
       c.players.forEach(n=>{const p=plr(n);h+=`<span class="cfl-p" style="color:${p.col};border-color:${p.col}44;background:${p.col}15">${n}</span>`;});
-      h+=`</div><button class="btn btn-g bblock" onclick="showAmidaByIdx(${idx})">🎲 あみだくじを引く</button></div>`;
+      h+=`</div><button class="btn btn-g bblock" onclick="showAmidaByIdx(${idx})">ð² ãã¿ã ãããå¼ã</button></div>`;
     });
   } else if(allConfirmed){
-    h+=`<div class="alrt alrt-g" style="text-align:center;margin-top:8px">全員の再指名が確定！<br><button class="btn btn-g" style="margin-top:8px" onclick="finishS()">A巡へ進む →</button></div>`;
+    h+=`<div class="alrt alrt-g" style="text-align:center;margin-top:8px">å¨å¡ã®åæåãç¢ºå®ï¼<br><button class="btn btn-g" style="margin-top:8px" onclick="finishS()">Aå·¡ã¸é²ã â</button></div>`;
   } else {
-    h+=`<button class="btn btn-g bblock" onclick="finishS()">A巡へ進む →</button>`;
+    h+=`<button class="btn btn-g bblock" onclick="finishS()">Aå·¡ã¸é²ã â</button>`;
   }
   return h;
 }
 
-// ------ ウェーバー巡 ------
+// ------ ã¦ã§ã¼ãã¼å·¡ ------
 function rWaiver(){
-  if(ST.wi>=getWV(ST.ri).length)return`<div class="hero"><div class="hr">${cr().lb} — 完了</div></div><button class="btn btn-g bblock" onclick="advRnd()">次の巡へ →</button>`;
+  if(ST.wi>=getWV(ST.ri).length)return`<div class="hero"><div class="hr">${cr().lb} â å®äº</div></div><button class="btn btn-g bblock" onclick="advRnd()">æ¬¡ã®å·¡ã¸ â</button>`;
   const rd=cr();const cp=cw();const cpd=plr(cp);const rm=rem();
-  let h=`<div class="hero"><div class="hr">${rd.lb}</div><div class="hd">${rd.id==='A'?'ウェーバー順（箱根成績下位から）':'ウェーバー順'}</div><div class="hw">現在: <span class="${cpd.c}">${cp}</span> さんの番</div><div class="hn">ウェーバー ${ST.wi+1}/4 — 残り ${rm.length} 校</div></div><div class="sl">指名する学校を選択</div><div class="sg">`;
+  let h=`<div class="hero"><div class="hr">${rd.lb}</div><div class="hd">${rd.id==='A'?'ã¦ã§ã¼ãã¼é ï¼ç®±æ ¹æç¸¾ä¸ä½ããï¼':'ã¦ã§ã¼ãã¼é '}</div><div class="hw">ç¾å¨: <span class="${cpd.c}">${cp}</span> ããã®çª</div><div class="hn">ã¦ã§ã¼ãã¼ ${ST.wi+1}/4 â æ®ã ${rm.length} æ ¡</div></div><div class="sl">æåããå­¦æ ¡ãé¸æ</div><div class="sg">`;
   const isMyTurn = localPlayer && localPlayer===cp;
   if(!isMyTurn && !localPlayer){
-    h+=`<div class="alrt" style="margin-bottom:10px">あなたの名前を選択してください</div>`;
+    h+=`<div class="alrt" style="margin-bottom:10px">ããªãã®ååãé¸æãã¦ãã ãã</div>`;
     PL.forEach(p=>{h+=`<button class="btn btn-o bblock" style="margin-bottom:6px" onclick="localPlayer='${p.name}';rDraft()">${p.name}</button>`;});
     h+=`</div>`;return h;
   }
   if(!isMyTurn){
-    h+=`<div class="alrt alrt-r">今は <strong>${cp}</strong> さんの番です。あなた（${localPlayer}）は待機中です。</div>`;
+    h+=`<div class="alrt alrt-r">ä»ã¯ <strong>${cp}</strong> ããã®çªã§ããããªãï¼${localPlayer}ï¼ã¯å¾æ©ä¸­ã§ãã</div>`;
     h+=`</div>`;return h;
   }
-  rm.forEach(s=>{h+=`<button class="sb" onclick="doPick('${s.n}')"><div class="sn">${s.n}</div><div class="ss2"><span class="bl bl${s.bl}">${s.bl}</span> ${s.p}</div><div class="ss2" style="margin-top:2px">初戦：${s.r1}</div></button>`;});
+  rm.forEach(s=>{h+=`<button class="sb" onclick="doPick('${s.n}')"><div class="sn">${s.n}</div><div class="ss2"><span class="bl bl${s.bl}">${s.bl}</span> ${s.p}</div><div class="ss2" style="margin-top:2px">åæ¦ï¼${s.r1}</div></button>`;});
   h+=`</div>`;
-  h+=`<button class="btn btn-o bblock" style="margin-top:10px;font-size:12px" onclick="undoPick()">↩ 1人前に戻る</button>`;
+  h+=`<button class="btn btn-o bblock" style="margin-top:10px;font-size:12px" onclick="undoPick()">â© 1äººåã«æ»ã</button>`;
   const thisPks=Object.entries(ST.pk).filter(([,v])=>v.ri===ST.ri).sort((a,b)=>getWV(ST.ri).indexOf(a[1].pl)-getWV(ST.ri).indexOf(b[1].pl));
-  if(thisPks.length){h+=`<div class="sl" style="margin-top:14px">この巡の指名済み</div>`;thisPks.forEach(([s,info])=>{const p=plr(info.pl);h+=`<div class="mr"><span class="${p.c}" style="font-weight:700;font-size:12px">${info.pl}</span><span style="margin-left:8px;font-size:13px">${s}</span></div>`;});}
+  if(thisPks.length){h+=`<div class="sl" style="margin-top:14px">ãã®å·¡ã®æåæ¸ã¿</div>`;thisPks.forEach(([s,info])=>{const p=plr(info.pl);h+=`<div class="mr"><span class="${p.c}" style="font-weight:700;font-size:12px">${info.pl}</span><span style="margin-left:8px;font-size:13px">${s}</span></div>`;});}
   return h;
 }
 
@@ -742,16 +742,16 @@ function showAmidaByIdx(idx){
 }
 
 function showAmida(school, players){
-  // 競合者のみに絞る
+  // ç«¶åèã®ã¿ã«çµã
   const conflictPlayers = players.filter(p => !ST.pk[school] || ST.pk[school].pl === p);
   amidaContext={school, players:conflictPlayers};
   amidaWinner=null;
 
-  // 既に結果がある場合は結果を表示
+  // æ¢ã«çµæãããå ´åã¯çµæãè¡¨ç¤º
   const existingWinner = ST.amidaResults && ST.amidaResults[school];
 
-  document.getElementById('amida-school-name').textContent=`「${school}」の指名権`;
-  document.getElementById('amida-note').textContent=`${conflictPlayers.join('・')} が競合しています`;
+  document.getElementById('amida-school-name').textContent=`ã${school}ãã®æåæ¨©`;
+  document.getElementById('amida-note').textContent=`${conflictPlayers.join('ã»')} ãç«¶åãã¦ãã¾ã`;
 
   const cards=document.getElementById('amida-cards');
   cards.innerHTML=conflictPlayers.map(name=>{
@@ -761,7 +761,7 @@ function showAmida(school, players){
 
   if(existingWinner){
     amidaWinner=existingWinner;
-    document.getElementById('amida-result').textContent=`🎉 ${existingWinner} さんが当選！`;
+    document.getElementById('amida-result').textContent=`ð ${existingWinner} ãããå½é¸ï¼`;
     document.getElementById('amida-btn').style.display='none';
     document.getElementById('amida-confirm').style.display='block';
     conflictPlayers.forEach(name=>{
@@ -771,7 +771,7 @@ function showAmida(school, players){
   } else {
     document.getElementById('amida-result').textContent='';
     document.getElementById('amida-btn').style.display='block';
-    document.getElementById('amida-btn').textContent='くじを引く！';
+    document.getElementById('amida-btn').textContent='ãããå¼ãï¼';
     document.getElementById('amida-btn').disabled=false;
     document.getElementById('amida-confirm').style.display='none';
   }
@@ -784,16 +784,16 @@ function startAmida(){
   document.getElementById('amida-btn').disabled=true;
 
   const {school, players}=amidaContext;
-  // アニメーション開始
+  // ã¢ãã¡ã¼ã·ã§ã³éå§
   players.forEach(name=>{
     const el=document.getElementById(`acard-${name}`);
     el.classList.add('spin');
     el.classList.remove('win','lose');
   });
 
-  // 2秒後に結果を表示
+  // 2ç§å¾ã«çµæãè¡¨ç¤º
   setTimeout(()=>{
-    // ランダムに勝者を決定
+    // ã©ã³ãã ã«åèãæ±ºå®
     const winner=players[Math.floor(Math.random()*players.length)];
     amidaWinner=winner;
 
@@ -804,8 +804,8 @@ function startAmida(){
       else el.classList.add('lose');
     });
 
-    document.getElementById('amida-result').textContent=`🎉 ${winner} さんが当選！`;
-    document.getElementById('amida-note').textContent=`${winner}さんが「${school}」の指名権を獲得しました`;
+    document.getElementById('amida-result').textContent=`ð ${winner} ãããå½é¸ï¼`;
+    document.getElementById('amida-note').textContent=`${winner}ãããã${school}ãã®æåæ¨©ãç²å¾ãã¾ãã`;
     document.getElementById('amida-btn').style.display='none';
     document.getElementById('amida-confirm').style.display='block';
   }, 2000);
@@ -817,24 +817,24 @@ async function confirmAmida(){
   const winner=amidaWinner;
   const losers=players.filter(n=>n!==winner);
 
-  // あみだ結果をFirebaseに保存（全員統一）
+  // ãã¿ã çµæãFirebaseã«ä¿å­ï¼å¨å¡çµ±ä¸ï¼
   if(!ST.amidaResults) ST.amidaResults={};
   ST.amidaResults[school]=winner;
 
-  // 勝者の指名を確定
+  // åèã®æåãç¢ºå®
   ST.pk[school]={pl:winner, ri:0};
 
-  // 再指名フェーズか初回S巡かを判定
+  // åæåãã§ã¼ãºãååSå·¡ããå¤å®
   const isRepickPhase = ST.snr.length>0 && players.some(n=>ST.snr.includes(n));
 
   if(isRepickPhase){
-    // 再指名フェーズ: 敗者を再び再指名キューへ戻し、次ラウンドの選択をリセット
+    // åæåãã§ã¼ãº: æèãåã³åæåã­ã¥ã¼ã¸æ»ããæ¬¡ã©ã¦ã³ãã®é¸æããªã»ãã
     const newSnr=losers.filter(n=>ST.snr.includes(n));
-    // snrを敗者だけに絞って再選択させる
+    // snrãæèã ãã«çµã£ã¦åé¸æããã
     ST.snr=newSnr;
     ST.snrd={};ST.snrs={};ST.snro=false;
   } else {
-    // 初回S巡: 敗者を再指名キューに追加
+    // ååSå·¡: æèãåæåã­ã¥ã¼ã«è¿½å 
     losers.forEach(l=>{if(!ST.snr.includes(l))ST.snr.push(l);});
   }
 
@@ -853,14 +853,14 @@ function rPicks(){
   let h=`<div class="pw">`;
   PL.forEach(p=>{
     const pks=ppk(p.name);const tot=pks.reduce((s,[sc])=>s+spts(sc),0);
-    h+=`<div class="pc ${p.bg} ${p.bc}" style="border:1px solid"><div class="pp ${p.c}">${p.name}<span class="pcnt">${pks.length}/8校</span></div>`;
-    if(!pks.length)h+=`<div style="font-size:11px;color:var(--muted)">未指名</div>`;
-    else{pks.forEach(([s,info])=>{const rd=RD[info.ri];const pts=spts(s);const w=wns(s);h+=`<div class="pi"><span class="rt rt${rd.id}">${rd.lb}</span><span>${s}</span>${w>0?`<span class="pp-pts">${pts}pt</span>`:''}</div>`;});if(tot>0)h+=`<div style="text-align:right;font-size:11px;color:var(--gold);margin-top:5px;font-weight:700">計 ${tot}pt</div>`;}
+    h+=`<div class="pc ${p.bg} ${p.bc}" style="border:1px solid"><div class="pp ${p.c}">${p.name}<span class="pcnt">${pks.length}/8æ ¡</span></div>`;
+    if(!pks.length)h+=`<div style="font-size:11px;color:var(--muted)">æªæå</div>`;
+    else{pks.forEach(([s,info])=>{const rd=RD[info.ri];const pts=spts(s);const w=wns(s);h+=`<div class="pi"><span class="rt rt${rd.id}">${rd.lb}</span><span>${s}</span>${w>0?`<span class="pp-pts">${pts}pt</span>`:''}</div>`;});if(tot>0)h+=`<div style="text-align:right;font-size:11px;color:var(--gold);margin-top:5px;font-weight:700">è¨ ${tot}pt</div>`;}
     h+=`</div>`;
   });
   h+=`</div>`;
   const rm=rem();
-  if(rm.length){h+=`<div class="sl" style="margin-top:13px">未指名校 (${rm.length}校)</div><div class="sg">`;rm.forEach(s=>{h+=`<div class="sb" style="cursor:default;opacity:.5"><div class="sn">${s.n}</div><div class="ss2"><span class="bl bl${s.bl}">${s.bl}</span> ${s.p}</div></div>`;});h+=`</div>`;}
+  if(rm.length){h+=`<div class="sl" style="margin-top:13px">æªæåæ ¡ (${rm.length}æ ¡)</div><div class="sg">`;rm.forEach(s=>{h+=`<div class="sb" style="cursor:default;opacity:.5"><div class="sn">${s.n}</div><div class="ss2"><span class="bl bl${s.bl}">${s.bl}</span> ${s.p}</div></div>`;});h+=`</div>`;}
   el.innerHTML=h;
 }
 
@@ -868,7 +868,7 @@ function rPicks(){
 // RENDER: RESULTS
 // ==============================
 let lastFetchTime=null;
-let fetchLog='まだ取得していません';
+let fetchLog='ã¾ã åå¾ãã¦ãã¾ãã';
 let fetchClass='';
 
 function rResults(){
@@ -876,77 +876,77 @@ function rResults(){
   let h=`<div class="fetch-bar">
     <div class="fetch-top">
       <div class="fetch-info">
-        <div class="fetch-title">🤖 試合結果 自動取得</div>
+        <div class="fetch-title">ð¤ è©¦åçµæ èªååå¾</div>
         <div class="fetch-status ${fetchClass}" id="fs">${fetchLog}</div>
       </div>
-      <button class="fetch-btn" id="fbtn" onclick="fetchResults()">🔄 今すぐ取得</button>
+      <button class="fetch-btn" id="fbtn" onclick="fetchResults()">ð ä»ããåå¾</button>
     </div>
   </div>`;
-  // 1回戦：日付ごとにグループ化
+  // 1åæ¦ï¼æ¥ä»ãã¨ã«ã°ã«ã¼ãå
   const R1_DAYS=[
-    {date:'3月19日（木）',ids:[0,1,2]},
-    {date:'3月20日（祝）',ids:[3,4,5]},
-    {date:'3月21日（土）',ids:[6,7,8]},
-    {date:'3月22日（日）',ids:[9,10,11]},
-    {date:'3月23日（月）',ids:[12,13,14]},
-    {date:'3月24日（火）',ids:[15]},
+    {date:'3æ19æ¥ï¼æ¨ï¼',ids:[0,1,2]},
+    {date:'3æ20æ¥ï¼ç¥ï¼',ids:[3,4,5]},
+    {date:'3æ21æ¥ï¼åï¼',ids:[6,7,8]},
+    {date:'3æ22æ¥ï¼æ¥ï¼',ids:[9,10,11]},
+    {date:'3æ23æ¥ï¼æï¼',ids:[12,13,14]},
+    {date:'3æ24æ¥ï¼ç«ï¼',ids:[15]},
   ];
   function dayHeader(label,ids){
     const allDone=ids.every(i=>ST.rs['r1_'+i]);
     const badge=allDone
-      ?`<span style="font-size:10px;padding:2px 8px;border-radius:3px;font-weight:700;background:rgba(62,207,142,.1);color:#3ecf8e">終了</span>`
-      :`<span style="font-size:10px;padding:2px 8px;border-radius:3px;font-weight:700;background:#2a2a2a;color:#666">試合前</span>`;
-    return `<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;color:#a0a0a0;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid #2a2a2a"><span>1回戦 — ${label}</span>${badge}</div>`;
+      ?`<span style="font-size:10px;padding:2px 8px;border-radius:3px;font-weight:700;background:rgba(62,207,142,.1);color:#3ecf8e">çµäº</span>`
+      :`<span style="font-size:10px;padding:2px 8px;border-radius:3px;font-weight:700;background:#2a2a2a;color:#666">è©¦åå</span>`;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;color:#a0a0a0;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid #2a2a2a"><span>1åæ¦ â ${label}</span>${badge}</div>`;
   }
   R1_DAYS.forEach(d=>{
     h+=dayHeader(d.date,d.ids);
     d.ids.forEach(i=>{h+=`<div class="card">`+mrow('r1_'+i,R1P[i][0],R1P[i][1])+`</div>`;});
   });
 
-  // 2回戦以降
+  // 2åæ¦ä»¥é
   function roundHeader(label){
     return `<div style="font-size:11px;font-weight:700;color:#a0a0a0;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid #2a2a2a">${label}</div>`;
   }
-  h+=roundHeader('2回戦');
-  for(let i=0;i<8;i++){const a=ST.rs[`r1_${i*2}`],b=ST.rs[`r1_${i*2+1}`];h+=`<div class="card">`+(a&&b?mrow(`r2_${i}`,a,b):`<div class="mpend">1回戦結果待ち</div>`)+`</div>`;}
-  h+=roundHeader('準々決勝');
-  for(let i=0;i<4;i++){const a=ST.rs[`r2_${i*2}`],b=ST.rs[`r2_${i*2+1}`];h+=`<div class="card">`+(a&&b?mrow(`qf_${i}`,a,b):`<div class="mpend">2回戦結果待ち</div>`)+`</div>`;}
-  h+=roundHeader('準決勝');
-  for(let i=0;i<2;i++){const a=ST.rs[`qf_${i*2}`],b=ST.rs[`qf_${i*2+1}`];h+=`<div class="card">`+(a&&b?mrow(`sf_${i}`,a,b):`<div class="mpend">準々決勝結果待ち</div>`)+`</div>`;}
-  h+=roundHeader('決勝 🏆');
-  const fa=ST.rs.sf_0,fb=ST.rs.sf_1;h+=`<div class="card">`+(fa&&fb?mrow('final',fa,fb):`<div class="mpend">準決勝結果待ち</div>`)+`</div>`;
+  h+=roundHeader('2åæ¦');
+  for(let i=0;i<8;i++){const a=ST.rs[`r1_${i*2}`],b=ST.rs[`r1_${i*2+1}`];h+=`<div class="card">`+(a&&b?mrow(`r2_${i}`,a,b):`<div class="mpend">1åæ¦çµæå¾ã¡</div>`)+`</div>`;}
+  h+=roundHeader('æºãæ±ºå');
+  for(let i=0;i<4;i++){const a=ST.rs[`r2_${i*2}`],b=ST.rs[`r2_${i*2+1}`];h+=`<div class="card">`+(a&&b?mrow(`qf_${i}`,a,b):`<div class="mpend">2åæ¦çµæå¾ã¡</div>`)+`</div>`;}
+  h+=roundHeader('æºæ±ºå');
+  for(let i=0;i<2;i++){const a=ST.rs[`qf_${i*2}`],b=ST.rs[`qf_${i*2+1}`];h+=`<div class="card">`+(a&&b?mrow(`sf_${i}`,a,b):`<div class="mpend">æºãæ±ºåçµæå¾ã¡</div>`)+`</div>`;}
+  h+=roundHeader('æ±ºå ð');
+  const fa=ST.rs.sf_0,fb=ST.rs.sf_1;h+=`<div class="card">`+(fa&&fb?mrow('final',fa,fb):`<div class="mpend">æºæ±ºåçµæå¾ã¡</div>`)+`</div>`;
   el.innerHTML=h;
 }
 
 // ==============================
-// 自動取得ロジック
+// èªååå¾ã­ã¸ãã¯
 // ==============================
 
-// 学校名の表記ゆれを正規化
+// å­¦æ ¡åã®è¡¨è¨ãããæ­£è¦å
 function normalizeName(n){
   if(!n||n==='null')return null;
   n=n.trim();
   const map={
-    '八戸光星':'八戸学院光星','光星学院':'八戸学院光星',
-    '九国大付':'九州国際大付','九州国際大附':'九州国際大付','九国大附':'九州国際大付','九州国際大付属':'九州国際大付',
-    '神戸国際大附':'神戸国際大付','神国大附':'神戸国際大付',
-    '智辯学園':'智弁学園','智辯':'智弁学園',
-    '東洋大姫路高校':'東洋大姫路','東洋大付姫路':'東洋大姫路','東洋大学附属姫路':'東洋大姫路',
-    '大阪桐蔭高校':'大阪桐蔭','桐蔭':'大阪桐蔭',
-    '横浜高校':'横浜','帝京高校':'帝京',
-    '花咲徳栄高校':'花咲徳栄','山梨学院高校':'山梨学院',
-    '花巻東高校':'花巻東','八戸学院光星高校':'八戸学院光星',
-    '神村学園高校':'神村学園','沖縄尚学高校':'沖縄尚学',
-    '帝京長岡高校':'帝京長岡','高川学園高校':'高川学園',
+    'å«æ¸åæ':'å«æ¸å­¦é¢åæ','åæå­¦é¢':'å«æ¸å­¦é¢åæ',
+    'ä¹å½å¤§ä»':'ä¹å·å½éå¤§ä»','ä¹å·å½éå¤§é':'ä¹å·å½éå¤§ä»','ä¹å½å¤§é':'ä¹å·å½éå¤§ä»','ä¹å·å½éå¤§ä»å±':'ä¹å·å½éå¤§ä»',
+    'ç¥æ¸å½éå¤§é':'ç¥æ¸å½éå¤§ä»','ç¥å½å¤§é':'ç¥æ¸å½éå¤§ä»',
+    'æºè¾¯å­¦å':'æºå¼å­¦å','æºè¾¯':'æºå¼å­¦å',
+    'æ±æ´å¤§å§«è·¯é«æ ¡':'æ±æ´å¤§å§«è·¯','æ±æ´å¤§ä»å§«è·¯':'æ±æ´å¤§å§«è·¯','æ±æ´å¤§å­¦éå±å§«è·¯':'æ±æ´å¤§å§«è·¯',
+    'å¤§éªæ¡è­é«æ ¡':'å¤§éªæ¡è­','æ¡è­':'å¤§éªæ¡è­',
+    'æ¨ªæµé«æ ¡':'æ¨ªæµ','å¸äº¬é«æ ¡':'å¸äº¬',
+    'è±å²å¾³æ é«æ ¡':'è±å²å¾³æ ','å±±æ¢¨å­¦é¢é«æ ¡':'å±±æ¢¨å­¦é¢',
+    'è±å·»æ±é«æ ¡':'è±å·»æ±','å«æ¸å­¦é¢åæé«æ ¡':'å«æ¸å­¦é¢åæ',
+    'ç¥æå­¦åé«æ ¡':'ç¥æå­¦å','æ²ç¸å°å­¦é«æ ¡':'æ²ç¸å°å­¦',
+    'å¸äº¬é·å²¡é«æ ¡':'å¸äº¬é·å²¡','é«å·å­¦åé«æ ¡':'é«å·å­¦å',
   };
   return map[n]||n;
 }
 
-// R1Pの対戦から正しいmatch IDにマッピング
-// fetchしたデータは「勝者校名→どの試合か」を逆引きする
+// R1Pã®å¯¾æ¦ããæ­£ããmatch IDã«ãããã³ã°
+// fetchãããã¼ã¿ã¯ãåèæ ¡åâã©ã®è©¦åãããéå¼ããã
 function applyFetchedResults(fetched){
-  // fetchedは {matchId: winner} の形式で来る想定
-  // validなキー
+  // fetchedã¯ {matchId: winner} ã®å½¢å¼ã§æ¥ãæ³å®
+  // validãªã­ã¼
   const VALID_KEYS=[
     'r1_0','r1_1','r1_2','r1_3','r1_4','r1_5','r1_6','r1_7',
     'r1_8','r1_9','r1_10','r1_11','r1_12','r1_13','r1_14','r1_15',
@@ -960,7 +960,7 @@ function applyFetchedResults(fetched){
     if(!raw||raw==='null')return;
     const norm=normalizeName(String(raw));
     const valid=SC.some(s=>s.n===norm);
-    if(!valid){console.warn('不明な学校名:',raw,'→',norm);return;}
+    if(!valid){console.warn('ä¸æãªå­¦æ ¡å:',raw,'â',norm);return;}
     if(ST.rs[k]!==norm){ST.rs[k]=norm;updated++;}
     if(fetchedSc&&fetchedSc[k])ST.sc[k]=fetchedSc[k];
     ST.fetchLocked=true;
@@ -973,12 +973,12 @@ async function fetchResults(){
   const statusEl=document.getElementById('fs');
   if(btn)btn.disabled=true;
   fetchClass='loading';
-  fetchLog='⏳ 取得中...';
+  fetchLog='â³ åå¾ä¸­...';
   if(statusEl){statusEl.className='fetch-status loading';statusEl.textContent=fetchLog;}
 
-  // 阪神甲子園球場公式サイトから取得
+  // éªç¥ç²å­åçå ´å¬å¼ãµã¤ãããåå¾
   const TARGET='https://koshien.hanshin.co.jp/highschool/spring2026/schedule.html';
-  // 複数プロキシを順番に試す
+  // è¤æ°ãã­ã­ã·ãé çªã«è©¦ã
   const PROXIES=[
     `https://corsproxy.io/?${encodeURIComponent(TARGET)}`,
     `https://api.allorigins.win/get?url=${encodeURIComponent(TARGET)}`,
@@ -986,7 +986,7 @@ async function fetchResults(){
   ];
 
   let html=null;
-  let fetchErr='全プロキシ接続失敗';
+  let fetchErr='å¨ãã­ã­ã·æ¥ç¶å¤±æ';
   for(const PROXY of PROXIES){
     try{
       const controller=new AbortController();
@@ -995,21 +995,21 @@ async function fetchResults(){
       clearTimeout(timer);
       if(!r.ok)continue;
       const text=await r.text();
-      // allorigins形式（JSON）かHTML直接かを判定
+      // alloriginså½¢å¼ï¼JSONï¼ãHTMLç´æ¥ããå¤å®
       let result=text;
       if(text.trimStart().startsWith('{')){
         try{const j=JSON.parse(text);if(j.contents)result=j.contents;}catch(e){}
       }
-      if(result&&result.length>500&&result.includes('帝京')){html=result;break;}
+      if(result&&result.length>500&&result.includes('å¸äº¬')){html=result;break;}
     }catch(e){
-      fetchErr=e.name==='AbortError'?'タイムアウト':e.message;
+      fetchErr=e.name==='AbortError'?'ã¿ã¤ã ã¢ã¦ã':e.message;
       continue;
     }
   }
 
   if(!html){
     fetchClass='err';
-    fetchLog='❌ 取得失敗: '+fetchErr;
+    fetchLog='â åå¾å¤±æ: '+fetchErr;
     if(statusEl){statusEl.className='fetch-status err';statusEl.textContent=fetchLog;}
     if(btn)btn.disabled=false;
     return;
@@ -1017,29 +1017,29 @@ async function fetchResults(){
 
   if(!html||html.length<500){
     fetchClass='err';
-    fetchLog='❌ 取得失敗: ページが取得できませんでした';
+    fetchLog='â åå¾å¤±æ: ãã¼ã¸ãåå¾ã§ãã¾ããã§ãã';
     if(statusEl){statusEl.className='fetch-status err';statusEl.textContent=fetchLog;}
     if(btn)btn.disabled=false;
     return;
   }
 
-  // ページ内のテキストを取得
+  // ãã¼ã¸åã®ãã­ã¹ããåå¾
   const parser=new DOMParser();
   const doc=parser.parseFromString(html,'text/html');
   const bodyText=(doc.body?.textContent||'').replace(/[ \t]+/g,' ');
 
   const fetched={};
 
-  // 阪神甲子園公式: "校名A (都道府県)スコアA - スコアB校名B (都道府県)"
-  // 例: "帝京 (東京)4 - 3沖縄尚学 (沖縄)"
-  // 校名マッピング（公式サイト表記→アプリ内名称）
+  // éªç¥ç²å­åå¬å¼: "æ ¡åA (é½éåºç)ã¹ã³ã¢A - ã¹ã³ã¢Bæ ¡åB (é½éåºç)"
+  // ä¾: "å¸äº¬ (æ±äº¬)4 - 3æ²ç¸å°å­¦ (æ²ç¸)"
+  // æ ¡åãããã³ã°ï¼å¬å¼ãµã¤ãè¡¨è¨âã¢ããªååç§°ï¼
   const nameMap={
-    '八戸学院光星':'八戸学院光星','高知農':'高知農','神戸国際大付':'神戸国際大付',
-    '九州国際大付':'九州国際大付','帝京':'帝京','熊本工':'熊本工'
+    'å«æ¸å­¦é¢åæ':'å«æ¸å­¦é¢åæ','é«ç¥è¾²':'é«ç¥è¾²','ç¥æ¸å½éå¤§ä»':'ç¥æ¸å½éå¤§ä»',
+    'ä¹å·å½éå¤§ä»':'ä¹å·å½éå¤§ä»','å¸äº¬':'å¸äº¬','çæ¬å·¥':'çæ¬å·¥'
   };
   function normSite(n){return (nameMap[n.trim()]||n.trim());}
 
-  // パターン: "校名 (都道府県)数字 - 数字校名 (都道府県)"
+  // ãã¿ã¼ã³: "æ ¡å (é½éåºç)æ°å­ - æ°å­æ ¡å (é½éåºç)"
   const pat=/([^()\d\s][^()\d]{0,7})\s*\(([^)]{1,6})\)(\d+)\s*-\s*(\d+)([^()\d\s][^()\d]{0,7})\s*\(([^)]{1,6})\)/g;
   let m;
   window._fetchedSc={};
@@ -1053,7 +1053,7 @@ async function fetchResults(){
       if((ra===a&&rb===b)||(ra===b&&rb===a)){
         if(!fetched['r1_'+i]){
           fetched['r1_'+i]=winner;
-          // スコア保存: [tAのスコア, tBのスコア]（R1Pの順番に合わせる）
+          // ã¹ã³ã¢ä¿å­: [tAã®ã¹ã³ã¢, tBã®ã¹ã³ã¢]ï¼R1Pã®é çªã«åãããï¼
           fetchedSc['r1_'+i]=ra===a?[sa,sb]:[sb,sa];
         }
       }
@@ -1067,16 +1067,18 @@ async function fetchResults(){
   lastFetchTime=now;
   const found=Object.values(fetched).filter(Boolean).length;
   fetchClass='ok';
-  fetchLog=found>0?`✅ ${now} — ${updated}試合更新（${found}試合検出）`:`✅ ${now} — 結果なし（試合前または未反映）`;
-  rAll();
+  fetchLog=found>0?`â ${now} â ${updated}è©¦åæ´æ°ï¼${found}è©¦åæ¤åºï¼`:`â ${now} â çµæãªãï¼è©¦ååã¾ãã¯æªåæ ï¼`;
+if(statusEl){statusEl.className='fetch-status ok';statusEl.textContent=fetchLog;}
+  if(btn)btn.disabled=false;
+    rAll();
 }
 
-// 大会期間中の夜間（20時以降）に自動取得
+// å¤§ä¼æéä¸­ã®å¤éï¼20æä»¥éï¼ã«èªååå¾
 async function autoFetchIfNeeded(){
   const now=new Date();
   const jst=new Date(now.getTime()+9*3600*1000);
   const y=jst.getUTCFullYear(),m=jst.getUTCMonth()+1,d=jst.getUTCDate(),h=jst.getUTCHours();
-  // 大会期間: 2026/3/19〜4/4
+  // å¤§ä¼æé: 2026/3/19ã4/4
   const inPeriod=(y===2026&&((m===3&&d>=19)||(m===4&&d<=4)));
   if(!inPeriod||h<20)return;
   await fetchResults();
@@ -1084,8 +1086,8 @@ async function autoFetchIfNeeded(){
 
 function mrow(mid,tA,tB){
   const w=ST.rs[mid];
-  const isMotoKawa=localPlayer==='本川';
-  // チーム情報（プレイヤーカラー・巡目）
+  const isMotoKawa=localPlayer==='æ¬å·';
+  // ãã¼ã æå ±ï¼ãã¬ã¤ã¤ã¼ã«ã©ã¼ã»å·¡ç®ï¼
   function teamCell(t,align){
     const pi=pki(t);
     const col=pi?pi.pl.col:'#ffffff';
@@ -1113,12 +1115,12 @@ function mrow(mid,tA,tB){
           <span style="color:#555;font-size:14px">-</span>
           <span style="font-family:monospace;font-size:18px;font-weight:700;min-width:20px;text-align:center;color:${w===tB?pki(tB)?.pl?.col||'#fff':'#555'}">${sB}</span>
         </div>
-        <span style="font-size:9px;background:#2a2a2a;color:#888;border-radius:3px;padding:2px 6px;font-weight:700">✓ 終了</span>
+        <span style="font-size:9px;background:#2a2a2a;color:#888;border-radius:3px;padding:2px 6px;font-weight:700">â çµäº</span>
       </div>`:
       `<div style="background:#111;border-radius:6px;padding:6px 10px;flex-shrink:0">
-        <span style="font-size:9px;background:#2a2a2a;color:#888;border-radius:3px;padding:2px 6px;font-weight:700">✓ 終了</span>
+        <span style="font-size:9px;background:#2a2a2a;color:#888;border-radius:3px;padding:2px 6px;font-weight:700">â çµäº</span>
       </div>`;
-    const fixBtn=isMotoKawa?`<div style="text-align:center;margin-top:2px"><button onclick="clearR('${mid}')" style="background:none;border:none;color:#555;font-size:10px;cursor:pointer;text-decoration:underline">修正</button></div>`:'';
+    const fixBtn=isMotoKawa?`<div style="text-align:center;margin-top:2px"><button onclick="clearR('${mid}')" style="background:none;border:none;color:#555;font-size:10px;cursor:pointer;text-decoration:underline">ä¿®æ­£</button></div>`:'';
     return `<div class="mr" style="flex-direction:column;align-items:stretch;gap:4px">
       <div style="display:flex;align-items:center;gap:6px">
         ${w===tA?teamCell(tA,'right'):teamCellLoser(tA,'right')}
@@ -1127,7 +1129,7 @@ function mrow(mid,tA,tB){
       </div>${fixBtn}
     </div>`;
   }
-  // 未入力：両チームともプレイヤーカラー＋巡目、ボタンあり
+  // æªå¥åï¼ä¸¡ãã¼ã ã¨ããã¬ã¤ã¤ã¼ã«ã©ã¼ï¼å·¡ç®ããã¿ã³ãã
   return `<div class="mr" style="flex-direction:column;align-items:stretch;gap:8px">
     <div style="display:flex;align-items:center;gap:6px">
       ${teamCell(tA,'right')}
@@ -1137,8 +1139,8 @@ function mrow(mid,tA,tB){
       ${teamCell(tB,'left')}
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-      <button class="mw" onclick="setR('${mid}','${tA}')" style="padding:10px 8px;font-size:13px;font-weight:700;text-align:center">◀ ${tA} 勝</button>
-      <button class="mw" onclick="setR('${mid}','${tB}')" style="padding:10px 8px;font-size:13px;font-weight:700;text-align:center">${tB} 勝 ▶</button>
+      <button class="mw" onclick="setR('${mid}','${tA}')" style="padding:10px 8px;font-size:13px;font-weight:700;text-align:center">â ${tA} å</button>
+      <button class="mw" onclick="setR('${mid}','${tB}')" style="padding:10px 8px;font-size:13px;font-weight:700;text-align:center">${tB} å â¶</button>
     </div>
   </div>`;
 }
@@ -1150,17 +1152,17 @@ function rScore(){
   const el=document.getElementById('pg-score');
   const sc=allScores();const sorted=PL.map(p=>({...p,s:sc[p.name]})).sort((a,b)=>b.s.tot-a.s.tot);
   const SK=['0P','2,000P','3,000P','5,000P'];const SKC=['sk0','sk2','sk3','sk4'];
-  let h=`<div class="card"><div class="ch">順位表</div><table class="stbl"><tr><th>順位</th><th style="text-align:left">名前</th><th>勝</th><th>B8残</th><th>合計</th><th>賭け</th></tr>`;
-  sorted.forEach((p,i)=>{h+=`<tr><td class="sr ${p.c}">${i+1}</td><td class="sn2 ${p.c}">${p.name}</td><td>${p.s.w}</td><td style="font-size:10px;color:var(--gold)">${p.s.b8>0?`${p.s.b8}校`:'-'}</td><td class="stot">${p.s.tot}</td><td class="${SKC[i]}" style="font-size:11px;font-weight:700">${SK[i]}</td></tr>`;});
+  let h=`<div class="card"><div class="ch">é ä½è¡¨</div><table class="stbl"><tr><th>é ä½</th><th style="text-align:left">åå</th><th>å</th><th>B8æ®</th><th>åè¨</th><th>è³­ã</th></tr>`;
+  sorted.forEach((p,i)=>{h+=`<tr><td class="sr ${p.c}">${i+1}</td><td class="sn2 ${p.c}">${p.name}</td><td>${p.s.w}</td><td style="font-size:10px;color:var(--gold)">${p.s.b8>0?`${p.s.b8}æ ¡`:'-'}</td><td class="stot">${p.s.tot}</td><td class="${SKC[i]}" style="font-size:11px;font-weight:700">${SK[i]}</td></tr>`;});
   h+=`</table></div>`;
   PL.forEach(p=>{
     const pks=ppk(p.name);const s=sc[p.name];
-    h+=`<div class="card ${p.bg} ${p.bc}" style="border:1px solid"><div class="ch ${p.c}">${p.name} — ${s.tot}pt（${s.w}勝）</div>`;
+    h+=`<div class="card ${p.bg} ${p.bc}" style="border:1px solid"><div class="ch ${p.c}">${p.name} â ${s.tot}ptï¼${s.w}åï¼</div>`;
     pks.forEach(([school,info])=>{const rd=RD[info.ri];const pts=spts(school);const w=wns(school);const out=isOut(school);
   if(out){
-    h+=`<div class="pi" style="color:#555"><span class="rt" style="background:#2a2a2a;color:#555">${rd.lb}</span><span style="margin-left:5px">${school}</span><span style="color:#444;font-size:10px;margin-left:4px">${w}勝</span><span class="pp-pts" style="color:#555">${pts>0?pts+'pt':'-'}</span></div>`;
+    h+=`<div class="pi" style="color:#555"><span class="rt" style="background:#2a2a2a;color:#555">${rd.lb}</span><span style="margin-left:5px">${school}</span><span style="color:#444;font-size:10px;margin-left:4px">${w}å</span><span class="pp-pts" style="color:#555">${pts>0?pts+'pt':'-'}</span></div>`;
   } else {
-    h+=`<div class="pi"><span class="rt rt${rd.id}">${rd.lb}</span><span style="margin-left:5px">${school}</span><span style="color:var(--muted);font-size:10px;margin-left:4px">${w}勝</span><span class="pp-pts">${pts>0?pts+'pt':'-'}</span></div>`;
+    h+=`<div class="pi"><span class="rt rt${rd.id}">${rd.lb}</span><span style="margin-left:5px">${school}</span><span style="color:var(--muted);font-size:10px;margin-left:4px">${w}å</span><span class="pp-pts">${pts>0?pts+'pt':'-'}</span></div>`;
   }
 });
     h+=`</div>`;
@@ -1173,51 +1175,51 @@ function rScore(){
 // ==============================
 function rRules(){
   document.getElementById('pg-rules').innerHTML=`
-  <div class="hero"><div class="hr">得点ルール</div><div class="hd">第98回センバツ ドラフトゲーム 2026</div></div>
-  <div class="card"><div class="ch">基本得点</div>
+  <div class="hero"><div class="hr">å¾ç¹ã«ã¼ã«</div><div class="hd">ç¬¬98åã»ã³ãã ãã©ããã²ã¼ã  2026</div></div>
+  <div class="card"><div class="ch">åºæ¬å¾ç¹</div>
     <div style="font-size:13px;line-height:2.4">
-      ${[['指名校が1勝するたびに','+30pt'],['優勝校を指名していた場合','+70pt'],['準優勝校を指名していた場合','+30pt'],['ベスト8最多残留（1位）','+50pt']].map(([lbl,pts])=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr)"><span>${lbl}</span><strong style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:18px">${pts}</strong></div>`).join('')}
+      ${[['æåæ ¡ã1åãããã³ã«','+30pt'],['åªåæ ¡ãæåãã¦ããå ´å','+70pt'],['æºåªåæ ¡ãæåãã¦ããå ´å','+30pt'],['ãã¹ã8æå¤æ®çï¼1ä½ï¼','+50pt']].map(([lbl,pts])=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr)"><span>${lbl}</span><strong style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:18px">${pts}</strong></div>`).join('')}
     </div>
-    <div style="background:rgba(232,184,75,.07);border-radius:8px;padding:9px;font-size:11px;color:var(--muted);line-height:1.7;margin-top:6px">※ベスト8最多が2名タイ→各+30pt　3名→各+20pt<br>※優勝・準優勝ボーナスは勝利ptに追加加算</div>
+    <div style="background:rgba(232,184,75,.07);border-radius:8px;padding:9px;font-size:11px;color:var(--muted);line-height:1.7;margin-top:6px">â»ãã¹ã8æå¤ã2åã¿ã¤âå+30ptã3åâå+20pt<br>â»åªåã»æºåªåãã¼ãã¹ã¯åå©ptã«è¿½å å ç®</div>
   </div>
-  <div class="card"><div class="ch">⚡ アップセットボーナス</div>
-    <div style="font-size:12px;color:var(--txt);line-height:1.8;margin-bottom:10px">後から指名した学校が、先に指名した学校に勝つとボーナス発生。</div>
+  <div class="card"><div class="ch">â¡ ã¢ããã»ãããã¼ãã¹</div>
+    <div style="font-size:12px;color:var(--txt);line-height:1.8;margin-bottom:10px">å¾ããæåããå­¦æ ¡ããåã«æåããå­¦æ ¡ã«åã¤ã¨ãã¼ãã¹çºçã</div>
     <div style="background:var(--s2);border-radius:10px;padding:12px;margin-bottom:10px;text-align:center">
-      <div style="font-size:10px;color:var(--muted);margin-bottom:6px">計算式</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);letter-spacing:.05em">得点 = 30 + (自分のランク − 相手のランク) × 10pt</div>
-      <div style="font-size:10px;color:var(--muted);margin-top:4px">※ 自分のランク ＞ 相手のランクのときのみ発生</div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:6px">è¨ç®å¼</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);letter-spacing:.05em">å¾ç¹ = 30 + (èªåã®ã©ã³ã¯ â ç¸æã®ã©ã³ã¯) Ã 10pt</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px">â» èªåã®ã©ã³ã¯ ï¼ ç¸æã®ã©ã³ã¯ã®ã¨ãã®ã¿çºç</div>
     </div>
     <div style="font-size:12px;line-height:2">
-      ${[['G巡(rk8) が S巡(rk1)に勝つ','(8-1)×10=+70pt追加','計100pt','#d8b4fe'],['F巡(rk7) が A巡(rk2)に勝つ','(7-2)×10=+50pt追加','計80pt','#bae6fd'],['D巡(rk5) が S巡(rk1)に勝つ','(5-1)×10=+40pt追加','計70pt','#fda4af'],['B巡(rk3) が A巡(rk2)に勝つ','(3-2)×10=+10pt追加','計40pt','#6ee7b7']].map(([desc,calc,total,col])=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bdr)"><span style="flex:1;font-size:11px">${desc}</span><span style="color:var(--muted);font-size:10px;white-space:nowrap">${calc}</span><strong style="color:${col};white-space:nowrap">${total}</strong></div>`).join('')}
+      ${[['Gå·¡(rk8) ã Så·¡(rk1)ã«åã¤','(8-1)Ã10=+70ptè¿½å ','è¨100pt','#d8b4fe'],['Få·¡(rk7) ã Aå·¡(rk2)ã«åã¤','(7-2)Ã10=+50ptè¿½å ','è¨80pt','#bae6fd'],['Då·¡(rk5) ã Så·¡(rk1)ã«åã¤','(5-1)Ã10=+40ptè¿½å ','è¨70pt','#fda4af'],['Bå·¡(rk3) ã Aå·¡(rk2)ã«åã¤','(3-2)Ã10=+10ptè¿½å ','è¨40pt','#6ee7b7']].map(([desc,calc,total,col])=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bdr)"><span style="flex:1;font-size:11px">${desc}</span><span style="color:var(--muted);font-size:10px;white-space:nowrap">${calc}</span><strong style="color:${col};white-space:nowrap">${total}</strong></div>`).join('')}
     </div>
   </div>
-  <div class="card"><div class="ch">指名ランク表</div>
+  <div class="card"><div class="ch">æåã©ã³ã¯è¡¨</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-      ${[['S巡','ランク1','#312e81','#a5b4fc'],['A巡','ランク2','#1e3a5f','#7dd3fc'],['B巡','ランク3','#064e3b','#6ee7b7'],['C巡','ランク4','#451a03','#fcd34d'],['D巡','ランク5','#7f1d1d','#fda4af'],['E巡','ランク6','#1c1917','#a8a29e'],['F巡','ランク7','#0c4a6e','#bae6fd'],['G巡','ランク8','#2e1065','#d8b4fe']].map(([rnd,rank,bg,col])=>`<div style="background:${bg};border-radius:8px;padding:9px 12px;display:flex;justify-content:space-between"><strong style="color:${col}">${rnd}</strong><span style="color:${col};opacity:.8;font-size:12px">${rank}</span></div>`).join('')}
+      ${[['Så·¡','ã©ã³ã¯1','#312e81','#a5b4fc'],['Aå·¡','ã©ã³ã¯2','#1e3a5f','#7dd3fc'],['Bå·¡','ã©ã³ã¯3','#064e3b','#6ee7b7'],['Cå·¡','ã©ã³ã¯4','#451a03','#fcd34d'],['Då·¡','ã©ã³ã¯5','#7f1d1d','#fda4af'],['Eå·¡','ã©ã³ã¯6','#1c1917','#a8a29e'],['Få·¡','ã©ã³ã¯7','#0c4a6e','#bae6fd'],['Gå·¡','ã©ã³ã¯8','#2e1065','#d8b4fe']].map(([rnd,rank,bg,col])=>`<div style="background:${bg};border-radius:8px;padding:9px 12px;display:flex;justify-content:space-between"><strong style="color:${col}">${rnd}</strong><span style="color:${col};opacity:.8;font-size:12px">${rank}</span></div>`).join('')}
     </div>
   </div>
-  <div class="card"><div class="ch">S巡の流れ</div>
+  <div class="card"><div class="ch">Så·¡ã®æµã</div>
     <div style="font-size:12px;line-height:2.2;color:var(--txt)">
       <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)">
-        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">①</span><span>各自のスマホで名前を選び、<strong>学校を非公開で選択・送信</strong></span>
+        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">â </span><span>åèªã®ã¹ããã§ååãé¸ã³ã<strong>å­¦æ ¡ãéå¬éã§é¸æã»éä¿¡</strong></span>
       </div>
       <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)">
-        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">②</span><span>全員送信後「開票」ボタンで<strong>4人の選択を一斉公開</strong></span>
+        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">â¡</span><span>å¨å¡éä¿¡å¾ãéç¥¨ããã¿ã³ã§<strong>4äººã®é¸æãä¸æå¬é</strong></span>
       </div>
       <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)">
-        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">③</span><span>競合があれば<strong>あみだくじ</strong>で当選者を決定</span>
+        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">â¢</span><span>ç«¶åãããã°<strong>ãã¿ã ãã</strong>ã§å½é¸èãæ±ºå®</span>
       </div>
       <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)">
-        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">④</span><span>外れた人は残り校から<strong>再指名</strong>（また被ったらあみだくじ）</span>
+        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">â£</span><span>å¤ããäººã¯æ®ãæ ¡ãã<strong>åæå</strong>ï¼ã¾ãè¢«ã£ãããã¿ã ããï¼</span>
       </div>
       <div style="display:flex;gap:10px;padding:7px 0">
-        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">⑤</span><span>A〜G巡は<strong>ウェーバー順</strong>（奇数巡: 太田→新井→若林→本川 / 偶数巡: 本川→若林→新井→太田）</span>
+        <span style="font-weight:700;flex-shrink:0;color:var(--gold)">â¤</span><span>AãGå·¡ã¯<strong>ã¦ã§ã¼ãã¼é </strong>ï¼å¥æ°å·¡: å¤ªç°âæ°äºâè¥æâæ¬å· / å¶æ°å·¡: æ¬å·âè¥æâæ°äºâå¤ªç°ï¼</span>
       </div>
     </div>
   </div>
-  <div class="card"><div class="ch">ポイント</div>
+  <div class="card"><div class="ch">ãã¤ã³ã</div>
     <div style="font-size:13px">
-      ${[['🥇 1位','0P','sk0'],['🥈 2位','2,000P','sk2'],['🥉 3位','3,000P','sk3'],['4位','5,000P','sk4']].map(([rank,amt,cls])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr)"><span>${rank}</span><strong class="${cls}" style="font-family:'Bebas Neue',sans-serif;font-size:20px">${amt}</strong></div>`).join('')}
+      ${[['ð¥ 1ä½','0P','sk0'],['ð¥ 2ä½','2,000P','sk2'],['ð¥ 3ä½','3,000P','sk3'],['4ä½','5,000P','sk4']].map(([rank,amt,cls])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr)"><span>${rank}</span><strong class="${cls}" style="font-family:'Bebas Neue',sans-serif;font-size:20px">${amt}</strong></div>`).join('')}
     </div>
   </div>`;
 }
@@ -1227,16 +1229,16 @@ function rRules(){
 // ==============================
 function rCfg(){
   const fbStatus = fbReady
-    ? '<div style="color:#6ee7b7;font-size:12px;font-weight:700">✅ Firebase接続済み — リアルタイム同期中</div>'
-    : '<div style="color:#fca5a5;font-size:12px;font-weight:700">❌ Firebase未接続 — config設定が必要です</div>';
-  const hakoneLabels=['4位','3位','2位','1位優勝'];
-  const wvRows=WV_ODD.map((n,i)=>{const p=plr(n);return`<div><span class="${p.c}" style="font-weight:700">${i+1}番手：${n}</span><span style="color:var(--muted);font-size:11px;margin-left:8px">2026箱根 ${hakoneLabels[i]}</span></div>`;}).join('');
-  const wvRowsB=WV_EVN.map((n,i)=>{const p=plr(n);return`<div><span class="${p.c}" style="font-weight:700">${i+1}番手：${n}</span></div>`;}).join('');
-  document.getElementById('pg-cfg').innerHTML=`<div class="card"><div class="ch">Firebase状態</div>${fbStatus}<div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.8">接続中は全員の操作がリアルタイムで反映されます。</div></div><div class="card"><div class="ch">データ管理</div><button class="btn btn-r bblock" onclick="doReset()">🗑️ 全データをリセット</button><button class="btn btn-o bblock" style="margin-top:8px" onclick="unlockFetch()">🔓 手動入力ロックを解除</button></div><div class="card"><div class="ch">ウェーバー順</div><div style="font-size:12px;color:var(--muted);margin-bottom:6px">A/C/E/G巡</div><div style="font-size:13px;line-height:2.3;margin-bottom:10px">${wvRows}</div><div style="font-size:12px;color:var(--muted);margin-bottom:6px">B/D/F巡</div><div style="font-size:13px;line-height:2.3">${wvRowsB}</div></div>`;
+    ? '<div style="color:#6ee7b7;font-size:12px;font-weight:700">â Firebaseæ¥ç¶æ¸ã¿ â ãªã¢ã«ã¿ã¤ã åæä¸­</div>'
+    : '<div style="color:#fca5a5;font-size:12px;font-weight:700">â Firebaseæªæ¥ç¶ â configè¨­å®ãå¿è¦ã§ã</div>';
+  const hakoneLabels=['4ä½','3ä½','2ä½','1ä½åªå'];
+  const wvRows=WV_ODD.map((n,i)=>{const p=plr(n);return`<div><span class="${p.c}" style="font-weight:700">${i+1}çªæï¼${n}</span><span style="color:var(--muted);font-size:11px;margin-left:8px">2026ç®±æ ¹ ${hakoneLabels[i]}</span></div>`;}).join('');
+  const wvRowsB=WV_EVN.map((n,i)=>{const p=plr(n);return`<div><span class="${p.c}" style="font-weight:700">${i+1}çªæï¼${n}</span></div>`;}).join('');
+  document.getElementById('pg-cfg').innerHTML=`<div class="card"><div class="ch">Firebaseç¶æ</div>${fbStatus}<div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.8">æ¥ç¶ä¸­ã¯å¨å¡ã®æä½ããªã¢ã«ã¿ã¤ã ã§åæ ããã¾ãã</div></div><div class="card"><div class="ch">ãã¼ã¿ç®¡ç</div><button class="btn btn-r bblock" onclick="doReset()">ðï¸ å¨ãã¼ã¿ããªã»ãã</button><button class="btn btn-o bblock" style="margin-top:8px" onclick="unlockFetch()">ð æåå¥åã­ãã¯ãè§£é¤</button></div><div class="card"><div class="ch">ã¦ã§ã¼ãã¼é </div><div style="font-size:12px;color:var(--muted);margin-bottom:6px">A/C/E/Gå·¡</div><div style="font-size:13px;line-height:2.3;margin-bottom:10px">${wvRows}</div><div style="font-size:12px;color:var(--muted);margin-bottom:6px">B/D/Få·¡</div><div style="font-size:13px;line-height:2.3">${wvRowsB}</div></div>`;
 }
 
 // ==============================
-// ACTIONS: S巡
+// ACTIONS: Så·¡
 // ==============================
 function setLocalPlayer(name){
   localPlayer=name;
@@ -1245,7 +1247,7 @@ function setLocalPlayer(name){
 
 async function submitS(){
   const sel=document.getElementById('s-school-sel');
-  if(!sel||!sel.value){alert('学校を選択してください');return;}
+  if(!sel||!sel.value){alert('å­¦æ ¡ãé¸æãã¦ãã ãã');return;}
   ST.sd[localPlayer]=sel.value;
   ST.ss[localPlayer]=true;
   await sv();
@@ -1258,26 +1260,26 @@ function goRepick(){
 }
 
 async function openS(){
-  if(!PL.every(p=>ST.ss[p.name])){alert('まだ全員が選択していません');return;}
+  if(!PL.every(p=>ST.ss[p.name])){alert('ã¾ã å¨å¡ãé¸æãã¦ãã¾ãã');return;}
   ST.so=true;
-  // 競合なしの学校を自動確定
+  // ç«¶åãªãã®å­¦æ ¡ãèªåç¢ºå®
   const grp={};
   Object.entries(ST.sd).forEach(([pl,s])=>{if(!grp[s])grp[s]=[];grp[s].push(pl);});
   Object.entries(grp).forEach(([s,ps])=>{if(ps.length===1&&!ST.pk[s])ST.pk[s]={pl:ps[0],ri:0};});
   await sv();
-  localPlayer=null; // 開票後はリセット
+  localPlayer=null; // éç¥¨å¾ã¯ãªã»ãã
   rDraft();
 }
 
 async function finishS(){
-  // 全員確定済みならA巡へ
+  // å¨å¡ç¢ºå®æ¸ã¿ãªãAå·¡ã¸
   ST.sd={};ST.ss={};ST.so=false;ST.snr=[];ST.snrd={};ST.snrs={};ST.snro=false;ST.ri=1;ST.wi=0;
   await sv();rAll();
 }
 
 async function submitRepick(){
   const sel=document.getElementById('rp-school-sel');
-  if(!sel||!sel.value){alert('学校を選択してください');return;}
+  if(!sel||!sel.value){alert('å­¦æ ¡ãé¸æãã¦ãã ãã');return;}
   ST.snrd[localPlayer]=sel.value;
   ST.snrs[localPlayer]=true;
   await sv();
@@ -1285,9 +1287,9 @@ async function submitRepick(){
 }
 
 async function openRepick(){
-  if(!ST.snr.every(n=>ST.snrs[n])){alert('まだ全員が選択していません');return;}
+  if(!ST.snr.every(n=>ST.snrs[n])){alert('ã¾ã å¨å¡ãé¸æãã¦ãã¾ãã');return;}
   ST.snro=true;
-  // 競合なし→自動確定
+  // ç«¶åãªãâèªåç¢ºå®
   const already=new Set(Object.keys(ST.pk));
   const grp={};
   Object.entries(ST.snrd).forEach(([pl,s])=>{if(!grp[s])grp[s]=[];grp[s].push(pl);});
@@ -1298,13 +1300,13 @@ async function openRepick(){
 }
 
 // ==============================
-// ACTIONS: ウェーバー・結果
+// ACTIONS: ã¦ã§ã¼ãã¼ã»çµæ
 // ==============================
 let _picking=false;
 async function doPick(s){
   if(_picking)return;
-  if(ST.pk[s]){alert('すでに指名済みです');return;}
-  if(!localPlayer||localPlayer!==cw()){alert('あなたの番ではありません');return;}
+  if(ST.pk[s]){alert('ãã§ã«æåæ¸ã¿ã§ã');return;}
+  if(!localPlayer||localPlayer!==cw()){alert('ããªãã®çªã§ã¯ããã¾ãã');return;}
   _picking=true;
   const pl=cw();ST.pk[s]={pl,ri:ST.ri,wi:ST.wi};ST.wi++;
   if(ST.wi>=getWV(ST.ri).length){ST.wi=0;ST.ri++;}
@@ -1313,10 +1315,10 @@ async function doPick(s){
   _picking=false;
 }
 async function undoPick(){
-  // 全指名の中で最後（wi最大・ri最大）のものを探して取り消す
+  // å¨æåã®ä¸­ã§æå¾ï¼wiæå¤§ã»riæå¤§ï¼ã®ãã®ãæ¢ãã¦åãæ¶ã
   const all=Object.entries(ST.pk);
-  if(!all.length){alert('取り消せる指名がありません');return;}
-  // ri最大→その中でwi最大
+  if(!all.length){alert('åãæ¶ããæåãããã¾ãã');return;}
+  // riæå¤§âãã®ä¸­ã§wiæå¤§
   const last=all.sort((a,b)=>b[1].ri!==a[1].ri?b[1].ri-a[1].ri:b[1].wi-a[1].wi)[0];
   const lastRi=last[1].ri;
   const lastWi=last[1].wi;
@@ -1328,18 +1330,18 @@ async function undoPick(){
 }
 async function advRnd(){ST.wi=0;ST.ri++;await sv();rAll();}
 async function clearR(mid){
-  if(localPlayer!=='本川'){alert('修正は本川のみ可能です');return;}
-  if(!confirm('この試合の結果を取り消しますか？'))return;
+  if(localPlayer!=='æ¬å·'){alert('ä¿®æ­£ã¯æ¬å·ã®ã¿å¯è½ã§ã');return;}
+  if(!confirm('ãã®è©¦åã®çµæãåãæ¶ãã¾ããï¼'))return;
   delete ST.rs[mid];await sv();rResults();rScore();rPicks();
 }
 
 async function unlockFetch(){
-  if(!confirm('自動取得ロックを解除して手動入力を許可しますか？'))return;
+  if(!confirm('èªååå¾ã­ãã¯ãè§£é¤ãã¦æåå¥åãè¨±å¯ãã¾ããï¼'))return;
   ST.fetchLocked=false;await sv();rResults();rCfg();
 }
 async function setR(mid,w){
-  if(ST.fetchLocked){alert('自動取得済みのため手動入力はロックされています');return;}
-  if(ST.rs[mid]){return;} // 入力済みは変更不可
+  if(ST.fetchLocked){alert('èªååå¾æ¸ã¿ã®ããæåå¥åã¯ã­ãã¯ããã¦ãã¾ã');return;}
+  if(ST.rs[mid]){return;} // å¥åæ¸ã¿ã¯å¤æ´ä¸å¯
   ST.rs[mid]=w;await sv();rResults();rScore();rPicks();
 }
 async function forceSync(){rAll();}
@@ -1359,7 +1361,7 @@ async function doRefresh(btn){
   if(btn){btn.style.opacity='1';btn.style.pointerEvents='';}
 }
 async function doReset(){
-  if(!confirm('全データをリセットしますか？\nこの操作は元に戻せません。'))return;
+  if(!confirm('å¨ãã¼ã¿ããªã»ãããã¾ããï¼\nãã®æä½ã¯åã«æ»ãã¾ããã'))return;
   ST={ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{}};
   localPlayer=null;await sv();rAll();
 }
@@ -1378,38 +1380,38 @@ function gp(pg,btn){
 function rpg(p){if(p==='draft')rDraft();else if(p==='picks')rPicks();else if(p==='results')rResults();else if(p==='score')rScore();else if(p==='rules')rRules();else if(p==='cfg')rCfg();}
 function rAll(){rDraft();rPicks();rResults();rScore();rRules();rCfg();}
 
-// Firebase未接続チェック用
+// Firebaseæªæ¥ç¶ãã§ãã¯ç¨
 let fbReady = false;
 
 (()=>{
-  // Firebaseリスナーが準備できるまで待つ
+  // Firebaseãªã¹ãã¼ãæºåã§ããã¾ã§å¾ã¤
   const waitFb = setInterval(()=>{
     if(typeof window._fbListen !== 'function') return;
     clearInterval(waitFb);
     fbReady = true;
 
-    // リアルタイムリスナー: Firebaseのデータが変わったら即反映
+    // ãªã¢ã«ã¿ã¤ã ãªã¹ãã¼: Firebaseã®ãã¼ã¿ãå¤ãã£ããå³åæ 
     window._fbListen((data)=>{
       mergeData(data);
       rAll();
     });
 
-    // 大会期間中・20時以降なら自動取得（初回のみ）
+    // å¤§ä¼æéä¸­ã»20æä»¥éãªãèªååå¾ï¼ååã®ã¿ï¼
     autoFetchIfNeeded();
-    // 1時間ごとに自動再取得チェック
+    // 1æéãã¨ã«èªåååå¾ãã§ãã¯
     setInterval(()=>autoFetchIfNeeded(), 3600000);
   }, 200);
 
-  // Firebaseが5秒で繋がらなければオフラインモードで起動
+  // Firebaseã5ç§ã§ç¹ãããªããã°ãªãã©ã¤ã³ã¢ã¼ãã§èµ·å
   setTimeout(()=>{
     if(!fbReady){
-      console.warn('Firebase未接続 — オフラインモードで起動');
+      console.warn('Firebaseæªæ¥ç¶ â ãªãã©ã¤ã³ã¢ã¼ãã§èµ·å');
       ST = EMPTY_ST();
       rAll();
     }
   }, 5000);
 })();
 </script>
-<a href="draft_db.html" style="position:fixed;bottom:16px;right:16px;background:#1e2533;border:1px solid #2d3748;color:#a8b5c8;padding:8px 14px;border-radius:8px;font-size:12px;text-decoration:none;z-index:9999;">📊 過去成績DB</a>
+<a href="draft_db.html" style="position:fixed;bottom:16px;right:16px;background:#1e2533;border:1px solid #2d3748;color:#a8b5c8;padding:8px 14px;border-radius:8px;font-size:12px;text-decoration:none;z-index:9999;">ð éå»æç¸¾DB</a>
 </body>
 </html>
