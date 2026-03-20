@@ -721,7 +721,7 @@ function rWaiver(){
     h+=`<div class="alrt alrt-r">今は <strong>${cp}</strong> さんの番です。あなた（${localPlayer}）は待機中です。</div>`;
     h+=`</div>`;return h;
   }
-  rm.forEach(s=>{h+=`<button class="sb" onclick="doPick('${s.n}')"><div class="sn">${s.n}</div><div class="ss2"><span class="bl bl${s.bl}">${s.bl}</span> ${s.p}</div><div class="ss2" style="margin-top:2px">初戦：${s.r1}</div></button>`;});
+  rm.forEach(s=>{const _out=isOut(s.n);h+=`<button class="sb" onclick="${_out?'':('doPick(\''+s.n+'\''+')')}" ${_out?'disabled':''} style="${_out?'opacity:.2;cursor:not-allowed;filter:grayscale(1)':''}"><div class="sn">${s.n}</div><div class="ss2"><span class="bl bl${s.bl}">${s.bl}</span> ${s.p}</div><div class="ss2" style="margin-top:2px">初戦：${s.r1}</div></button>`;});
   h+=`</div>`;
   h+=`<button class="btn btn-o bblock" style="margin-top:10px;font-size:12px" onclick="undoPick()">↩ 1人前に戻る</button>`;
   const thisPks=Object.entries(ST.pk).filter(([,v])=>v.ri===ST.ri).sort((a,b)=>getWV(ST.ri).indexOf(a[1].pl)-getWV(ST.ri).indexOf(b[1].pl));
@@ -1151,8 +1151,8 @@ function mrow(mid,tA,tB){
 function rScore(){
   const el=document.getElementById('pg-score');
   const sc=allScores();const sorted=PL.map(p=>({...p,s:sc[p.name]})).sort((a,b)=>b.s.tot-a.s.tot);
-  const SK=['0P','2,000P','3,000P','5,000P'];const SKC=['sk0','sk2','sk3','sk4'];
-  let h=`<div class="card"><div class="ch">順位表</div><table class="stbl"><tr><th>順位</th><th style="text-align:left">名前</th><th>勝</th><th>B8残</th><th>合計</th><th>賭け</th></tr>`;
+  const SK=['0P','-2,000P','-3,000P','-5,000P'];const SKC=['sk0','sk2','sk3','sk4'];
+  let h=`<div class="card"><div class="ch">順位表</div><table class="stbl"><tr><th>順位</th><th style="text-align:left">名前</th><th>勝</th><th>B8残</th><th>合計</th><th>ポイント</th></tr>`;
   sorted.forEach((p,i)=>{h+=`<tr><td class="sr ${p.c}">${i+1}</td><td class="sn2 ${p.c}">${p.name}</td><td>${p.s.w}</td><td style="font-size:10px;color:var(--gold)">${p.s.b8>0?`${p.s.b8}校`:'-'}</td><td class="stot">${p.s.tot}</td><td class="${SKC[i]}" style="font-size:11px;font-weight:700">${SK[i]}</td></tr>`;});
   h+=`</table></div>`;
   PL.forEach(p=>{
@@ -1219,7 +1219,7 @@ function rRules(){
   </div>
   <div class="card"><div class="ch">ポイント</div>
     <div style="font-size:13px">
-      ${[['🥇 1位','0P','sk0'],['🥈 2位','2,000P','sk2'],['🥉 3位','3,000P','sk3'],['4位','5,000P','sk4']].map(([rank,amt,cls])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr)"><span>${rank}</span><strong class="${cls}" style="font-family:'Bebas Neue',sans-serif;font-size:20px">${amt}</strong></div>`).join('')}
+      ${[['🥇 1位','0P','sk0'],['🥈 2位','-2,000P','sk2'],['🥉 3位','-3,000P','sk3'],['4位','-5,000P','sk4']].map(([rank,amt,cls])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr)"><span>${rank}</span><strong class="${cls}" style="font-family:'Bebas Neue',sans-serif;font-size:20px">${amt}</strong></div>`).join('')}
     </div>
   </div>`;
 }
