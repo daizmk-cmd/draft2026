@@ -962,7 +962,7 @@ function applyFetchedResults(fetched){
     const valid=SC.some(s=>s.n===norm);
     if(!valid){console.warn('不明な学校名:',raw,'→',norm);return;}
     if(ST.rs[k]!==norm){ST.rs[k]=norm;updated++;}
-    if(fetchedSc&&fetchedSc[k])ST.sc[k]=fetchedSc[k];
+    if(window._fetchedSc&&window._fetchedSc[k])ST.sc[k]=window._fetchedSc[k];
     ST.fetchLocked=true;
   });
   return updated;
