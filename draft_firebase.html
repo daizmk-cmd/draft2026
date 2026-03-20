@@ -942,12 +942,9 @@ async function fetchResults(){
   fetchLog='⏳ 取得中...';
   if(statusEl){statusEl.className='fetch-status loading';statusEl.textContent=fetchLog;}
 
-  // プロキシ経由で高校野球ニュースサイトを取得
-  const TARGET='https://www.xn--8wv97xz6xo7h.online/senbatsu-koshien-team/';
-  const PROXIES=[
-    `https://corsproxy.io/?${encodeURIComponent(TARGET)}`,
-    `https://api.allorigins.win/get?url=${encodeURIComponent(TARGET)}`,
-  ];
+  // 阪神甲子園球場公式サイトから取得
+  const TARGET='https://koshien.hanshin.co.jp/highschool/spring2026/schedule.html';
+  const PROXY=`https://api.allorigins.win/get?url=${encodeURIComponent(TARGET)}`;
 
   async function tryFetch(url,ms){
     return new Promise((res,rej)=>{
@@ -963,12 +960,10 @@ async function fetchResults(){
   }
 
   let html=null;
-  for(const proxy of PROXIES){
-    try{
-      const result=await tryFetch(proxy,15000);
-      if(result&&result.length>500){html=result;break;}
-    }catch(e){continue;}
-  }
+  try{
+    const result=await tryFetch(PROXY,15000);
+    if(result&&result.length>500)html=result;
+  }catch(e){}
 
   if(!html){
     fetchClass='err';
@@ -993,21 +988,20 @@ async function fetchResults(){
 
   const fetched={};
 
-  // サイトの学校名マッピング（略称 → アプリ内名称）
+  // 阪神甲子園公式: "校名A (都道府県)スコアA - スコアB校名B (都道府県)"
+  // 例: "帝京 (東京)4 - 3沖縄尚学 (沖縄)"
+  // 校名マッピング（公式サイト表記→アプリ内名称）
   const nameMap={
-    '八学光星':'八戸学院光星','高知農業':'高知農','神戸国際大':'神戸国際大付',
-    '九国大付':'九州国際大付','帝京高校':'帝京'
+    '八戸学院光星':'八戸学院光星','高知農':'高知農','神戸国際大付':'神戸国際大付',
+    '九州国際大付':'九州国際大付','帝京':'帝京','熊本工':'熊本工'
   };
-  function normSite(n){
-    n=n.trim();
-    return nameMap[n]||n;
-  }
+  function normSite(n){return (nameMap[n.trim()]||n.trim());}
 
-  // パターン1: 試合後形式 "校名A 数字-数字 校名B" (例: 沖縄尚学 3-4 帝京高校)
-  const resultPat=/([^\s\d　]{2,10})\s+(\d+)[-−ー]+(\d+)\s+([^\s\d　]{2,10})/g;
-  let m1;
-  while((m1=resultPat.exec(bodyText))!==null){
-    const a=normSite(m1[1]),sa=parseInt(m1[2]),sb=parseInt(m1[3]),b=normSite(m1[4]);
+  // パターン: "校名 (都道府県)数字 - 数字校名 (都道府県)"
+  const pat=/([^()\d]{2,8})\s*\([^)]{1,10}\)(\d+)\s*-\s*(\d+)([^()\d]{2,8})\s*\([^)]{1,10}\)/g;
+  let m;
+  while((m=pat.exec(bodyText))!==null){
+    const a=normSite(m[1]),sa=parseInt(m[2]),sb=parseInt(m[3]),b=normSite(m[4]);
     if(sa===sb)continue;
     const winner=sa>sb?a:b;
     R1P.forEach((pair,i)=>{
@@ -1016,26 +1010,6 @@ async function fetchResults(){
         if(!fetched['r1_'+i])fetched['r1_'+i]=winner;
       }
     });
-  }
-
-  // パターン2: vs形式でスコア行から判定 (試合前→試合後で変わる場合)
-  const vsPat=/([^\s　]{2,10})\s+vs\s+([^\s　]{2,10})/gi;
-  let vm;
-  while((vm=vsPat.exec(bodyText))!==null){
-    const a=normSite(vm[1]),b=normSite(vm[2]);
-    const after=bodyText.slice(vm.index+vm[0].length,vm.index+vm[0].length+300);
-    const scores=[];
-    const sp=/＝(\d+)/g;let sm;
-    while((sm=sp.exec(after))!==null&&scores.length<2)scores.push(parseInt(sm[1]));
-    if(scores.length===2&&scores[0]!==scores[1]){
-      const winner=scores[0]>scores[1]?a:b;
-      R1P.forEach((pair,i)=>{
-        const [ra,rb]=pair;
-        if((ra===a&&rb===b)||(ra===b&&rb===a)){
-          if(!fetched['r1_'+i])fetched['r1_'+i]=winner;
-        }
-      });
-    }
   }
 
   const updated=applyFetchedResults(fetched);
