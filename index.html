@@ -325,13 +325,36 @@ let amidaContext=null; // {school, players, winner}
 const EMPTY_ST=()=>({ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{},sc:{},amidaResults:{},fetchLocked:false});
 
 async function sv(){
-  try{ await window._fbSet(ST); }catch(e){ console.error('Firebase write error',e); }
+  try{ _savePkBackup(); await window._fbSet(ST); }catch(e){ console.error('Firebase write error',e); }
 }
 async function ld(){
   // 初回ロードはリスナー側で処理するため sv/ld パターンは書き込みのみ使用
 }
 function mergeData(d){
-  ST = {...EMPTY_ST(), ...(d||{})};
+  const incoming = d || {};
+  const prev = ST || {};
+  const incomingPkCount = incoming.pk ? Object.keys(incoming.pk).length : 0;
+  const localPkCount = prev.pk ? Object.keys(prev.pk).length : 0;
+  if(incomingPkCount === 0 && localPkCount > 0){
+    console.warn('[mergeData] Firebase pk empty but local has', localPkCount, 'picks - keeping local');
+    ST = {...EMPTY_ST(), ...incoming, pk: prev.pk, rs: incoming.rs||prev.rs||{}, sc: incoming.sc||prev.sc||{}};
+    return;
+  }
+  if(incomingPkCount === 0){
+    const backup = _loadPkBackup();
+    if(backup && Object.keys(backup).length > 0){
+      console.warn('[mergeData] Firebase pk empty - restoring from localStorage backup');
+      ST = {...EMPTY_ST(), ...incoming, pk: backup};
+      return;
+    }
+  }
+  ST = {...EMPTY_ST(), ...incoming};
+}
+function _savePkBackup(){
+  try{ if(ST.pk && Object.keys(ST.pk).length > 0) localStorage.setItem('senbatsu2026_pk_backup', JSON.stringify(ST.pk)); }catch(e){}
+}
+function _loadPkBackup(){
+  try{ const s=localStorage.getItem('senbatsu2026_pk_backup'); return s?JSON.parse(s):null; }catch(e){ return null; }
 }
 
 // ==============================
@@ -1363,8 +1386,11 @@ async function doRefresh(btn){
   if(btn){btn.style.opacity='1';btn.style.pointerEvents='';}
 }
 async function doReset(){
-  if(!confirm('全データをリセットしますか？\nこの操作は元に戻せません。'))return;
-  ST={ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{}};
+  if(!confirm('⚠️ 全データをリセットしますか？\nこの操作は元に戻せません！'))return;
+  const ans=prompt('本当にリセットする場合は「リセット」と入力してください');
+  if(ans!=='リセット'){alert('キャンセルしました');return;}
+  localStorage.removeItem('senbatsu2026_pk_backup');
+  ST={ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{},sc:{},amidaResults:{},fetchLocked:false};
   localPlayer=null;await sv();rAll();
 }
 
@@ -1394,7 +1420,14 @@ let fbReady = false;
 
     // リアルタイムリスナー: Firebaseのデータが変わったら即反映
     window._fbListen((data)=>{
+      const prevPkCount = ST.pk ? Object.keys(ST.pk).length : 0;
       mergeData(data);
+      const newPkCount = ST.pk ? Object.keys(ST.pk).length : 0;
+      if(prevPkCount > 0 && newPkCount === 0){
+        console.error('[Listener] pk lost! Attempting restore...');
+        const backup = _loadPkBackup();
+        if(backup && Object.keys(backup).length > 0){ ST.pk = backup; sv(); }
+      }
       rAll();
     });
 
