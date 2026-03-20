@@ -974,23 +974,30 @@ async function fetchResults(){
 
   // 阪神甲子園球場公式サイトから取得
   const TARGET='https://koshien.hanshin.co.jp/highschool/spring2026/schedule.html';
-  const PROXY=`https://api.allorigins.win/get?url=${encodeURIComponent(TARGET)}`;
+  // 複数プロキシを順番に試す
+  const PROXIES=[
+    `https://corsproxy.io/?${encodeURIComponent(TARGET)}`,
+    `https://api.allorigins.win/get?url=${encodeURIComponent(TARGET)}`,
+    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(TARGET)}`,
+  ];
 
   let html=null;
-  let fetchErr='接続失敗';
-  try{
-    const controller=new AbortController();
-    const timer=setTimeout(()=>controller.abort(),12000);
-    const r=await fetch(PROXY,{signal:controller.signal});
-    clearTimeout(timer);
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const text=await r.text();
-    let j;try{j=JSON.parse(text);}catch(e){j=null;}
-    const result=j&&j.contents?j.contents:text;
-    if(result&&result.length>500)html=result;
-    else fetchErr='ページ内容が空でした';
-  }catch(e){
-    fetchErr=e.name==='AbortError'?'タイムアウト':e.message;
+  let fetchErr='全プロキシ接続失敗';
+  for(const PROXY of PROXIES){
+    try{
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),10000);
+      const r=await fetch(PROXY,{signal:controller.signal});
+      clearTimeout(timer);
+      if(!r.ok)continue;
+      const text=await r.text();
+      let j;try{j=JSON.parse(text);}catch(e){j=null;}
+      const result=j&&j.contents?j.contents:text;
+      if(result&&result.length>500){html=result;break;}
+    }catch(e){
+      fetchErr=e.name==='AbortError'?'タイムアウト':e.message;
+      continue;
+    }
   }
 
   if(!html){
