@@ -1088,16 +1088,42 @@ async function fetchResults(){
     const a=normSite(m[1]),sa=parseInt(m[3]),sb=parseInt(m[4]),b=normSite(m[5]);
     if(sa===sb)continue;
     const winner=sa>sb?a:b;
+    // 1回戦マッチング
     R1P.forEach((pair,i)=>{
       const [ra,rb]=pair;
       if((ra===a&&rb===b)||(ra===b&&rb===a)){
-        if(!fetched['r1_'+i]){
-          fetched['r1_'+i]=winner;
-          // スコア保存: [tAのスコア, tBのスコア]（R1Pの順番に合わせる）
-          fetchedSc['r1_'+i]=ra===a?[sa,sb]:[sb,sa];
-        }
+        if(!fetched['r1_'+i]){fetched['r1_'+i]=winner;fetchedSc['r1_'+i]=ra===a?[sa,sb]:[sb,sa];}
       }
     });
+    // 2回戦: r1_(i*2)勝者 vs r1_(i*2+1)勝者
+    for(let i=0;i<8;i++){
+      const ra=ST.rs['r1_'+(i*2)],rb=ST.rs['r1_'+(i*2+1)];
+      if(!ra||!rb)continue;
+      if((ra===a&&rb===b)||(ra===b&&rb===a)){
+        if(!fetched['r2_'+i]){fetched['r2_'+i]=winner;fetchedSc['r2_'+i]=ra===a?[sa,sb]:[sb,sa];}
+      }
+    }
+    // 準々決勝: r2_(i*2)勝者 vs r2_(i*2+1)勝者
+    for(let i=0;i<4;i++){
+      const ra=ST.rs['r2_'+(i*2)],rb=ST.rs['r2_'+(i*2+1)];
+      if(!ra||!rb)continue;
+      if((ra===a&&rb===b)||(ra===b&&rb===a)){
+        if(!fetched['qf_'+i]){fetched['qf_'+i]=winner;fetchedSc['qf_'+i]=ra===a?[sa,sb]:[sb,sa];}
+      }
+    }
+    // 準決勝: qf_(i*2)勝者 vs qf_(i*2+1)勝者
+    for(let i=0;i<2;i++){
+      const ra=ST.rs['qf_'+(i*2)],rb=ST.rs['qf_'+(i*2+1)];
+      if(!ra||!rb)continue;
+      if((ra===a&&rb===b)||(ra===b&&rb===a)){
+        if(!fetched['sf_'+i]){fetched['sf_'+i]=winner;fetchedSc['sf_'+i]=ra===a?[sa,sb]:[sb,sa];}
+      }
+    }
+    // 決勝
+    {const ra=ST.rs['sf_0'],rb=ST.rs['sf_1'];
+    if(ra&&rb&&((ra===a&&rb===b)||(ra===b&&rb===a))){
+      if(!fetched['final']){fetched['final']=winner;fetchedSc['final']=ra===a?[sa,sb]:[sb,sa];}
+    }}
   }
 
   const updated=applyFetchedResults(fetched);
