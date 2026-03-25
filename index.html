@@ -425,7 +425,8 @@ function allScores(){
   const b8={};PL.forEach(p=>b8[p.name]=0);
   for(let i=0;i<8;i++){const w=ST.rs[`r2_${i}`];if(w&&ST.pk[w])b8[ST.pk[w].pl]++;}
   const mx=Math.max(...Object.values(b8),0);
-  if(mx>0){const tops=PL.filter(p=>b8[p.name]===mx);const bon=tops.length===1?50:tops.length===2?30:20;tops.forEach(p=>{sc[p.name].tot+=bon;sc[p.name].b8=b8[p.name];});}
+  PL.forEach(p=>{if(b8[p.name]>0)sc[p.name].b8=b8[p.name];});
+  if(mx>0){const tops=PL.filter(p=>b8[p.name]===mx);const bon=tops.length===1?50:tops.length===2?30:20;tops.forEach(p=>{sc[p.name].tot+=bon;});}
   return sc;
 }
 
