@@ -230,7 +230,7 @@ td.rank-cell { text-align:center; }
       <h1>DRAFT GAME <span>ARCHIVE</span></h1>
     </div>
     <div class="header-meta">
-      <strong>2008〜2025年</strong> ｜ 全53大会 記録 ｜ <strong>スコア判明: 43大会</strong><br>
+      <strong>2008〜2026年</strong> ｜ 全55大会 記録 ｜ <strong>スコア判明: 55大会</strong><br>
       センバツ・夏の甲子園・箱根駅伝・ワールドカップ・オリンピック
     </div>
   </div>
@@ -249,7 +249,7 @@ td.rank-cell { text-align:center; }
 <!-- ===== OVERVIEW ===== -->
 <section class="section active" id="tab-overview">
   <div class="section-title">通算メダル集計</div>
-  <p class="section-desc">スコア記録がある43大会のメダル数（1位=金、2位=銀、3位=銅）</p>
+  <p class="section-desc">スコア記録がある55大会のメダル数（1位=金、2位=銀、3位=銅）</p>
   <div class="table-wrap" style="margin-bottom:32px">
     <table class="medal-table" id="medal-table"></table>
   </div>
@@ -322,59 +322,61 @@ const PLAYER_COLORS = {
 };
 
 const ALL_DATA = [
-  {num:1,  year:2008, name:'2008センバツ',        kind:'センバツ',       has_data:true,  scores:{若林:70,太田:70,本川:70},                      ranks:{若林:2,太田:3,本川:4}},
-  {num:2,  year:2008, name:'2008夏甲子園',        kind:'夏の甲子園',     has_data:true,  scores:{若林:140,太田:120,本川:100,新井:90},            ranks:{若林:1,太田:2,本川:3,新井:4}},
-  {num:3,  year:2009, name:'2009箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{若林:67,本川:50,新井:48,太田:20},               ranks:{若林:1,本川:2,新井:3,太田:4}},
-  {num:4,  year:2009, name:'2009夏甲子園',        kind:'夏の甲子園',     has_data:true,  scores:{太田:260,若林:120,新井:70,本川:60},             ranks:{太田:1,若林:3,新井:4,本川:4}},
-  {num:5,  year:2010, name:'2010箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{新井:45,太田:40,若林:34,本川:32},               ranks:{新井:1,太田:2,若林:3,本川:4}},
-  {num:6,  year:2010, name:'2010ワールドカップ',  kind:'ワールドカップ', has_data:true,  scores:{本川:740,新井:695,太田:680,若林:370},                    ranks:{本川:1,新井:2,太田:3,若林:4}},
-  {num:7,  year:2010, name:'2010夏甲子園',        kind:'夏の甲子園',     has_data:false, scores:{},                                                       ranks:{}, note:'ルール書のみ'},
-  {num:8,  year:2011, name:'2011箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{太田:75,新井:42,若林:19,本川:13},               ranks:{太田:1,新井:2,若林:4,本川:4}},
-  {num:9,  year:2011, name:'2011センバツ',        kind:'センバツ',       has_data:false, scores:{},                                                       ranks:{}, note:'ルール書のみ'},
-  {num:10, year:2011, name:'2011夏甲子園',        kind:'夏の甲子園',     has_data:false, scores:{},                                                       ranks:{}, note:'ドラフト記録のみ'},
-  {num:11, year:2012, name:'2012箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{本川:61,太田:55,若林:51,新井:28},                        ranks:{本川:1,太田:2,若林:3,新井:4}},
-  {num:12, year:2012, name:'2012センバツ',        kind:'センバツ',       has_data:false, scores:{},                                                       ranks:{}, note:'ルール書のみ'},
-  {num:13, year:2012, name:'2012夏甲子園',        kind:'夏の甲子園',     has_data:false, scores:{},                                                       ranks:{}, note:'ドラフト記録のみ'},
-  {num:14, year:2013, name:'2013箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{新井:49,若林:48,本川:43,太田:18},                        ranks:{新井:1,若林:2,本川:3,太田:4}},
-  {num:15, year:2013, name:'2013センバツ',        kind:'センバツ',       has_data:true,  scores:{若林:490,本川:400,太田:210,新井:180},                    ranks:{若林:1,本川:2,太田:3,新井:4}},
-  {num:16, year:2013, name:'2013夏甲子園',        kind:'夏の甲子園',     has_data:true,  scores:{太田:610,若林:430,本川:350,新井:320},                    ranks:{太田:1,若林:2,本川:3,新井:4}},
-  {num:17, year:2014, name:'2014箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{太田:84,新井:78,本川:27,若林:26},                        ranks:{太田:1,新井:2,本川:3,若林:4}},
-  {num:18, year:2014, name:'2014センバツ',        kind:'センバツ',       has_data:true,  scores:{若林:120,本川:120,太田:90,新井:90},                      ranks:{若林:1,本川:2,太田:3,新井:4}},
-  {num:19, year:2014, name:'2014ワールドカップ',  kind:'ワールドカップ', has_data:true,  scores:{本川:740,新井:695,太田:680,若林:370},                    ranks:{本川:1,新井:2,太田:3,若林:4}},
-  {num:20, year:2014, name:'2014夏甲子園',        kind:'夏の甲子園',     has_data:true,  scores:{新井:490,本川:480,若林:460,太田:190},                    ranks:{新井:1,本川:2,若林:3,太田:4}},
-  {num:21, year:2015, name:'2015箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{新井:53,本川:50,若林:43,太田:21},                           ranks:{新井:1,本川:2,若林:3,太田:4}},
-  {num:22, year:2015, name:'2015センバツ',        kind:'センバツ',       has_data:true,  scores:{若林:425,新井:325,太田:205,本川:205},                       ranks:{若林:1,新井:2,太田:3,本川:4}},
-  {num:23, year:2015, name:'2015夏甲子園',        kind:'夏の甲子園',     has_data:true,  scores:{本川:970,新井:550,若林:370,太田:230},                       ranks:{本川:1,新井:2,若林:3,太田:4}},
-  {num:24, year:2016, name:'2016箱根駅伝',        kind:'箱根駅伝',       has_data:false, scores:{},                                                          ranks:{}, note:'データなし'},
-  {num:25, year:2016, name:'2016センバツ',        kind:'センバツ',       has_data:true,  scores:{太田:460,本川:390,新井:210,若林:40},                        ranks:{太田:1,本川:2,新井:3,若林:4}},
-  {num:26, year:2016, name:'2016夏甲子園',        kind:'夏の甲子園',     has_data:false, scores:{},                                                          ranks:{}, note:'データなし'},
-  {num:27, year:2017, name:'2017箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{新井:135.5,若林:94.5,太田:80,本川:67},                     ranks:{新井:1,若林:2,太田:3,本川:4}},
-  {num:28, year:2017, name:'2017センバツ',        kind:'センバツ',       has_data:true,  scores:{若林:450,太田:320,本川:290,新井:100},                       ranks:{若林:1,太田:2,本川:3,新井:4}},
-  {num:29, year:2017, name:'2017夏甲子園',        kind:'夏の甲子園',     has_data:false, scores:{},                                                          ranks:{}, note:'ルール書のみ'},
-  {num:30, year:2018, name:'2018箱根駅伝',        kind:'箱根駅伝',       has_data:true,  scores:{新井:120,若林:92.5,本川:85,太田:83.5},                     ranks:{新井:1,若林:2,本川:3,太田:4}},
-  {num:31, year:2018, name:'2018平昌五輪',          kind:'オリンピック',    has_data:true,  scores:{太田:330,若林:250,本川:160,新井:80},                        ranks:{太田:1,若林:2,本川:3,新井:4}},
-  {num:32, year:2018, name:'2018センバツ',          kind:'センバツ',        has_data:false, scores:{},                                                          ranks:{}, note:'組み合わせ表のみ'},
-  {num:33, year:2018, name:'2018ワールドカップ',    kind:'ワールドカップ',  has_data:true,  scores:{新井:790,若林:730,太田:475,本川:305},                       ranks:{新井:1,若林:2,太田:3,本川:4}},
-  {num:34, year:2018, name:'2018夏甲子園',          kind:'夏の甲子園',      has_data:false, scores:{},                                                          ranks:{}, note:'ルール書のみ'},
-  {num:35, year:2019, name:'2019箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{本川:114,新井:77.5,太田:60.5,若林:35},                     ranks:{本川:1,新井:2,太田:3,若林:4}},
-  {num:36, year:2019, name:'2019センバツ',          kind:'センバツ',        has_data:true,  scores:{本川:520,若林:390,新井:160,太田:120},                       ranks:{本川:1,若林:2,新井:3,太田:4}},
-  {num:37, year:2019, name:'2019夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{太田:700,本川:480,若林:440,新井:210},                       ranks:{太田:1,本川:2,若林:3,新井:4}},
-  {num:38, year:2020, name:'2020箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{本川:129,若林:101.5,新井:73,太田:69.5},                    ranks:{本川:1,若林:2,新井:3,太田:4}},
-  {num:39, year:2021, name:'2021箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{太田:110,新井:97,本川:95.5,若林:68.5},                     ranks:{太田:1,新井:2,本川:3,若林:4}},
-  {num:40, year:2021, name:'2021センバツ',          kind:'センバツ',        has_data:false, scores:{},                                                          ranks:{}, note:'組み合わせ表のみ'},
-  {num:41, year:2021, name:'2021夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{太田:670,若林:530,新井:510,本川:380},                       ranks:{太田:1,若林:2,新井:3,本川:4}},
-  {num:42, year:2022, name:'2022箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{本川:120,太田:103.5,新井:91,若林:67.5},                    ranks:{本川:1,太田:2,新井:3,若林:4}},
-  {num:43, year:2022, name:'2022センバツ',          kind:'センバツ',        has_data:true,  scores:{本川:280,新井:270,若林:180,太田:80},                        ranks:{本川:1,新井:2,若林:3,太田:4}},
-  {num:44, year:2022, name:'2022夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{新井:690,太田:560,本川:460,若林:460},                       ranks:{新井:1,太田:2,本川:3,若林:4}},
-  {num:45, year:2022, name:'2022ワールドカップ',    kind:'ワールドカップ',  has_data:true,  scores:{若林:1080,本川:950,新井:520,太田:460},                      ranks:{若林:1,本川:2,新井:3,太田:4}},
-  {num:46, year:2023, name:'2023箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{本川:116.5,若林:80.5,太田:77.5,新井:31.5},                 ranks:{本川:1,太田:2,若林:3,新井:4}},
-  {num:47, year:2023, name:'2023センバツ',          kind:'センバツ',        has_data:true,  scores:{若林:490,本川:430,新井:150,太田:70},                        ranks:{若林:1,本川:2,新井:3,太田:4}},
-  {num:48, year:2023, name:'2023夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{若林:850,本川:660,太田:380,新井:280},                       ranks:{若林:1,本川:2,太田:3,新井:4}},
-  {num:49, year:2024, name:'2024箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{太田:104.5,新井:68.5,本川:79.5,若林:36},                   ranks:{太田:1,新井:2,若林:3,本川:4}},
-  {num:50, year:2024, name:'2024センバツ',          kind:'センバツ',        has_data:true,  scores:{太田:640,本川:250,若林:220,新井:180},                       ranks:{太田:1,本川:2,若林:3,新井:4}},
-  {num:51, year:2024, name:'2024夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{太田:1020,若林:890,新井:310,本川:260},                      ranks:{太田:1,若林:2,新井:3,本川:4}},
-  {num:52, year:2025, name:'2025箱根駅伝',          kind:'箱根駅伝',        has_data:true,  scores:{若林:105.5,太田:77.5,本川:69,新井:68},                     ranks:{若林:1,太田:2,本川:3,新井:4}},
-  {num:53, year:2025, name:'2025夏甲子園',          kind:'夏の甲子園',      has_data:true,  scores:{太田:870,若林:590,本川:430,新井:310},                       ranks:{太田:1,若林:2,本川:3,新井:4}},
+  {num:1, year:2008, name:'2008センバツ', kind:'センバツ', has_data:true, scores:{若林:70,太田:70,本川:70}, ranks:{若林:1,太田:2,本川:3}},
+  {num:2, year:2008, name:'2008夏甲子園', kind:'夏の甲子園', has_data:true, scores:{若林:140,太田:120,本川:100,新井:90}, ranks:{若林:1,太田:2,本川:3,新井:4}},
+  {num:3, year:2009, name:'2009箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{太田:22,若林:50,新井:52,本川:67}, ranks:{太田:1,若林:2,新井:3,本川:4}},
+  {num:4, year:2009, name:'2009夏甲子園', kind:'夏の甲子園', has_data:true, scores:{太田:240,若林:120,新井:70,本川:60}, ranks:{太田:1,若林:2,新井:3,本川:4}},
+  {num:5, year:2010, name:'2010箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{本川:18,太田:33,若林:39,新井:62}, ranks:{本川:1,太田:2,若林:3,新井:4}},
+  {num:6, year:2010, name:'2010ワールドカップ', kind:'ワールドカップ', has_data:true, scores:{新井:720,太田:720,若林:610,本川:450}, ranks:{新井:1,太田:2,若林:3,本川:4}},
+  {num:7, year:2010, name:'2010夏甲子園', kind:'夏の甲子園', has_data:true, scores:{若林:920,新井:310,本川:300,太田:130}, ranks:{若林:1,新井:2,本川:3,太田:4}},
+  {num:8, year:2011, name:'2011箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{太田:30,新井:34,本川:39,若林:42}, ranks:{太田:1,新井:2,本川:3,若林:4}},
+  {num:9, year:2011, name:'2011センバツ', kind:'センバツ', has_data:true, scores:{本川:450,新井:330,若林:120,太田:110}, ranks:{本川:1,新井:2,若林:3,太田:4}},
+  {num:10, year:2011, name:'2011夏甲子園', kind:'夏の甲子園', has_data:true, scores:{新井:370,若林:350,太田:280,本川:150}, ranks:{新井:1,若林:2,太田:3,本川:4}},
+  {num:11, year:2012, name:'2012箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{太田:21,若林:29,本川:52,新井:65}, ranks:{太田:1,若林:2,本川:3,新井:4}},
+  {num:12, year:2012, name:'2012センバツ', kind:'センバツ', has_data:true, scores:{太田:590,若林:230,本川:190,新井:90}, ranks:{太田:1,若林:2,本川:3,新井:4}},
+  {num:13, year:2012, name:'2012夏甲子園', kind:'夏の甲子園', has_data:true, scores:{太田:480,若林:410,新井:280,本川:270}, ranks:{太田:1,若林:2,新井:3,本川:4}},
+  {num:14, year:2013, name:'2013箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{太田:18,本川:43,若林:48,新井:49}, ranks:{太田:1,本川:2,若林:3,新井:4}},
+  {num:15, year:2013, name:'2013センバツ', kind:'センバツ', has_data:true, scores:{若林:490,本川:400,太田:210,新井:180}, ranks:{若林:1,本川:2,太田:3,新井:4}},
+  {num:16, year:2013, name:'2013夏甲子園', kind:'夏の甲子園', has_data:true, scores:{太田:610,若林:430,本川:350,新井:320}, ranks:{太田:1,若林:2,本川:3,新井:4}},
+  {num:17, year:2014, name:'2014箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{若林:26,本川:27,新井:78,太田:84}, ranks:{若林:1,本川:2,新井:3,太田:4}},
+  {num:18, year:2014, name:'2014センバツ', kind:'センバツ', has_data:true, scores:{太田:680,若林:210,新井:180,本川:70}, ranks:{太田:1,若林:2,新井:3,本川:4}},
+  {num:19, year:2014, name:'2014ワールドカップ', kind:'ワールドカップ', has_data:true, scores:{本川:740,新井:695,太田:680,若林:370}, ranks:{本川:1,新井:2,太田:3,若林:4}},
+  {num:20, year:2014, name:'2014夏甲子園', kind:'夏の甲子園', has_data:true, scores:{新井:490,本川:480,若林:460,太田:190}, ranks:{新井:1,本川:2,若林:3,太田:4}},
+  {num:21, year:2015, name:'2015箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{太田:21,若林:43,本川:50,新井:53}, ranks:{太田:1,若林:2,本川:3,新井:4}},
+  {num:22, year:2015, name:'2015センバツ', kind:'センバツ', has_data:true, scores:{若林:425,新井:325,本川:205,太田:205}, ranks:{若林:1,新井:2,本川:3,太田:4}},
+  {num:23, year:2015, name:'2015夏甲子園', kind:'夏の甲子園', has_data:true, scores:{本川:970,新井:550,若林:370,太田:230}, ranks:{本川:1,新井:2,若林:3,太田:4}},
+  {num:24, year:2016, name:'2016箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{太田:37,本川:39,新井:43,若林:51}, ranks:{太田:1,本川:2,新井:3,若林:4}},
+  {num:25, year:2016, name:'2016センバツ', kind:'センバツ', has_data:true, scores:{太田:460,本川:390,新井:210,若林:40}, ranks:{太田:1,本川:2,新井:3,若林:4}},
+  {num:26, year:2016, name:'2016夏甲子園', kind:'夏の甲子園', has_data:true, scores:{若林:800,本川:420,太田:370,新井:350}, ranks:{若林:1,本川:2,太田:3,新井:4}},
+  {num:27, year:2017, name:'2017箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{新井:135.5,若林:94.5,太田:80,本川:67}, ranks:{新井:1,若林:2,太田:3,本川:4}},
+  {num:28, year:2017, name:'2017センバツ', kind:'センバツ', has_data:true, scores:{若林:450,太田:320,本川:290,新井:100}, ranks:{若林:1,太田:2,本川:3,新井:4}},
+  {num:29, year:2017, name:'2017夏甲子園', kind:'夏の甲子園', has_data:true, scores:{本川:710,新井:610,太田:300,若林:280}, ranks:{本川:1,新井:2,太田:3,若林:4}},
+  {num:30, year:2018, name:'2018箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{新井:120,若林:92.5,本川:85,太田:83.5}, ranks:{新井:1,若林:2,本川:3,太田:4}},
+  {num:31, year:2018, name:'2018平昌五輪', kind:'オリンピック', has_data:true, scores:{太田:330,若林:250,本川:160,新井:80}, ranks:{太田:1,若林:2,本川:3,新井:4}},
+  {num:32, year:2018, name:'2018センバツ', kind:'センバツ', has_data:true, scores:{太田:410,若林:380,新井:370,本川:120}, ranks:{太田:1,若林:2,新井:3,本川:4}},
+  {num:33, year:2018, name:'2018ワールドカップ', kind:'ワールドカップ', has_data:true, scores:{新井:790,若林:730,太田:475,本川:305}, ranks:{新井:1,若林:2,太田:3,本川:4}},
+  {num:34, year:2018, name:'2018夏甲子園', kind:'夏の甲子園', has_data:true, scores:{若林:740,太田:690,本川:400,新井:300}, ranks:{若林:1,太田:2,本川:3,新井:4}},
+  {num:35, year:2019, name:'2019箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{本川:147,新井:125.5,太田:107.5,若林:90}, ranks:{本川:1,新井:2,太田:3,若林:4}},
+  {num:36, year:2019, name:'2019センバツ', kind:'センバツ', has_data:true, scores:{本川:520,若林:390,新井:160,太田:120}, ranks:{本川:1,若林:2,新井:3,太田:4}},
+  {num:37, year:2019, name:'2019夏甲子園', kind:'夏の甲子園', has_data:true, scores:{太田:700,若林:490,本川:480,新井:210}, ranks:{太田:1,若林:2,本川:3,新井:4}},
+  {num:38, year:2020, name:'2020箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{本川:129,若林:101.5,新井:73,太田:69.5}, ranks:{本川:1,若林:2,新井:3,太田:4}},
+  {num:39, year:2021, name:'2021箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{太田:110,新井:97,本川:95.5,若林:68.5}, ranks:{太田:1,新井:2,本川:3,若林:4}},
+  {num:40, year:2021, name:'2021センバツ', kind:'センバツ', has_data:true, scores:{若林:400,新井:280,本川:260,太田:180}, ranks:{若林:1,新井:2,本川:3,太田:4}},
+  {num:41, year:2021, name:'2021夏甲子園', kind:'夏の甲子園', has_data:true, scores:{太田:670,若林:530,新井:510,本川:380}, ranks:{太田:1,若林:2,新井:3,本川:4}},
+  {num:42, year:2022, name:'2022箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{本川:120,太田:103.5,新井:91,若林:67.5}, ranks:{本川:1,太田:2,新井:3,若林:4}},
+  {num:43, year:2022, name:'2022センバツ', kind:'センバツ', has_data:true, scores:{本川:280,新井:270,若林:180,太田:80}, ranks:{本川:1,新井:2,若林:3,太田:4}},
+  {num:44, year:2022, name:'2022夏甲子園', kind:'夏の甲子園', has_data:true, scores:{新井:690,太田:560,若林:460,本川:460}, ranks:{新井:1,太田:2,若林:3,本川:4}},
+  {num:45, year:2022, name:'2022ワールドカップ', kind:'ワールドカップ', has_data:true, scores:{若林:1080,本川:950,新井:520,太田:460}, ranks:{若林:1,本川:2,新井:3,太田:4}},
+  {num:46, year:2023, name:'2023箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{本川:112.5,太田:105.5,若林:80.5,新井:65.5}, ranks:{本川:1,太田:2,若林:3,新井:4}},
+  {num:47, year:2023, name:'2023センバツ', kind:'センバツ', has_data:true, scores:{若林:490,本川:430,新井:150,太田:70}, ranks:{若林:1,本川:2,新井:3,太田:4}},
+  {num:48, year:2023, name:'2023夏甲子園', kind:'夏の甲子園', has_data:true, scores:{若林:850,本川:660,太田:380,新井:280}, ranks:{若林:1,本川:2,太田:3,新井:4}},
+  {num:49, year:2024, name:'2024箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{太田:111.5,新井:88.5,若林:78,本川:66.5}, ranks:{太田:1,新井:2,若林:3,本川:4}},
+  {num:50, year:2024, name:'2024センバツ', kind:'センバツ', has_data:true, scores:{太田:640,本川:250,若林:220,新井:180}, ranks:{太田:1,本川:2,若林:3,新井:4}},
+  {num:51, year:2024, name:'2024夏甲子園', kind:'夏の甲子園', has_data:true, scores:{太田:1020,若林:890,新井:310,本川:260}, ranks:{太田:1,若林:2,新井:3,本川:4}},
+  {num:52, year:2025, name:'2025箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{若林:101.5,本川:93,太田:87.5,新井:86}, ranks:{若林:1,本川:2,太田:3,新井:4}},
+  {num:53, year:2025, name:'2025夏甲子園', kind:'夏の甲子園', has_data:true, scores:{太田:870,若林:590,本川:430,新井:310}, ranks:{太田:1,若林:2,本川:3,新井:4}},
+  {num:54, year:2026, name:'2026箱根駅伝', kind:'箱根駅伝', has_data:true, scores:{本川:107,若林:94,新井:85,太田:67}, ranks:{本川:1,若林:2,新井:3,太田:4}},
+  {num:55, year:2026, name:'2026センバツ', kind:'センバツ', has_data:true, scores:{若林:480,新井:370,太田:320,本川:210}, ranks:{若林:1,新井:2,太田:3,本川:4}},
 ];
 
 const PLAYERS = ['若林','太田','本川','新井'];
@@ -727,4 +729,3 @@ buildHistoryTable();
 </script>
 </body>
 </html>
-
