@@ -206,6 +206,38 @@ body{background:var(--bg);color:var(--txt);font-family:'Noto Sans JP',sans-serif
 .fetch-btn:hover:not(:disabled){border-color:#fff;color:#fff}
 .fetch-btn:disabled{opacity:.4;cursor:not-allowed}
 
+/* ---- 対戦表（トーナメント表） ---- */
+.brk-legend{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:12px;font-size:11px;color:var(--muted)}
+.brk-legend .lg{display:inline-flex;align-items:center;gap:5px}
+.brk-legend .sw{width:11px;height:11px;border-radius:3px;flex:none}
+.brk-half{margin-bottom:6px}
+.brk-htitle{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.brk-htitle::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.brk-block{background:var(--s1);border:1px solid var(--bdr);border-radius:9px;padding:10px 10px 4px;margin-bottom:11px}
+.brk-bt{font-size:11px;font-weight:800;color:#cfd6de;letter-spacing:.04em;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.brk-bt .adv{color:var(--nf);font-weight:800}
+.brk-cols{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.brk-col{display:flex;flex-direction:column;justify-content:space-around;gap:9px;min-width:154px;flex:none}
+.brk-rl{font-size:9px;font-weight:800;letter-spacing:.1em;color:var(--faint,#6b7480);text-transform:uppercase;text-align:center;margin-bottom:1px}
+.brk-m{border:1px solid var(--bdr);border-radius:7px;overflow:hidden;background:#0e1116}
+.bt{display:flex;align-items:center;gap:6px;padding:6px 8px;border-left:3px solid var(--oc,#3a3f49);background:var(--s1)}
+.bt+.bt{border-top:1px solid var(--bdr)}
+.bt-jun{font-size:9px;font-weight:800;color:#fff;background:var(--oc,#3a3f49);border-radius:3px;padding:1px 4px;flex:none;min-width:15px;text-align:center;line-height:1.5}
+.bt-nm{font-size:12.5px;font-weight:700;color:var(--ink,#eef1f5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bt-ow{font-size:10px;color:var(--oc,#8a929c);font-weight:700;margin-left:auto;flex:none}
+.bt-sc{font-size:12px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;flex:none;min-width:14px;text-align:right}
+.bt-oshi{color:var(--gold,#f6c945);margin-right:1px}
+.bt-win{background:linear-gradient(90deg,rgba(229,9,20,.14),transparent)}
+.bt-win .bt-nm{color:#fff}
+.bt-win .bt-nm::after{content:' ✓';color:var(--nf);font-weight:800}
+.bt-out{opacity:.4}
+.bt-out .bt-nm{text-decoration:line-through;text-decoration-thickness:1px}
+.bt-pend .bt-nm{color:var(--faint,#6b7480);font-weight:600}
+.brk-champ{background:linear-gradient(135deg,rgba(246,201,69,.14),rgba(20,23,28,.5));border:1px solid rgba(246,201,69,.42);border-radius:11px;padding:14px;text-align:center;margin-top:6px}
+.brk-champ .cl{font-size:11px;letter-spacing:.16em;color:#f6c945;font-weight:800;text-transform:uppercase}
+.brk-champ .cn{font-size:22px;font-weight:800;margin-top:4px}
+.brk-note{font-size:11px;color:var(--muted);margin:2px 0 14px;line-height:1.7}
+
 /* ---- AMIDA MODAL ---- */
 #amida-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:500;align-items:center;justify-content:center;padding:16px}
 #amida-overlay.show{display:flex}
@@ -239,6 +271,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Noto Sans JP',sans-serif
 </div>
 <div class="nav">
   <button class="nb on" onclick="gp('draft',this)"><span class="ni"><svg viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h6"/></svg></span>ドラフト</button>
+  <button class="nb" onclick="gp('bracket',this)"><span class="ni"><svg viewBox="0 0 24 24"><path d="M3 5h5v5h5"/><path d="M3 19h5v-5"/><path d="M13 10V6h4v12h-4v-4"/><path d="M17 12h4"/></svg></span>対戦表</button>
   <button class="nb" onclick="gp('picks',this)"><span class="ni"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>指名</button>
   <button class="nb" onclick="gp('results',this)"><span class="ni"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M6.5 6a9 9 0 0 1 0 12"/><path d="M17.5 6a9 9 0 0 0 0 12"/></svg></span>結果</button>
   <button class="nb" onclick="gp('score',this)"><span class="ni"><svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.7V17c0 .6-.5 1-1 1.2C7.8 18.7 7 20.2 7 22"/><path d="M14 14.7V17c0 .6.5 1 1 1.2 1.2.5 2 2 2 3.8"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span>順位</button>
@@ -248,6 +281,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Noto Sans JP',sans-serif
 </div>
 <div class="main">
   <div class="pg on" id="pg-draft"></div>
+  <div class="pg" id="pg-bracket"></div>
   <div class="pg" id="pg-picks"></div>
   <div class="pg" id="pg-results"></div>
   <div class="pg" id="pg-score"></div>
@@ -1122,6 +1156,75 @@ function rResults(){
 }
 
 // ==============================
+// 対戦表（トーナメント表）: 各校に指名者(色・巡)を表示。結果が入れば勝敗も反映。
+// ==============================
+function brkTeam(school,mid,side){
+  const w=ST.rs[mid];
+  const sc=ST.sc&&ST.sc[mid];
+  if(!school){
+    const pend=(mid.indexOf('r1_')===0)?'未定':'勝者待ち';
+    return `<div class="bt bt-pend"><span class="bt-nm">${pend}</span></div>`;
+  }
+  const pi=pki(school);
+  const col=pi?pi.pl.col:'#6b7480';
+  const jun=pi?pi.rd.id:'L';
+  const owner=pi?pi.pl.name:'ジョーカー';
+  const oshi=(pi&&pi.oshi)?'<span class="bt-oshi">★</span>':'';
+  const isW=w&&w===school, isL=w&&w!==school;
+  const score=sc?(side===0?sc[0]:sc[1]):'';
+  return `<div class="bt ${isW?'bt-win':''} ${isL?'bt-out':''}" style="--oc:${col}">`
+    +`<span class="bt-jun">${jun}</span>`
+    +`<span class="bt-nm">${oshi}${school}</span>`
+    +`<span class="bt-ow">${owner}</span>`
+    +(score!==''?`<span class="bt-sc">${score}</span>`:'')
+    +`</div>`;
+}
+function brkMatch(mid){
+  return `<div class="brk-m">${brkTeam(teamAt(mid,0),mid,0)}${brkTeam(teamAt(mid,1),mid,1)}</div>`;
+}
+function brkBlock(bi){
+  const r2a='r2_'+(2*bi), r2b='r2_'+(2*bi+1), r3='r3_'+bi;
+  const r1ids=[];
+  [2*bi,2*bi+1].forEach(j=>{R2SRC[j].forEach(src=>{if(src&&typeof src==='object'&&('r1'in src))r1ids.push(src.r1);});});
+  let cols='';
+  if(r1ids.length){
+    cols+='<div class="brk-col"><div class="brk-rl">1回戦</div>'+r1ids.map(k=>brkMatch('r1_'+k)).join('')+'</div>';
+  }
+  cols+='<div class="brk-col"><div class="brk-rl">2回戦</div>'+brkMatch(r2a)+brkMatch(r2b)+'</div>';
+  cols+='<div class="brk-col"><div class="brk-rl">3回戦</div>'+brkMatch(r3)+'</div>';
+  const b8=ST.rs[r3];
+  const adv=b8?`<span class="adv">→ ${b8}（ベスト8）</span>`:'';
+  return `<div class="brk-block"><div class="brk-bt">ブロック${bi+1}${adv}</div><div class="brk-cols">${cols}</div></div>`;
+}
+function rBracket(){
+  const el=document.getElementById('pg-bracket');
+  if(!el)return;
+  let h='';
+  h+='<div class="brk-legend">'+PL.map(p=>`<span class="lg"><span class="sw" style="background:${p.col}"></span>${p.name}</span>`).join('')
+    +'<span class="lg"><span class="sw" style="background:#6b7480"></span>ジョーカー(未指名)</span></div>';
+  h+='<div class="brk-note">各校の左バー・巡バッジ＝<b>指名者と指名巡</b>。結果が入ると勝者に✓、敗者は取り消し線。各山は横スクロールで確認できます。</div>';
+  h+='<div class="brk-half"><div class="brk-htitle">上半分</div>';
+  for(let i=0;i<4;i++)h+=brkBlock(i);
+  h+='</div>';
+  h+='<div class="brk-half"><div class="brk-htitle">下半分</div>';
+  for(let i=4;i<8;i++)h+=brkBlock(i);
+  h+='</div>';
+  h+='<div class="brk-half"><div class="brk-htitle">決勝トーナメント</div>';
+  h+='<div class="brk-block"><div class="brk-cols">'
+    +'<div class="brk-col"><div class="brk-rl">準々決勝</div>'+brkMatch('qf_0')+brkMatch('qf_1')+brkMatch('qf_2')+brkMatch('qf_3')+'</div>'
+    +'<div class="brk-col"><div class="brk-rl">準決勝</div>'+brkMatch('sf_0')+brkMatch('sf_1')+'</div>'
+    +'<div class="brk-col"><div class="brk-rl">決勝</div>'+brkMatch('final')+'</div>'
+    +'</div></div>';
+  const champ=ST.rs.final;
+  if(champ){
+    const pi=pki(champ);const col=pi?pi.pl.col:'#f6c945';const own=pi?pi.pl.name:'ジョーカー';
+    h+=`<div class="brk-champ"><div class="cl">🏆 優勝</div><div class="cn" style="color:${col}">${champ}<span style="font-size:13px;color:var(--muted);font-weight:700"> ／ ${own}</span></div></div>`;
+  }
+  h+='</div>';
+  el.innerHTML=h;
+}
+
+// ==============================
 // 自動取得ロジック
 // ==============================
 
@@ -1671,8 +1774,8 @@ function gp(pg,btn){
   if(btn)btn.classList.add('on');
   curPg=pg;rpg(pg);
 }
-function rpg(p){if(p==='draft')rDraft();else if(p==='picks')rPicks();else if(p==='results')rResults();else if(p==='score')rScore();else if(p==='manual')rManual();else if(p==='rules')rRules();else if(p==='cfg')rCfg();}
-function rAll(){rDraft();rPicks();rResults();rScore();rManual();rRules();rCfg();}
+function rpg(p){if(p==='draft')rDraft();else if(p==='bracket')rBracket();else if(p==='picks')rPicks();else if(p==='results')rResults();else if(p==='score')rScore();else if(p==='manual')rManual();else if(p==='rules')rRules();else if(p==='cfg')rCfg();}
+function rAll(){rDraft();rBracket();rPicks();rResults();rScore();rManual();rRules();rCfg();}
 
 // Firebase未接続チェック用
 let fbReady = false;
