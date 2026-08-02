@@ -1653,7 +1653,10 @@ async function doReset(){
   if(ans!=='リセット'){alert('キャンセルしました');return;}
   localStorage.removeItem('natsu2026_pk_backup');
   ST={ri:0,wi:0,sd:{},ss:{},so:false,snr:[],snrd:{},snrs:{},snro:false,pk:{},rs:{},sc:{},amidaResults:{},fetchLocked:false,manual:EMPTY_MANUAL(),sj:null};
-  localPlayer=null;await sv();rAll();
+  localPlayer=null;
+  // 明示リセットはpk空を含めて全上書き（sv()のpk保護ガードを通さず確実にクリア）
+  try{ await window._fbSet(ST); }catch(e){ console.error('reset write error',e); }
+  rAll();
 }
 
 // ==============================
