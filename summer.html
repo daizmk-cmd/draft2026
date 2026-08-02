@@ -432,8 +432,18 @@ async function sv(){
     const _pkCount=ST.pk?Object.keys(ST.pk).length:0;
     if(_pkCount===0){
       const _bk=_loadPkBackup();
-      if(_bk&&Object.keys(_bk).length>0){ST.pk=_bk;console.warn('[sv] pk restored from backup');}
-      else{console.warn('[sv] pk empty + no backup -> ABORT');return;}
+      if(_bk&&Object.keys(_bk).length>0){
+        // 過去に指名があったのにpkが空＝データ喪失の疑い。バックアップから復元して通常書き込み。
+        ST.pk=_bk;console.warn('[sv] pk restored from backup');
+        _savePkBackup();
+        await window._fbSet(ST);
+        return;
+      }
+      // pk空＋バックアップ無し＝指名前（入札フェーズ等）。これは正常な状態。
+      // pkを空で上書きしてFirebase側を消さないよう、pk以外のフィールドのみ同期する。
+      const rest={...ST}; delete rest.pk;
+      await window._fbUpdate(rest);
+      return;
     }
     _savePkBackup();
     await window._fbSet(ST);
@@ -560,13 +570,11 @@ function allScores(){
       if(ls&&ST.pk[ls]){const lr=ST.pk[ls].ri+1;const pen=30+(JOKER_RANK-lr);sc[ST.pk[ls].pl].joker-=pen;}
     });
   }
-  // B8残留ボーナス: 準々決勝進出校（=ベスト8）を数える。
-  // 準々決勝進出8校 = 3回戦(r3_0〜r3_7)の勝者。
+  // B8残留ボーナスは廃止（2026ルール変更）。ベスト8残留数は参考表示のみ・加点なし。
   const b8={};CONF.drafters.forEach(n=>b8[n]=0);
   for(let i=0;i<8;i++){const w=ST.rs[`r3_${i}`];if(w&&ST.pk[w])b8[ST.pk[w].pl]++;}
   CONF.drafters.forEach(n=>{sc[n].b8count=b8[n];});
-  const mx=Math.max(...Object.values(b8),0);
-  if(mx>0){const tops=CONF.drafters.filter(n=>b8[n]===mx);const bon=tops.length===1?50:tops.length===2?30:20;tops.forEach(n=>{sc[n].b8+=bon;});}
+  // sc[n].b8（加点）は常に0のまま
   // 手動補正
   CONF.drafters.forEach(n=>{const m=ST.manual&&ST.manual[n];if(m)sc[n].manual=(+m.opt||0);});
   // 合計
@@ -1373,7 +1381,7 @@ function rScore(){
   PL.forEach(p=>{
     const pks=ppk(p.name);const s=sc[p.name];
     h+=`<div class="card ${p.bg} ${p.bc}" style="border:1px solid"><div class="ch ${p.c}">${p.name} — ${s.tot}pt（${s.w}勝）</div>`;
-    h+=`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;font-size:10px">${bd('基本',s.base)}${bd('アップセット',s.upset)}${bd('推し2倍',s.oshi,'#fbbf24')}${bd('優勝/準V',s.champ)}${bd('B8残',s.b8)}${bd('ジョーカー',s.joker)}${bd('手動',s.manual)}</div>`;
+    h+=`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;font-size:10px">${bd('基本',s.base)}${bd('アップセット',s.upset)}${bd('推し2倍',s.oshi,'#fbbf24')}${bd('優勝/準V',s.champ)}${bd('ジョーカー',s.joker)}${bd('手動',s.manual)}</div>`;
     pks.forEach(([school,info])=>{const rd=RD[info.ri];const pts=spts(school);const w=wns(school);const out=isOut(school);const star=info.oshi?'<span class="oshi-star">★</span>':'';
   if(out){
     h+=`<div class="pi" style="color:#555"><span class="rt" style="background:#2a2a2a;color:#555">${rd.lb}</span><span style="margin-left:5px">${star}${school}</span><span style="color:#444;font-size:10px;margin-left:4px">${w}勝</span><span class="pp-pts" style="color:#555">${pts!==0?pts+'pt':'-'}</span></div>`;
@@ -1438,9 +1446,9 @@ function rRules(){
   </div>
   <div class="card"><div class="ch">基本得点</div>
     <div style="font-size:13px;line-height:2.4">
-      ${[['指名校が1勝するたびに','+30pt'],['Eランク(E巡)指名校が1勝','+50pt'],['優勝校を指名','+70pt'],['準優勝校を指名','+30pt'],['ベスト8最多残留（1位）','+50pt']].map(([lbl,pts])=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr)"><span>${lbl}</span><strong style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:18px">${pts}</strong></div>`).join('')}
+      ${[['指名校が1勝するたびに','+30pt'],['Eランク(E巡)指名校が1勝','+50pt'],['優勝校を指名','+70pt'],['準優勝校を指名','+30pt']].map(([lbl,pts])=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr)"><span>${lbl}</span><strong style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:18px">${pts}</strong></div>`).join('')}
     </div>
-    <div style="background:rgba(232,184,75,.07);border-radius:8px;padding:9px;font-size:11px;color:var(--muted);line-height:1.7;margin-top:6px">※下位校ボーナス対象ランクは設定で変更可（今年=E）<br>※ベスト8最多が2名タイ→各+30pt　3名→各+20pt<br>※優勝・準優勝ボーナスは勝利ptに追加加算</div>
+    <div style="background:rgba(232,184,75,.07);border-radius:8px;padding:9px;font-size:11px;color:var(--muted);line-height:1.7;margin-top:6px">※下位校ボーナス対象ランクは設定で変更可（今年=E）<br>※優勝・準優勝ボーナスは勝利ptに追加加算</div>
   </div>
   <div class="card"><div class="ch">★ 推し校</div>
     <div style="font-size:12px;line-height:1.9;color:var(--txt)">ドラフト後、各自の<strong>7〜12巡目（F〜K巡）</strong>の指名校から<strong>1校</strong>を推し校に指定。<br>推し校の<strong>勝利ポイント（基本＋アップセット）が2倍</strong>になります（優勝/準優勝ボーナスは対象外）。</div>
@@ -1522,7 +1530,9 @@ async function submitS(){
   if(!sel||!sel.value){alert('学校を選択してください');return;}
   ST.sd[localPlayer]=sel.value;
   ST.ss[localPlayer]=true;
-  await sv();
+  // 自分の欄だけをピンポイント書き込み（他人の入札を全体上書きで消さない）。
+  try{ await window._fbUpdate({['sd/'+localPlayer]:sel.value, ['ss/'+localPlayer]:true}); }
+  catch(e){ console.error('bid write error',e); }
   rDraft();
 }
 
@@ -1557,7 +1567,9 @@ async function submitRepick(){
   if(!sel||!sel.value){alert('学校を選択してください');return;}
   ST.snrd[localPlayer]=sel.value;
   ST.snrs[localPlayer]=true;
-  await sv();
+  // 自分の欄だけをピンポイント書き込み（他人の再指名を全体上書きで消さない）。
+  try{ await window._fbUpdate({['snrd/'+localPlayer]:sel.value, ['snrs/'+localPlayer]:true}); }
+  catch(e){ console.error('repick write error',e); }
   rDraft();
 }
 
