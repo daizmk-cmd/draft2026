@@ -346,8 +346,64 @@ const SC=[
   {n:'神村学園',pref:'鹿児島',bl:'10.九州'},
   {n:'沖縄尚学',pref:'沖縄',bl:'10.九州'},
 ];
-// 組み合わせ抽選後に設定（春の16ペア配列は夏では未使用）
-const R1P=[];
+// ==============================
+// 2026 夏の甲子園 49校トーナメント ブラケット
+// ==============================
+// 1回戦17試合（勝者は2回戦へ）。校名はSC表記に統一。
+const R1P=[
+  ['札幌日大','仙台育英'],      // 0
+  ['東筑','神村学園'],          // 1
+  ['聖隷クリストファー','佐野日大'], // 2
+  ['東海大甲府','鶴岡東'],      // 3
+  ['八幡商','健大高崎'],        // 4
+  ['立命館宇治','有明'],        // 5
+  ['立正大淞南','長崎日大'],    // 6
+  ['遊学館','青森山田'],        // 7
+  ['白樺学園','東日大昌平'],    // 8
+  ['日本文理','大分商'],        // 9
+  ['英明','関東第一'],          // 10
+  ['新田','花巻東'],            // 11
+  ['岡山学芸館','鳥取城北'],    // 12
+  ['鳴門渦潮','八王子実践'],    // 13
+  ['中京','霞ヶ浦'],            // 14
+  ['明徳義塾','日南学園'],      // 15
+  ['横浜','沖縄尚学'],          // 16
+];
+// 2回戦16試合の各枠ソース。文字列=シード校、{r1:i}=1回戦iの勝者。
+const R2SRC=[
+  ['高岡商','高川学園'],        // 0
+  ['天理','福山'],              // 1
+  ['横手','敦賀気比'],          // 2
+  ['智弁和歌山','社'],          // 3
+  ['履正社','享栄'],            // 4
+  ['松商学園','三重'],          // 5
+  ['拓大紅陵','佐賀商'],        // 6
+  ['花咲徳栄',{r1:0}],          // 7
+  [{r1:1},{r1:2}],             // 8
+  [{r1:3},{r1:4}],             // 9
+  [{r1:5},{r1:6}],             // 10
+  [{r1:7},{r1:8}],             // 11
+  [{r1:9},{r1:10}],            // 12
+  [{r1:11},{r1:12}],           // 13
+  [{r1:13},{r1:14}],           // 14
+  [{r1:15},{r1:16}],           // 15
+];
+// 汎用リゾルバ: 試合IDと枠(side=0/1)から、その枠に入る校名を返す（未確定ならnull）
+function teamAt(mid,side){
+  if(mid.startsWith('r1_')){const i=+mid.split('_')[1];const p=R1P[i];return p?p[side]:null;}
+  if(mid.startsWith('r2_')){
+    const i=+mid.split('_')[1];const src=R2SRC[i];if(!src)return null;
+    const s=src[side];
+    if(typeof s==='string')return s;
+    if(s&&typeof s==='object'&&'r1'in s)return ST.rs['r1_'+s.r1]||null;
+    return null;
+  }
+  if(mid.startsWith('r3_')){const i=+mid.split('_')[1];return ST.rs['r2_'+(2*i+side)]||null;}
+  if(mid.startsWith('qf_')){const i=+mid.split('_')[1];return ST.rs['r3_'+(2*i+side)]||null;}
+  if(mid.startsWith('sf_')){const i=+mid.split('_')[1];return ST.rs['qf_'+(2*i+side)]||null;}
+  if(mid==='final'){return ST.rs['sf_'+side]||null;}
+  return null;
+}
 
 // ==============================
 // STATE
@@ -445,10 +501,13 @@ function isOut(s){
   }
   return false;
 }
-// loser(): トーナメント構造依存。組み合わせ抽選後に実装。今は安全にnull。
+// loser(): teamAtで両校を解決し、勝者wでない方（=敗者）を返す。
+// 両校未確定 or wが対戦カードに含まれない場合はnull。
 function loser(mid,w){
-  // 抽選後に R1P / ラウンド構造を用いて対戦相手を返す実装に置換する。
-  // 現状はブラケット未確定のため常にnull（アップセット・ジョーカー負け判定は無効）。
+  const a=teamAt(mid,0),b=teamAt(mid,1);
+  if(!a||!b)return null;
+  if(w===a)return b;
+  if(w===b)return a;
   return null;
 }
 // 学校単体の得点（基本点＋アップセット、推し校なら勝利点2倍、優勝/準優勝ボーナス）
@@ -501,9 +560,10 @@ function allScores(){
       if(ls&&ST.pk[ls]){const lr=ST.pk[ls].ri+1;const pen=30+(JOKER_RANK-lr);sc[ST.pk[ls].pl].joker-=pen;}
     });
   }
-  // B8残留ボーナス: 準々決勝進出校を数える（抽選後に qf_* を集計）→ 今はrs空で0
+  // B8残留ボーナス: 準々決勝進出校（=ベスト8）を数える。
+  // 準々決勝進出8校 = 3回戦(r3_0〜r3_7)の勝者。
   const b8={};CONF.drafters.forEach(n=>b8[n]=0);
-  for(let i=0;i<8;i++){const w=ST.rs[`qf_${i}`];if(w&&ST.pk[w])b8[ST.pk[w].pl]++;}
+  for(let i=0;i<8;i++){const w=ST.rs[`r3_${i}`];if(w&&ST.pk[w])b8[ST.pk[w].pl]++;}
   CONF.drafters.forEach(n=>{sc[n].b8count=b8[n];});
   const mx=Math.max(...Object.values(b8),0);
   if(mx>0){const tops=CONF.drafters.filter(n=>b8[n]===mx);const bon=tops.length===1?50:tops.length===2?30:20;tops.forEach(n=>{sc[n].b8+=bon;});}
@@ -1011,11 +1071,46 @@ let lastFetchTime=null;
 let fetchLog='まだ取得していません';
 let fetchClass='';
 
-// 結果タブ: 組み合わせ抽選後に有効化（フェーズ1ではプレースホルダ）
+// 結果タブ: 2026夏 49校トーナメント。teamAtで各枠を解決して表示。
 function rResults(){
   const el=document.getElementById('pg-results');
-  el.innerHTML=`<div class="hero"><div class="hr">試合結果</div><div class="hd">組み合わせ抽選後に有効化されます</div></div>
-  <div class="alrt" style="text-align:center;line-height:1.9">🎲 組み合わせ抽選が行われると、ここに<strong>49校トーナメント表</strong>と試合結果の入力・自動取得が表示されます。<br><br>抽選までは<strong>ドラフト・指名一覧・順位・補正入力</strong>をご利用ください。</div>`;
+  let h=`<div class="fetch-bar">
+    <div class="fetch-top">
+      <div class="fetch-info">
+        <div class="fetch-title">🤖 試合結果 自動取得</div>
+        <div class="fetch-status ${fetchClass}" id="fs">${fetchLog}</div>
+      </div>
+      <button class="fetch-btn" id="fbtn" onclick="fetchResults()">🔄 今すぐ取得</button>
+    </div>
+  </div>`;
+  function roundHeader(label){
+    return `<div style="font-size:11px;font-weight:700;color:#a0a0a0;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid #2a2a2a">${label}</div>`;
+  }
+  // 1回戦（17試合）: R1Pの各ペアを常に表示
+  h+=roundHeader('1回戦（17試合）');
+  for(let i=0;i<17;i++){h+=`<div class="card">`+mrow('r1_'+i,R1P[i][0],R1P[i][1])+`</div>`;}
+  // 2回戦以降: teamAtで両校を解決。未確定なら待ち表示。
+  function renderRound(label,prefix,count,pendMsg){
+    h+=roundHeader(label);
+    for(let i=0;i<count;i++){
+      const mid=prefix+i;const a=teamAt(mid,0),b=teamAt(mid,1);
+      h+=`<div class="card">`+((a&&b)?mrow(mid,a,b):`<div class="mpend">${pendMsg}</div>`)+`</div>`;
+    }
+  }
+  renderRound('2回戦（16試合）','r2_',16,'1回戦結果待ち');
+  renderRound('3回戦（8試合）','r3_',8,'2回戦結果待ち');
+  renderRound('準々決勝（4試合）','qf_',4,'3回戦結果待ち');
+  renderRound('準決勝（2試合）','sf_',2,'準々決勝結果待ち');
+  // 優勝校ハイライト
+  const champ=ST.rs.final;
+  if(champ){
+    const pc=pki(champ);const col=pc?pc.pl.col:'#fbbf24';
+    h+=`<div style="text-align:center;margin:18px 0 4px"><div style="font-size:12px;color:#a0a0a0;font-weight:700;letter-spacing:.12em">🏆 優勝</div><div style="font-size:24px;font-weight:800;color:${col};margin-top:4px">${champ}</div></div>`;
+  }
+  h+=roundHeader('決勝 🏆');
+  {const a=teamAt('final',0),b=teamAt('final',1);
+   h+=`<div class="card">`+((a&&b)?mrow('final',a,b):`<div class="mpend">準決勝結果待ち</div>`)+`</div>`;}
+  el.innerHTML=h;
 }
 
 // ==============================
@@ -1027,17 +1122,27 @@ function normalizeName(n){
   if(!n||n==='null')return null;
   n=n.trim();
   const map={
+    // --- 2026夏 校名の表記ゆれ → SC表記 ---
+    '智辯和歌山':'智弁和歌山','智弁和歌山高校':'智弁和歌山','智辯和歌山高校':'智弁和歌山',
+    '霞ケ浦':'霞ヶ浦','霞ケ浦高校':'霞ヶ浦','霞ヶ浦高校':'霞ヶ浦',
+    '聖隷クリストファー高校':'聖隷クリストファー','聖隷クリストファー高':'聖隷クリストファー','聖隷':'聖隷クリストファー',
+    '東日本国際大昌平':'東日大昌平','東日本国際大付昌平':'東日大昌平','東日本国際大付属昌平':'東日大昌平','東日大昌平高校':'東日大昌平',
+    '立正大淞南高校':'立正大淞南','淞南':'立正大淞南',
+    '東海大甲府高校':'東海大甲府','東海大付甲府':'東海大甲府',
+    '関東第一高校':'関東第一','関東一':'関東第一','関一':'関東第一',
+    '八王子実践高校':'八王子実践',
+    '岡山学芸館高校':'岡山学芸館','鳥取城北高校':'鳥取城北',
+    '立命館宇治高校':'立命館宇治','明徳義塾高校':'明徳義塾',
+    '日南学園高校':'日南学園','神村学園高校':'神村学園','沖縄尚学高校':'沖縄尚学',
+    '仙台育英高校':'仙台育英','花巻東高校':'花巻東','横浜高校':'横浜',
+    '健大高崎高校':'健大高崎','花咲徳栄高校':'花咲徳栄','鶴岡東高校':'鶴岡東',
+    '拓大紅陵高校':'拓大紅陵','敦賀気比高校':'敦賀気比','松商学園高校':'松商学園',
+    '高川学園高校':'高川学園','日本文理高校':'日本文理','鳴門渦潮高校':'鳴門渦潮',
+    // --- 春や過去大会の別表記（残置・無害） ---
     '八戸光星':'八戸学院光星','光星学院':'八戸学院光星',
     '九国大付':'九州国際大付','九州国際大附':'九州国際大付','九国大附':'九州国際大付','九州国際大付属':'九州国際大付',
     '神戸国際大附':'神戸国際大付','神国大附':'神戸国際大付',
     '智辯学園':'智弁学園','智辯':'智弁学園',
-    '東洋大姫路高校':'東洋大姫路','東洋大付姫路':'東洋大姫路','東洋大学附属姫路':'東洋大姫路',
-    '大阪桐蔭高校':'大阪桐蔭','桐蔭':'大阪桐蔭',
-    '横浜高校':'横浜','帝京高校':'帝京',
-    '花咲徳栄高校':'花咲徳栄','山梨学院高校':'山梨学院',
-    '花巻東高校':'花巻東','八戸学院光星高校':'八戸学院光星',
-    '神村学園高校':'神村学園','沖縄尚学高校':'沖縄尚学',
-    '帝京長岡高校':'帝京長岡','高川学園高校':'高川学園',
   };
   return map[n]||n;
 }
@@ -1048,9 +1153,11 @@ function applyFetchedResults(fetched){
   // fetchedは {matchId: winner} の形式で来る想定
   // validなキー
   const VALID_KEYS=[
-    'r1_0','r1_1','r1_2','r1_3','r1_4','r1_5','r1_6','r1_7',
-    'r1_8','r1_9','r1_10','r1_11','r1_12','r1_13','r1_14','r1_15',
+    'r1_0','r1_1','r1_2','r1_3','r1_4','r1_5','r1_6','r1_7','r1_8',
+    'r1_9','r1_10','r1_11','r1_12','r1_13','r1_14','r1_15','r1_16',
     'r2_0','r2_1','r2_2','r2_3','r2_4','r2_5','r2_6','r2_7',
+    'r2_8','r2_9','r2_10','r2_11','r2_12','r2_13','r2_14','r2_15',
+    'r3_0','r3_1','r3_2','r3_3','r3_4','r3_5','r3_6','r3_7',
     'qf_0','qf_1','qf_2','qf_3','sf_0','sf_1','final'
   ];
   let updated=0;
@@ -1076,8 +1183,8 @@ async function fetchResults(){
   fetchLog='⏳ 取得中...';
   if(statusEl){statusEl.className='fetch-status loading';statusEl.textContent=fetchLog;}
 
-  // 阪神甲子園球場公式サイトから取得
-  const TARGET='https://koshien.hanshin.co.jp/highschool/spring2026/schedule.html';
+  // 阪神甲子園球場公式サイトから取得（2026夏・後で正式URLに差し替え可）
+  const TARGET='https://koshien.hanshin.co.jp/highschool/summer2026/schedule.html';
   // 複数プロキシを順番に試す
   const PROXIES=[
     `https://corsproxy.io/?${encodeURIComponent(TARGET)}`,
@@ -1100,7 +1207,7 @@ async function fetchResults(){
       if(text.trimStart().startsWith('{')){
         try{const j=JSON.parse(text);if(j.contents)result=j.contents;}catch(e){}
       }
-      if(result&&result.length>500&&result.includes('帝京')){html=result;break;}
+      if(result&&result.length>500&&(result.includes('横浜')||result.includes('仙台育英'))){html=result;break;}
     }catch(e){
       fetchErr=e.name==='AbortError'?'タイムアウト':e.message;
       continue;
@@ -1131,15 +1238,18 @@ async function fetchResults(){
   const fetched={};
 
   // 阪神甲子園公式: "校名A (都道府県)スコアA - スコアB校名B (都道府県)"
-  // 例: "帝京 (東京)4 - 3沖縄尚学 (沖縄)"
-  // 校名マッピング（公式サイト表記→アプリ内名称）
-  const nameMap={
-    '八戸学院光星':'八戸学院光星','高知農':'高知農','神戸国際大付':'神戸国際大付',
-    '九州国際大付':'九州国際大付','帝京':'帝京','熊本工':'熊本工',
-    '智辯学園':'智弁学園','智辯和歌山':'智弁和歌山',
-    '横浜':'横浜','神村学園':'神村学園','花巻東':'花巻東'
-  };
-  function normSite(n){return (nameMap[n.trim()]||n.trim());}
+  // 例: "横浜 (神奈川)4 - 3沖縄尚学 (沖縄)"
+  // 校名は normalizeName（SC表記への正規化辞書）で統一する。
+  function normSite(n){return normalizeName(n.trim())||n.trim();}
+
+  // 突合対象の全matchID（1回戦〜決勝）。teamAtで現在確定している対戦カードと照合する。
+  const ALL_MIDS=[];
+  for(let i=0;i<17;i++)ALL_MIDS.push('r1_'+i);
+  for(let i=0;i<16;i++)ALL_MIDS.push('r2_'+i);
+  for(let i=0;i<8;i++)ALL_MIDS.push('r3_'+i);
+  for(let i=0;i<4;i++)ALL_MIDS.push('qf_'+i);
+  for(let i=0;i<2;i++)ALL_MIDS.push('sf_'+i);
+  ALL_MIDS.push('final');
 
   // パターン: "校名 (都道府県)数字 - 数字校名 (都道府県)"
   const pat=/([^()\d\s][^()\d]{0,7})\s*\(([^)]{1,6})\)(\d+)\s*-\s*(\d+)([^()\d\s][^()\d]{0,7})\s*\(([^)]{1,6})\)/g;
@@ -1150,42 +1260,15 @@ async function fetchResults(){
     const a=normSite(m[1]),sa=parseInt(m[3]),sb=parseInt(m[4]),b=normSite(m[5]);
     if(sa===sb)continue;
     const winner=sa>sb?a:b;
-    // 1回戦マッチング
-    R1P.forEach((pair,i)=>{
-      const [ra,rb]=pair;
+    // 各matchIDについて、teamAtで解決した対戦カードと突合。一致すれば勝者をセット。
+    ALL_MIDS.forEach(mid=>{
+      if(fetched[mid])return;
+      const ra=teamAt(mid,0),rb=teamAt(mid,1);
+      if(!ra||!rb)return;
       if((ra===a&&rb===b)||(ra===b&&rb===a)){
-        if(!fetched['r1_'+i]){fetched['r1_'+i]=winner;fetchedSc['r1_'+i]=ra===a?[sa,sb]:[sb,sa];}
+        fetched[mid]=winner;fetchedSc[mid]=ra===a?[sa,sb]:[sb,sa];
       }
     });
-    // 2回戦: r1_(i*2)勝者 vs r1_(i*2+1)勝者
-    for(let i=0;i<8;i++){
-      const ra=ST.rs['r1_'+(i*2)],rb=ST.rs['r1_'+(i*2+1)];
-      if(!ra||!rb)continue;
-      if((ra===a&&rb===b)||(ra===b&&rb===a)){
-        if(!fetched['r2_'+i]){fetched['r2_'+i]=winner;fetchedSc['r2_'+i]=ra===a?[sa,sb]:[sb,sa];}
-      }
-    }
-    // 準々決勝: r2_(i*2)勝者 vs r2_(i*2+1)勝者
-    for(let i=0;i<4;i++){
-      const ra=ST.rs['r2_'+(i*2)],rb=ST.rs['r2_'+(i*2+1)];
-      if(!ra||!rb)continue;
-      if((ra===a&&rb===b)||(ra===b&&rb===a)){
-        if(!fetched['qf_'+i]){fetched['qf_'+i]=winner;fetchedSc['qf_'+i]=ra===a?[sa,sb]:[sb,sa];}
-      }
-    }
-    // 準決勝: qf_(i*2)勝者 vs qf_(i*2+1)勝者
-    for(let i=0;i<2;i++){
-      const ra=ST.rs['qf_'+(i*2)],rb=ST.rs['qf_'+(i*2+1)];
-      if(!ra||!rb)continue;
-      if((ra===a&&rb===b)||(ra===b&&rb===a)){
-        if(!fetched['sf_'+i]){fetched['sf_'+i]=winner;fetchedSc['sf_'+i]=ra===a?[sa,sb]:[sb,sa];}
-      }
-    }
-    // 決勝
-    {const ra=ST.rs['sf_0'],rb=ST.rs['sf_1'];
-    if(ra&&rb&&((ra===a&&rb===b)||(ra===b&&rb===a))){
-      if(!fetched['final']){fetched['final']=winner;fetchedSc['final']=ra===a?[sa,sb]:[sb,sa];}
-    }}
   }
 
   const updated=applyFetchedResults(fetched);
@@ -1206,8 +1289,8 @@ async function autoFetchIfNeeded(){
   const now=new Date();
   const jst=new Date(now.getTime()+9*3600*1000);
   const y=jst.getUTCFullYear(),m=jst.getUTCMonth()+1,d=jst.getUTCDate(),h=jst.getUTCHours();
-  // 大会期間: 2026/3/19〜4/4
-  const inPeriod=(y===2026&&((m===3&&d>=19)||(m===4&&d<=4)));
+  // 大会期間: 2026夏（8/5〜8/24頃）
+  const inPeriod=(y===2026&&m===8&&d>=5&&d<=24);
   if(!inPeriod||h<20)return;
   await fetchResults();
 }
