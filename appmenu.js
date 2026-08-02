@@ -8,7 +8,7 @@
   var APPS = [
     { icon: '⚾', name: 'センバツ(春) ドラフト', url: 'index.html' },
     { icon: '📊', name: '歴代実績DB',           url: 'draft_db.html' },
-    { icon: '🌻', name: '夏の甲子園 ドラフト',   url: 'summer.html', soon: true },
+    { icon: '🌻', name: '夏の甲子園 ドラフト',   url: 'summer.html' },
     { icon: '🏃', name: '箱根駅伝 ドラフト',     url: 'hakone.html', soon: true }
   ];
   // -------------------------------------------------
