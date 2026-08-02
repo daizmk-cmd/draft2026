@@ -1260,7 +1260,8 @@ async function fetchResults(){
   ALL_MIDS.push('final');
 
   // パターン: "校名 (都道府県)数字 - 数字校名 (都道府県)"
-  const pat=/([^()\d\s][^()\d]{0,7})\s*\(([^)]{1,6})\)(\d+)\s*-\s*(\d+)([^()\d\s][^()\d]{0,7})\s*\(([^)]{1,6})\)/g;
+  // 校名は最長「聖隷クリストファー」(9文字)まで許容（{0,9}）。
+  const pat=/([^()\d\s][^()\d]{0,9})\s*\(([^)]{1,6})\)(\d+)\s*-\s*(\d+)([^()\d\s][^()\d]{0,9})\s*\(([^)]{1,6})\)/g;
   let m;
   window._fetchedSc={};
   const fetchedSc=window._fetchedSc;
